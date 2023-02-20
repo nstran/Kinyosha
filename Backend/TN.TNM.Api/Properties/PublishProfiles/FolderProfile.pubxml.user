@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <History>True|2023-01-12T06:51:11.7020362Z;True|2023-01-11T08:46:33.0048827+07:00;True|2023-01-09T17:03:05.3470607+07:00;True|2023-01-05T15:17:03.7781242+07:00;False|2023-01-05T15:13:12.1200291+07:00;True|2023-01-04T11:47:09.2871429+07:00;True|2023-01-04T11:43:49.2535547+07:00;False|2023-01-04T11:41:30.2591419+07:00;True|2022-12-29T15:02:19.1371186+07:00;True|2022-12-29T09:52:18.2492022+07:00;False|2022-12-29T09:41:05.3186588+07:00;</History>
+    <LastFailureDetails />
+    <_PublishTargetUrl>D:\Publish\TNM_Kinyosha_API</_PublishTargetUrl>
+  </PropertyGroup>
+</Project>

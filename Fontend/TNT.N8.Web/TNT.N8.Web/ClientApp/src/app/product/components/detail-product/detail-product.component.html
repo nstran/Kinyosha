@@ -1,0 +1,221 @@
+<!-- Loading... -->
+<!-- <div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div> -->
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="detail-product">
+  <div class="row no-margin" id="parent">
+    <div class="col-md-12 header" style="padding: 6px;" [ngClass]="{'fixed': fixed}" [ngStyle]="{'width':withFiexd}">
+      <div class="row">
+        <div class="col-md-6 no-padding">
+          <div class="row no-margin">
+            <div class="col-md-1 col-sm-1 col-xs-3">
+              <div class="header-box-icon">
+                <img src="/assets/icons/components/create_lead.svg" class="header-icon">
+              </div>
+            </div>
+            <div class="col-md-11 col-sm-10 col-xs-9" style="display:
+              contents;">
+              <div>
+                <span class="product-name">Thông tin chi tiết hàng hóa</span>
+              </div>
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12" style="display: flex; justify-content:
+              flex-end; margin-top: 5px;">
+              <button (click)="cancel()" type="button" class="btn-remove" style="margin-right: 5px;">
+                <span class="btn-remove-text">Thoát</span>
+              </button>
+              <button #save *ngIf="actionEdit" class="save" type="button" (click)="updateProduct()">
+                <span class="text-save">Lưu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-12 header" style="padding: 6px;" [ngClass]="{'fixed':
+      fixed}" [ngStyle]="{'width':withFiexd}">
+      <form [formGroup]="productForm">
+        <div class="row">
+          <div class="col-md-12">
+            <strong>Thông tin chung</strong>
+          </div>
+          <div class="col-md-12" style="padding: 10px 0px 10px 20px;">
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label *ngIf="typePage==0">Nhóm vật liệu <span style="color: red;">*</span>:</label>
+                <label *ngIf="typePage==2">Nhóm công cụ, dụng cụ <span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                  <p-dropdown [options]="listProperty" optionLabel="categoryName" placeholder="" filter="true" 
+                    [styleClass]="(productForm.get('ProductCategory').invalid && (productForm.get('ProductCategory').dirty || productForm.get('ProductCategory').touched)) ? 'error-border' : ''"
+                    formControlName="ProductCategory" [style]="{ width: '100%' }">
+                  </p-dropdown>
+                  <span class="error-message-span" *ngIf="productForm.get('ProductCategory').hasError('required')"
+                    [hidden]="productForm.get('ProductCategory').untouched">
+                    Không được để trống
+                  </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label *ngIf="typePage==0">Mã vật liệu <span style="color: red;">*</span>:</label>
+                <label *ngIf="typePage==2">Mã công cụ, dụng cụ <span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <div #boxProductCode>
+                  <input [ngClass]="(productForm.get('ProductCode').invalid && (productForm.get('ProductCode').dirty ||
+                                productForm.get('ProductCode').touched)) ? 'error-border' : '' " formControlName="ProductCode"
+                    type="text" class="full-width" pInputText />
+                </div>
+                <div class="col-md-12" [hidden]="productForm.get('ProductCode').invalid || productForm.get('ProductCode').untouched">
+                  <span *ngIf="productForm.get('ProductCode').hasError('required')" class="error-message-span">Không được để
+                    trống</span>
+                </div>
+              </div>           
+            </div>
+            <div sty class="col-md-4">
+              <div class="col-md-12">
+                <label *ngIf="typePage==0">Mã kế toán<span style="color: red;">*</span>:</label>
+                <label *ngIf="typePage==2">Mã kế toán<span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12" #boxAccountingCode>
+                <input [ngClass]="(productForm.get('AccountingCode').invalid && (productForm.get('AccountingCode').dirty ||
+                            productForm.get('AccountingCode').touched)) ? 'error-border' : '' " formControlName="AccountingCode"
+                  type="text" class="full-width" pInputText />
+              </div>
+              <div class="col-md-12">
+                <span *ngIf="productForm.get('AccountingCode').hasError('required')" class="error-message-span"
+                  [hidden]="productForm.get('AccountingCode').untouched">
+                  Không được để trống</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" style="padding: 10px 0px 10px 20px;">
+            <div sty class="col-md-4">
+              <div class="col-md-12">
+                <label *ngIf="typePage==0">Tên vật liệu <span style="color: red;">*</span>:</label>
+                <label *ngIf="typePage==2">Tên công cụ, dụng cụ <span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12" #boxProductName>
+                <input [ngClass]="(productForm.get('ProductName').invalid && (productForm.get('ProductName').dirty ||
+                            productForm.get('ProductName').touched)) ? 'error-border' : '' " formControlName="ProductName"
+                  type="text" class="full-width" pInputText />
+              </div>
+              <div class="col-md-12" [hidden]="productForm.get('ProductName').invalid || productForm.get('ProductName').untouched">
+                <span *ngIf="productForm.get('ProductName').hasError('required')" class="error-message-span">Không được để
+                  trống</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Đơn vị tính <span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <p-dropdown [options]="listProductUnit" optionLabel="categoryName" placeholder="" filter="true"
+                  [styleClass]="(productForm.get('ProductUnit').invalid && (productForm.get('ProductUnit').dirty || productForm.get('ProductUnit').touched)) ? 'error-border' : ''"
+                  formControlName="ProductUnit" [style]="{ width: '100%' }">
+                </p-dropdown>
+                <span class="error-message-span" *ngIf="productForm.get('ProductUnit').hasError('required')"
+                  [hidden]="productForm.get('ProductUnit').untouched">
+                  Không được để trống
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Số lượng tồn tối thiểu yêu cầu:</label>
+              </div>
+              <div class="col-md-12" #boxMinimumInventoryQuantity>
+                <input [ngClass]="(productForm.get('MinimumInventoryQuantity').invalid && (productForm.get('MinimumInventoryQuantity').dirty || 
+                            productForm.get('MinimumInventoryQuantity').touched)) ? 'error-border' : '' "
+                  formControlName="MinimumInventoryQuantity" type="text" class="full-width" pInputText />
+              </div>
+              <div class="col-md-12"
+                [hidden]="productForm.get('MinimumInventoryQuantity').invalid || productForm.get('MinimumInventoryQuantity').untouched">
+                <span *ngIf="productForm.get('MinimumInventoryQuantity').hasError('required')" class="error-message-span">Không
+                  được để
+                  trống</span>
+              </div>
+            </div>
+            <!-- <div class="col-md-4">
+              <div class="col-md-12">
+                <label *ngIf="typePage==0">Tên<span style="color: red">*</span>:</label>
+                <label *ngIf="typePage==2">Tên<span style="color: red">*</span>:</label>
+              </div>
+              <div class="col-md-12" #boxMinimumInventoryQuantity>
+                <input [ngClass]="(productForm.get('ProductName').invalid && (productForm.get('ProductName').dirty || 
+                              productForm.get('ProductName').touched)) ? 'error-border' : '' "
+                  formControlName="ProductName" type="text" class="full-width" pInputText />
+              </div>
+              <div class="col-md-12"
+                [hidden]="productForm.get('ProductName').invalid || productForm.get('ProductName').untouched">
+                <span *ngIf="productForm.get('ProductName').hasError('required')" class="error-message-span">Không được
+                  để
+                  trống</span>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="detail-product">
+  <p-tabView>
+    <p-tabPanel header="Nhà cung cấp">
+      <ng-template pTemplate="content">
+        <div class="col-md-12 bottom-buffer">
+          <button (click)="addVendorProductDetail()" pButton style="margin-right: 10px; margin-bottom: 10px;"
+            type="button" icon="pi pi-plus" label="Thêm nhà cung cấp">
+          </button>
+          <button (click)="onCreateNewVendor()" pButton type="button" icon="pi pi-plus"
+            label="Tạo nhanh nhà cung cấp"></button>
+        </div>
+        <div class="col-md-12 mt-5">
+          <p-table [columns]="selectedColumns" [value]="listProductVendorMapping" [resizableColumns]="true" selectionMode="single"
+            (onRowSelect)="onRowSelect($event.data)" [style]="{width:'100%'}" [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10,50,100]" responsive="true">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn [ngStyle]="{'width': col.width, 'text-align': 'center'}">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" class="ui-resizable-column"
+                  [ngStyle]="{'width': col.width, 'text-align': col.textAlign}" [ngSwitch]="col.field">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <span *ngSwitchCase="'STT'">
+                    {{rowIndex + 1}}
+                  </span>
+                  <span *ngSwitchCase="'ThaoTac'">
+                    <button pButton icon="pi pi-trash" (click)="deleteItem(rowData)" class="ui-button-danger"></button>
+                  </span>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>

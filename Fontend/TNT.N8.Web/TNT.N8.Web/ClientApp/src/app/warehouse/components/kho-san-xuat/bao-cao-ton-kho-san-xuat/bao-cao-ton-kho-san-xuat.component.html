@@ -1,0 +1,161 @@
+<div class="loading-indicator" *ngIf="loading">
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+    </p-progressSpinner>
+</div>
+<p-toast position="bottom-right"></p-toast>
+
+<div class="bao-cao-ton-kho">
+    <div class="row">
+        <div class="box-header">
+            <div class="col-md-4 no-padding" style="margin-left: 5px;">
+                <span class="row">
+                    <div class="col-md-12">
+                        Bộ phận quản lý
+                        <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" pInputText [(ngModel)]="selectOrg" class="w-100" disabled="true" />
+                    </div>
+                </span>
+            </div>
+            <div class="col-md-8"></div>
+            
+            <div class="col-md-12">
+                <div class="row bottom-buffer top-buffer">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="margin-top: 15px">
+                        <div class="row bottom-buffer">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4  ">
+                                        <span>
+                                            Từ ngày:
+                                        </span>
+                                    </div>
+                                    <div class="col-md-8 no-padding">
+                                        <p-calendar [(ngModel)]="fromDate" (onSelect)="getReport()" dateFormat="dd/mm/yy"
+                                            [style]="{'width':'100%'}" [inputStyle]="{ width: '100%' }">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 ">
+                                        <span>
+                                            Đến ngày:
+                                        </span>
+                                    </div>
+                                    <div class="col-md-8 no-padding">
+                                        <p-calendar [(ngModel)]="toDate" (onSelect)="getReport()" dateFormat="dd/mm/yy"
+                                            [style]="{'width':'100%'}" [inputStyle]="{ width: '100%' }">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p-table #myTable [columns]="colsListBaoCao" [value]="dataList" [resizableColumns]="true" columnResizeMode="expand"
+                    [paginator]="true" [rows]="50" [rowsPerPageOptions]="[50,100,200,300,500,1000,2000]" responsive="true" class="table-border">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                                [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'productCode', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'productName', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <p-dropdown [options]="statuses"
+                                    (onChange)="myTable.filter($event.value, 'productUnitName', 'equals')" appendTo="body"
+                                    [baseZIndex]="999" [style]="{'width': '100%'}" styleClass="ui-column-filter" placeholder="Chọn đơn vị"
+                                    [showClear]="true">
+                                    <ng-template let-option pTemplate="item">
+                                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </th>
+                            <th>
+                                <p-dropdown [options]="statuses1" (onChange)="myTable.filter($event.value, 'vendorName', 'equals')"
+                                    appendTo="body" [baseZIndex]="999" [style]="{'width': '100%'}" styleClass="ui-column-filter"
+                                    placeholder="Chọn nhà cung cấp" [showClear]="true">
+                                    <ng-template let-option pTemplate="item">
+                                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'startInventory', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'quantityReceiving', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'quantityDelivery', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <input pInputText type="text" style="width: 100%"
+                                    (input)="myTable.filter($event.target.value, 'endInventory', 'contains')" placeholder=""
+                                    class="ui-column-filter">
+                            </th>
+                            <th>
+                                <p-dropdown [options]="statuses2" (onChange)="myTable.filter($event.value, 'productCategoryName', 'equals')" appendTo="body"
+                                    [baseZIndex]="999" [style]="{'width': '100%'}" styleClass="ui-column-filter" placeholder="Chọn loại hàng"
+                                    [showClear]="true">
+                                    <ng-template let-option pTemplate="item">
+                                        <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIdex="rowIndex">
+                        <tr>
+                            <td *ngFor="let col of columns" [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                                [ngSwitch]="col.field">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                <span *ngSwitchCase="'STT'">{{rowIdex + 1}}</span>
+                
+                                <span *ngSwitchCase="'productCode'" class="link">{{rowData[col.field]}}</span>
+                
+                                <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            
+        </div>
+    </div>
+</div>

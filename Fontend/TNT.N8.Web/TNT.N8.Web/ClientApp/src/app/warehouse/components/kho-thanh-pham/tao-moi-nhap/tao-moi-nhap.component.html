@@ -1,0 +1,344 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+    </p-progressSpinner>
+</div>
+
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<div class="phieu-nhap-kho">
+    <div class="row no-margin">
+        <div class="col-md-12">
+            <div class="row pnk-content" id="parent">
+                <div class="col-md-12 no-padding">
+                    <div class="row no-margin button-group" [ngClass]="{'fixed': fixed}"
+                        [ngStyle]="{'width':withFiexd}">
+                        <div class="col-md-12">
+                            <div class="center">
+                                <!-- <img src="/assets/icons/components/create_lead.svg" class="header-icon"> -->
+                                <span class="header-text">TẠO MỚI PHIẾU NHẬP KHO</span>
+                            </div>
+
+                            <div style="float: right;">
+                                <span *ngIf="!isInvalidForm" style="margin-right: 5px;">
+                                    <img src="/assets/icons/components/ios-warning.svg" class="ios-warning">
+                                </span>
+                                <div class="box-waring" *ngIf="isInvalidForm" #toggleButton
+                                    (click)="toggleNotifiError()">
+                                    <img src="/assets/icons/components/ios-warning-active.svg"
+                                        class="ios-warning-active">
+                                </div>
+
+                                <button class="cancel" type="button" (click)="goBack()">
+                                    <span class="text-cancel">Thoát</span>
+                                </button>
+                                <button #save class="save" type="button" (click)="taoPhieuNhapKho(false)">
+                                    <span class="text-save">Lưu</span>
+                                </button>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row pnk-content">
+                <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+                    <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right"
+                        collapseIcon="pi pi-fw pi-chevron-circle-down">
+                        <p-accordionTab header="Thông tin chung" [selected]="true">
+                            <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                                <!-- hàng 1 -->
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>Mã phiếu: <span style="font-weight: bold; margin-left: 25px">Hệ thống tự
+                                                sinh</span></label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label style="margin-left: 10%">Trạng thái: <span
+                                                style="font-weight: bold;">Mới</span></label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label style="margin-left: 10%">Ngày tạo: <span
+                                                style="font-weight: bold;">{{ngayHienTai}}</span></label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label style="margin-left: 10%">Người tạo: <span
+                                                style="font-weight: bold;">{{userName}}</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label style="margin-left: 10%">Bộ phận: <span
+                                                style="font-weight: bold;">{{department}}</span></label>
+                                    </div>
+                                </div>
+                                <!-- hàng 2 -->
+                                <div class="row" style="margin-top: 15px">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Loại nhập<p></p>:</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <p-radioButton styleClass="p-radioButtonCustom" name="group1" value=6
+                                                    [(ngModel)]="loaiPhieu" label="Nhập thành phẩm sau đóng gói"></p-radioButton>
+                                                <p-radioButton class="ml-25" styleClass="p-radioButtonCustom"
+                                                    name="group1" value=7 [(ngModel)]="loaiPhieu"
+                                                    label="Nhập sau kiểm tra"></p-radioButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- hàng 3 -->
+                                <div class="row" style="margin-top: 15px">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <form [formGroup]="khoForm">
+                                                <div class="col-md-4">
+                                                    <label>Kho nhập <span style="color: red;">*</span>:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <p-dropdown [style]="{'width': '100%'}" [options]="listWarehouse"
+                                                        formControlName="khoNhanControl"
+                                                        optionLabel="warehouseName"></p-dropdown>
+                                                    <p [hidden]="khoNhanControl.valid || khoNhanControl.untouched">
+                                                        <span
+                                                            *ngIf="khoNhanControl.hasError('required') || khoNhanControl.hasError('blankString') "
+                                                            class="error-message-span">
+                                                            Không được để trống
+                                                        </span>
+                                                    </p>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <form [formGroup]="createForm">
+                                                <div class="col-md-4">
+                                                    <label>Ngày nhập <span style="color: red;">*</span>:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <p-calendar formControlName="ngayNhap" dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                                        [inputStyle]="{ width: '100%' }" [minDate]="minDate">
+                                                    </p-calendar>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-accordionTab>
+                    </p-accordion>
+                </div>
+            </div>
+
+            <!-- Danh sách nguyên vật liệu nhập kho -->
+            <div class="row area-2">
+                <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+                    <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right"
+                        collapseIcon="pi pi-fw pi-chevron-circle-down">
+                        <p-accordionTab header="Danh sách nguyên vật liệu nhập kho" [selected]="true">
+                            <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header-group-btn" style="margin-top: -20px;">
+                                            <button type="button" class="btn-save" style="width:90px!important;"
+                                                (click)="addNewDialog()">
+                                                <span class="btn-save-text">Thêm</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-10">
+                                    <div class="col-md-12">
+                                        <p-table #myTable [columns]="colsGroupVatLieu" [value]="listItemGroup"
+                                            [resizableColumns]="true" columnResizeMode="expand" [paginator]="true"
+                                            [rows]="10" [rowsPerPageOptions]="[10,20,30]" [responsive]="true"
+                                            class="table-border">
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" pResizableColumn
+                                                        [pSortableColumn]="col.field"
+                                                        [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                                                        {{col.header}}
+                                                        <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-columns="columns"
+                                                let-rowIndex="rowIndex">
+                                                <tr>
+                                                    <td *ngFor="let col of columns" [ngSwitch]="col.field"
+                                                        pEditableColumn
+                                                        [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+                                                        <span class="ui-column-title">{{col.header}}</span>
+                                                        <span *ngSwitchCase="'stt'">
+                                                            {{rowIndex + 1}}
+                                                        </span>
+                                                        <span *ngSwitchCase="'productName'">
+                                                            <span (click)="clickDetailLotNo(rowData)" class="link"> {{
+                                                                rowData[col.field] }} </span>
+                                                        </span>
+                                                        <span *ngSwitchCase="'unitName'">
+                                                            {{ rowData[col.field] }}
+                                                        </span>
+                                                        <span *ngSwitchCase="'quantityActual'">
+                                                            {{ rowData[col.field] | number }}
+                                                        </span>
+                                                        <span *ngSwitchCase="'thaoTac'">
+                                                            <button style="width: 100%; color: red;" type="button"
+                                                                pButton icon="pi pi-trash" class="ui-button-secondary"
+                                                                (click)="deleteItemGroup(rowData)"></button>
+                                                        </span>
+                                                        <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </p-accordionTab>
+                    </p-accordion>
+                </div>
+            </div>
+
+            <div class="row area-2">
+                <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+                    <div class="col-md-12 mt-10">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label style="font-weight: bold;">Ghi chú</label>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea rows="5" cols="30" pInputTextarea autoResize="autoResize"
+                                    [(ngModel)]="noteControl" class="w100"></textarea>
+                                <!-- <input class="w100" type="text" pInputText> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Thêm thành phẩm nhập kho" [(visible)]="showDetailDialog" [modal]="true" [style]="{width: '70vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false" [closable]="true">
+    <div class="row no-margin">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <span>Chọn sản phẩm*:</span>
+                </div>
+                <div class="col-md-3">
+                    <span>Đơn vị tính:</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <span *ngIf="isDisableMultiSelect == false">
+                        <p-multiSelect [options]="listProduct" defaultLabel="Lựa chọn vật tư" optionLabel="productName"
+                            [(ngModel)]="productSelected" [style]="{'width': '90%'}" (onChange)="onChangeProduct()"
+                            resetFilterOnHide="false">
+                        </p-multiSelect>
+                    </span>
+                    <span *ngIf="isDisableMultiSelect == true">
+                        <p style="font-weight: bold;">{{productSelected[0].productName}}</p>
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <span>
+                        <p style="font-weight: bold;">{{donViTinh}}</p>
+                    </span>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-10">
+                    <span>
+                        <p>Danh sách nhập theo Lot.No</p>
+                    </span>
+                </div>
+                <div class="col-md-2">
+                    <span style="float: right; margin-bottom: 8px;">
+                        <button type="button" pButton (click)="addNewLotNo()" label="Thêm mới"></button>
+                    </span>
+                </div>
+            </div>
+            <div class="row" style="min-height: 20vw;">
+                <div class="col-md-12">
+                    <p-table [columns]="colsChiTietVatLieu" [value]="listChiTietLotNo" dataKey="id" [paginator]="true"
+                        [rows]="10" [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border"
+                        [scrollable]="true" scrollHeight="200px">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns" pResizableColumn
+                                    [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                                    {{col.header}}
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+                            <tr>
+                                <td *ngFor="let col of columns" [ngSwitch]="col.field"
+                                    [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width}">
+
+
+                                    <span *ngSwitchCase="'lotNoName'">
+                                        <input type="text" class="item-lot-no-{{rowIndex}}" style="width: 100%"
+                                            pInputText [(ngModel)]="rowData[col.field]"
+                                            (keydown.enter)="addNewLotNo()" />
+                                    </span>
+
+                                    <span *ngSwitchCase="'quantityProduct'">
+                                        <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]" (keydown.enter)="addNewLotNo()"
+                                            [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }" />
+                                    </span>
+
+                                    <span *ngSwitchCase="'quantityOK'">
+                                        <input type="text" style="width: 100%" pInputText
+                                            [(ngModel)]="rowData[col.field]" (keydown.enter)="addNewLotNo()"
+                                            [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }" />
+                                    </span>
+
+                                    <span *ngSwitchCase="'quantityPending'">
+                                        <input type="text" style="width: 100%" pInputText
+                                            [(ngModel)]="rowData[col.field]" (keydown.enter)="addNewLotNo()"
+                                            [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }" />
+                                    </span>
+
+                                    <span *ngSwitchCase="'quantityNG'">
+                                        <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]" (keydown.enter)="addNewLotNo()"
+                                            [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }" />
+                                    </span>
+
+                                    <span *ngSwitchCase="'TT'">
+                                        <button style="width: 100%; color: red;" type="button" pButton
+                                            icon="pi pi-trash" class="ui-button-secondary"
+                                            (click)="deleteLotNo(rowData)" (keyup.enter)="themMoiDialog(ri)"></button>
+                                    </span>
+                                    <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <!-- <button *ngIf="!checkEdit" type="button" pButton (click)="luuDialog()" label="Lưu"></button>
+    <button *ngIf="checkEdit" type="button" pButton (click)="saveDialog()" label="Cập nhật"></button> -->
+        <button type="button" pButton (click)="saveDialog()" label="Lưu"></button>
+        <button type="button" pButton (click)="huyDialog()" label="Hủy" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>

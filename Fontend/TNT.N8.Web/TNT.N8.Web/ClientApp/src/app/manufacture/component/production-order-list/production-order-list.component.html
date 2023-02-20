@@ -1,0 +1,148 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="product-order-list">
+  <div class="row no-margin">
+    <div class="box-header">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box-header-group">
+              <div class="row">
+                <div class="col-md-1 col-xs-2">
+                  <div class="box-header-icon">
+                    <img src="/assets/icons/components/money-2.svg" class="Money-2">
+                  </div>
+                </div>
+                <div class="col-md-11 col-xs-10">
+                  <div class="box-header-title d-contents">Danh sách lệnh sản xuất</div>
+                  <div class="box-header-subtitle">
+                    {{listProductOrder.length}} bản ghi
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box-header-group-btn">
+              <button type="button" class="btn-refresh" (click)="refreshFilter()">
+                <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+              </button>
+              <button type="button" class="btn-filter" (click)="showFilter()">
+                <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                <span class="btn-filter-text">Bộ lọc</span>
+              </button>
+              <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                     (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
+              <button type="button" class="btn-create" *ngIf="actionAdd" (click)="goToCreate()">
+                <span class="btn-create-text">Tạo mới</span>
+              </button>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row no-margin" style="background-color: #f2f4f8;">
+    <div *ngIf="isShowFilterTop" class="col-md-12 no-padding">
+      <div class="box-filter">
+        <div class="row no-margin">
+          <div class="col-md-12">
+            <span>Mã lệnh</span>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="order-code-text" placeholder="Nhập mã lệnh" [(ngModel)]="productionOrderCode">
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-5">
+            <button type="button" class="btn-search" (click)="searchProductionOrder()">
+              <span class="btn-search-text">Tìm kiếm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="listProductOrder.length > 0" class="col-md-{{leftColNumber}} no-padding">
+      <p-table #myTable [columns]="selectedColumns" [value]="listProductOrder" [resizableColumns]="true"
+               columnResizeMode="expand" [paginator]="true" [rows]="10" [responsive]="true" class="table-style-page" [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns"
+                [ngStyle]="{'text-align': 'center', 'display': col.display, 'width': col.width }">
+              <span>
+                {{col.header}}
+              </span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+          <tr>
+            <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+              <span class="ui-column-title">{{col.header}}</span>
+              <span *ngSwitchCase="'stt'">
+                {{rowIndex + 1}}
+              </span>
+              <span *ngSwitchCase="'productionCode'" (click)="gotoProductionOrderDetail(rowData['id'])" class="link">
+                {{rowData[col.field]}}
+              </span>
+              <span *ngSwitchCase="'createdDate'">
+                {{rowData[col.field] | date:'dd/MM/yyyy'}}
+              </span>
+              <span *ngSwitchCase="'setting'">
+                <button class="ui-button-danger" pButton *ngIf="actionDelete"
+                        icon="pi pi-trash" (click)="removeRowData(rowData)"></button>
+              </span>
+              <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div *ngIf="!(listProductOrder.length> 0)" class="col-md-{{leftColNumber}} no-padding no-data">
+      <div class="box-no-data">
+        <img src="/assets/icons/components/box.svg" class="box-icon">
+        <div>
+          <span>Hiện tại không có dữ liệu</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isShowFilterLeft" class="col-md-{{rightColNumber}} no-padding">
+      <div class="box-filter">
+        <div class="row no-margin">
+          <div class="col-md-12">
+            <span>Mã lệnh</span>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="order-code-text" placeholder="Nhập mã lệnh" [(ngModel)]="productionOrderCode">
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-5" style="text-align: right;">
+            <button type="button" class="btn-search" (click)="searchProductionOrder()">
+              <span class="btn-search-text">Tìm kiếm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

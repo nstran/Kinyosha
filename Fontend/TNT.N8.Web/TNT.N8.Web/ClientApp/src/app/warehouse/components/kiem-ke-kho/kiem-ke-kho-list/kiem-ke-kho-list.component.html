@@ -1,0 +1,318 @@
+<!-- <div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div> -->
+<p-toast position="bottom-right"></p-toast>
+
+<div class="kiem-ke-kho-list">
+  <div class="row no-margin">
+    <div class="box-header">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box-header-group">
+              <div class="row">
+                <div class="col-md-11 col-xs-10">
+                  <div class="box-header-title">Danh sách đợt kiểm kê</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+          </div>
+          <div class="col-md-12">
+            <div class="box-header-group-btn">
+              <button type="button" class="btn-refresh">
+                <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+              </button>
+              <button type="button" class="btn-filter">
+                <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                <span class="btn-filter-text">Bộ lọc</span>
+              </button>
+              <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                     (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
+              <div style="clear: both;"></div>
+              <!-- <button type="button" class="btn-save" style="width:90px!important;">
+                <span class="btn-save-text" (click)="save()">Thêm mới</span>
+              </button> -->
+              <button type="button" class="btn-create" (click)="showTaoMoi = true;" *ngIf="actionAdd">
+                <span class="btn-create-text">Tạo mới</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row no-margin" style="background-color: #f2f4f8;">
+    <div *ngIf="isShowFilterTop" class="col-md-12 no-padding">
+      <div class="box-filter">
+        <div class="row no-margin">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <span>Năm</span>
+                  </div>
+                  <div class="col-md-12">
+                    <p-dropdown [options]="listYear" [(ngModel)]="selectedYear" placeholder="Chọn năm"
+                                optionLabel="value" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()"
+                                (onChange)="changeYear($event.value)">
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <span>Kỳ</span>
+                  </div>
+                  <div class="col-md-12">
+                    <p-dropdown [options]="listMonth" [(ngModel)]="selectedMonth" placeholder="Chọn kỳ"
+                                optionLabel="value" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()"
+                                (onChange)="changeMonth($event.value)">
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-10">
+            <span>Đến ngày</span>
+          </div>
+          <div class="col-md-12">
+            <p-calendar [(ngModel)]="selectedDay" dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                        (keydown.enter)="$event.preventDefault()" [inputStyle]="{'width':'100%'}" [baseZIndex]="999"></p-calendar>
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-10">
+            <span>Sản phẩm</span>
+          </div>
+          <div class="col-md-12">
+            <input class="w100" type="text" placeholder="Mã sản phẩm hoặc Tên sản phẩm" [(ngModel)]="productNameCode"
+                   (keydown.enter)="$event.preventDefault()" pInputText />
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-10">
+            <span>Nhóm hàng</span>
+          </div>
+          <div class="col-md-12">
+            <p-dropdown [options]="listProductCategory" [virtualScroll]="true" itemSize="15" [filter]="true"
+                        [showClear]="true" [resetFilterOnHide]="true" [(ngModel)]="selectedProductCategory"
+                        placeholder="Chọn nhóm hàng" optionLabel="productCategoryCodeName" [style]="{'width': '100%'}"
+                        (keydown.enter)="$event.preventDefault()">
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-10">
+            <span>Kho hàng</span>
+          </div>
+          <div class="col-md-12">
+            <p-dropdown [options]="listWareHouse" [virtualScroll]="true" itemSize="15" [filter]="true"
+                        [resetFilterOnHide]="true" [(ngModel)]="selectedWareHouse" placeholder="Chọn kho hàng"
+                        optionLabel="warehouseCodeName" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()">
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="row no-margin">
+          <div class="col-md-12 mt-10" style="text-align: right;">
+            <button type="button" class="btn-search" (click)="findInstock(false)">
+              <span class="btn-search-text">Tìm kiếm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p-treeTable [value]="listData" [columns]="cols" [paginator]="true" [rows]="10"
+                   class="table-style-page" [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header" let-columns>
+          <tr [ttRow]="rowNode">
+            <th *ngFor="let col of columns"
+                [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+              {{col.header}}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns" let-rowIndex="rowIndex">
+          <tr [ttRow]="rowNode">
+            <td *ngFor="let col of columns; let i = index" [ngSwitch]="col.field"
+                [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+              <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+              <!--<span *ngSwitchCase="'STT'">{{rowIndex + 1}}</span>-->
+              <span *ngSwitchCase="'tenDotKiemKe'" class="link"
+                    (click)="goToDetail(rowData)">{{rowData[col.field]}}</span>
+
+              <span *ngSwitchCase="'tenTrangThai'">{{rowData[col.field]}}</span>
+              <span *ngSwitchCase="'thaoTac'">
+                <button *ngIf="rowData.tentrangthai == 'Đang thực hiện' && actionDelete" style="width: 100%; color: red;" type="button" pButton
+                        icon="pi pi-trash" class="ui-button-secondary" (click)="xoaData(rowData)"></button>
+              </span>
+              <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+
+      <div *ngIf="isShowFilterLeft" class="col-md-{{rightColNumber}} no-padding">
+        <div class="box-filter">
+          <div class="row no-margin">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span>Năm</span>
+                    </div>
+                    <div class="col-md-12">
+                      <p-dropdown [options]="listYear" [(ngModel)]="selectedYear" placeholder="Chọn năm"
+                                  optionLabel="value" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()"
+                                  (onChange)="changeYear($event.value)">
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span>Kỳ</span>
+                    </div>
+                    <div class="col-md-12">
+                      <p-dropdown [options]="listMonth" [(ngModel)]="selectedMonth" placeholder="Chọn kỳ"
+                                  optionLabel="value" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()"
+                                  (onChange)="changeMonth($event.value)">
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="col-md-12 mt-10">
+              <span>Đến ngày</span>
+            </div>
+            <div class="col-md-12">
+              <p-calendar [(ngModel)]="selectedDay" dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                          (keydown.enter)="$event.preventDefault()" [inputStyle]="{'width':'100%'}" [baseZIndex]="999"></p-calendar>
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="col-md-12 mt-10">
+              <span>Sản phẩm</span>
+            </div>
+            <div class="col-md-12">
+              <input class="w100" type="text" placeholder="Mã sản phẩm hoặc Tên sản phẩm" [(ngModel)]="productNameCode"
+                     (keydown.enter)="$event.preventDefault()" pInputText />
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="col-md-12 mt-10">
+              <span>Nhóm hàng</span>
+            </div>
+            <div class="col-md-12">
+              <p-dropdown [options]="listProductCategory" [virtualScroll]="true" itemSize="15" [filter]="true"
+                          [showClear]="true" [resetFilterOnHide]="true" [(ngModel)]="selectedProductCategory"
+                          placeholder="Chọn nhóm hàng" optionLabel="productCategoryCodeName" [style]="{'width': '100%'}"
+                          (keydown.enter)="$event.preventDefault()">
+              </p-dropdown>
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="col-md-12 mt-10">
+              <span>Kho hàng</span>
+            </div>
+            <div class="col-md-12">
+              <p-dropdown [options]="listWareHouse" [virtualScroll]="true" itemSize="15" [filter]="true"
+                          [resetFilterOnHide]="true" [(ngModel)]="selectedWareHouse" placeholder="Chọn kho hàng"
+                          optionLabel="warehouseCodeName" [style]="{'width': '100%'}" (keydown.enter)="$event.preventDefault()">
+              </p-dropdown>
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="col-md-12 mt-10" style="text-align: right;">
+              <button type="button" class="btn-search" (click)="findInstock(false)">
+                <span class="btn-search-text">Tìm kiếm</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-dialog header="Tạo đợt kiểm kê" [(visible)]="showTaoMoi" [modal]="true" [responsive]="true"
+              [contentStyle]="{'overflow-y': 'unset','overflow-x': 'hidden'}" class='showImportForm'
+              [style]="{width: '550px', minWidth: '250px'}" [minY]="120" [baseZIndex]="10000" [closable]="true"
+              (onHide)="showTaoMoi = false;">
+      <form [formGroup]="dotKiemKeFormGroup">
+        <div class="row buffer-bottom" style="margin-bottom:7px; height: 150px;">
+          <div class="col-md-6 buffer-bottom-label">
+            <div class="col-md-12 buffer-bottom-label">
+              <span>Chọn đợt kiểm kê</span><span class="required">*</span>
+            </div>
+            <div class="col-md-12">
+              <p-calendar view="month" formControlName="ngayBatDauControl" dateFormat="mm/yy" showButtonBar="true" class="w-100"
+                          [yearNavigator]="true" yearRange="1990:{{todayDate.getFullYear()}}" [style]="{'width':'100%'}"
+                          [monthNavigator]="true" [minDate]='todayDate'
+                          [styleClass]="(ngayBatDauControl.invalid && (ngayBatDauControl.dirty || ngayBatDauControl.touched)) ? 'error-border' : ''"
+                          (keydown.enter)="$event.preventDefault()" [inputStyle]="{'width':'100%'}" [baseZIndex]="9999999"
+                          appendTo="body">
+              </p-calendar>
+            </div>
+            <div class="col-md-12" [hidden]="ngayBatDauControl.valid || ngayBatDauControl.untouched">
+              <span *ngIf="ngayBatDauControl.hasError('required') || ngayBatDauControl.hasError('blankString') "
+                    class="error-message-span"> Không được để trống</span>
+            </div>
+          </div>
+
+          <div class="col-md-6 buffer-bottom-label">
+            <div class="col-md-12 buffer-bottom-label">
+              <span>Chọn kho kiểm kê</span><span class="required">*</span>
+            </div>
+            <div class="col-md-12">
+              <p-dropdown [options]="listWarehouse" (onChange)="changeKho($event)" formControlName="khoKiemKeControl" class="w-100" [style]="{'width':'100%'}"
+                          [styleClass]="(khoKiemKeControl.invalid  && (khoKiemKeControl.dirty ||  khoKiemKeControl.touched)) ? 'error-border': ''"
+                          optionLabel="warehouseName" [autoDisplayFirst]="false"></p-dropdown>
+            </div>
+            <div class="col-md-12" [hidden]="khoKiemKeControl.valid || khoKiemKeControl.untouched">
+              <span *ngIf="khoKiemKeControl.hasError('required') || khoKiemKeControl.hasError('blankString') "
+                    class="error-message-span"> Không được để trống</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row buffer-bottom">
+
+        </div>
+
+      </form>
+      <p-footer>
+        <button type="button" class="btn-create" style="width: 100px; margin-right:15px" (click)="TaoDotKiemKe()" *ngIf="actionAdd">
+          <span class="btn-create-text">Lưu</span>
+        </button>
+      </p-footer>
+    </p-dialog>
+  </div>

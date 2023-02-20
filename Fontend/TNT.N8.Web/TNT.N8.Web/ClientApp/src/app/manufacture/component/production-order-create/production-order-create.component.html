@@ -1,0 +1,151 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="production-order-create">
+  <div class="row m-0 bg-white d-flex item-center p-10 mb-15 border-dde1e6">
+    <div class="col-md-6">
+      <div class="row" style="display: flex; align-items: center;">
+        <div class="col-md-1 col-xs-2">
+          <div class="box-header-icon">
+            <img src="/assets/icons/components/ic_library_add_24px.svg" class="ic_library_add_24px">
+          </div>
+        </div>
+        <div class="col-md-11 col-xs-10">
+          <div class="box-header-title">Lệnh sản xuất</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row h-100">
+        <div class="d-inline-block float-right h-100">
+          <button class="btn-save bg-e4e4e4" type="button" (click)="goToOrderList()">Thoát</button>
+          <button class="btn-save text-white" type="button" *ngIf="actionAdd" (click)="saveProductionOrder()">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row m-0">
+    <div class="row m-0 bg-white border-dde1e6 p-10 mb-15">
+      <div class="row m-0 px-15 mb-10">
+        <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+          <p-accordionTab header="Thông tin chung" [selected]="true">
+            <div class="row">
+              <div class="col-md-3" style="margin-left: 30px;">
+                <label>Mã lệnh: <b>{{ productionProcessCode  }}</b></label>
+              </div>
+              <div class="col-md-3">
+                <label>Người tạo: <b>{{ createName }}</b></label>
+              </div>
+              <div class="col-md-3">
+                <label>Ngày tạo: <b>{{ dateCreate | date: 'dd/MM/yyyy' }}</b></label>
+              </div>
+            </div>
+            <div class="row mt-10">
+              <p-tabView>
+                <p-tabPanel header="Thành phẩm">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-1">
+                          <label>Khách hàng:</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input type="text" pInputText [(ngModel)]="customer" style="width: 100%;" />
+                        </div>
+                      </div>
+                      <div class="row mt-10">
+                        <div class="col-md-1">
+                          <label>Thành phẩm sản xuất<span class="require">*</span>:</label>
+                        </div>
+                        <div class="col-md-2">
+                          <p-dropdown #dropdownVal [options]="productList" optionLabel="productName" [(ngModel)]="selectProduct" placeholder="Chọn thành phẩm"
+                                      [styleClass]="(isValidate && (selectProduct == null || selectProduct == undefined)) ? 'error-border': ''"
+                                      [filter]="true" [style]="{'width': '100%'}" (onChange)="getConfigByProduct()">
+                          </p-dropdown>
+                        </div>
+                        <div class="col-md-1">
+                          <label>Quy trình<span class="require">*</span>:</label>
+                        </div>
+                        <div class="col-md-2">
+                          <p-dropdown #dropdownVal [options]="configProductList" [(ngModel)]="selectProcedure" placeholder="Chọn quy trình"
+                                      [styleClass]="(isValidate && (selectProcedure == null || selectProcedure == undefined)) ? 'error-border': ''"
+                                      optionLabel="code" [filter]="true" [style]="{'width': '100%'}">
+                          </p-dropdown>
+                        </div>
+                        <div class="col-md-1">
+                          <label>Số lượng sản xuất<span class="require">*</span>:</label>
+                        </div>
+                        <div class="col-md-2">
+                          <p-inputNumber [(ngModel)]="numberManufacturing" class="number-fullwidth" [style]="{'width': '100%'}" mode="decimal"
+                                         [ngClass]="(isValidate && (numberManufacturing == null || numberManufacturing == undefined || numberManufacturing <= 0)) ? 'error-border-input' : ''"></p-inputNumber>
+                        </div>
+                        <div class="col-md-3">
+                          <button class="btn-save bg-e4e4e4" type="button" *ngIf="actionAdd" (click)="goCreateLotNo()">Tạo Lot.No</button>
+                        </div>
+                      </div>
+                      <div class="row mt-10">
+                        <div class="col-md-12">
+                          <p-table #myTable [columns]="colsFinishedProduct" [value]="finishedProductList" [resizableColumns]="true"
+                                   columnResizeMode="expand" [paginator]="true" [rows]="10"  class="table-style-page"
+                                   [rowsPerPageOptions]="[10,20,30]" [responsive]="true">
+                            <ng-template pTemplate="header" let-columns>
+                              <tr>
+                                <th *ngFor="let col of columns"
+                                    [ngStyle]="{'text-align': 'center', 'display': col.display, 'width': col.width }">
+                                  <span>
+                                    {{col.header}}
+                                  </span>
+                                </th>
+                              </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+                              <tr>
+                                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                                    [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                  <span class="ui-column-title">{{col.header}}</span>
+                                  <span *ngSwitchCase="'stt'">
+                                    {{rowIndex + 1}}
+                                  </span>
+                                  <span *ngSwitchCase="'startDate'">
+                                    {{rowData[col.field] | date:'dd/MM/yyyy'}}
+                                  </span>
+                                  <span *ngSwitchCase="'setting'">
+                                    <button type="button" class="circle-btn-delete" *ngIf="actionDelete" style="font-size: 20px;" (click)="remoteDetail(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                                  </span>
+                                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                </td>
+                              </tr>
+                            </ng-template>
+                          </p-table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </p-tabPanel>
+              </p-tabView>
+            </div>
+            <div class="row mt-10">
+              <div class="col-md-12">
+                <label>Diễn giải: </label>
+              </div>
+              <div class="col-md-12">
+                <textarea rows="3" [(ngModel)]="description" pInputTextarea style="width: 100%;"></textarea>
+              </div>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
+
+    </div>
+  </div>
+
+</div>

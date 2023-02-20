@@ -1,0 +1,796 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<div class="phieu-nhap-kho">
+
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row pnk-content" id="parent">
+        <div class="col-md-12 no-padding">
+          <div class="row no-margin button-group" [ngClass]="{'fixed': fixed}" [ngStyle]="{'width':withFiexd}">
+            <div class="col-md-12">
+              <div class="center">
+                <!-- <img src="/assets/icons/components/create_lead.svg" class="header-icon"> -->
+                <span class="header-text">CHI TIẾT PHIẾU XUẤT KHO</span>
+              </div>
+
+              <div style="float: right;">
+                <span *ngIf="!isInvalidForm" style="margin-right: 5px;">
+                  <img src="/assets/icons/components/ios-warning.svg" class="ios-warning">
+                </span>
+                <div class="box-waring" *ngIf="isInvalidForm" #toggleButton (click)="toggleNotifiError()">
+                  <img src="/assets/icons/components/ios-warning-active.svg" class="ios-warning-active">
+                </div>
+
+                <button class="cancel" type="button" (click)="goBack()">
+                  <span class="text-cancel">Thoát</span>
+                </button>
+
+                <button #saveAndCreate *ngIf="trangThai == 0 && actionConfirm" class="save-and-new" type="button"
+                  [disabled]="awaitResult" (click)="luuVaGui()">
+                  <span class="text-save-and-new">Xác nhận xuất kho</span>
+                </button>
+
+                <!-- <button #saveAndCreate (click)="pheDuyetPhieuXuat()" *ngIf="trangThai == 1" class="save-and-new"
+                  type="button" [disabled]="awaitResult" style="width: 210px !important">
+                  <span class="text-save-and-new">Phê duyệt và tạo phiếu xuất</span>
+                </button> -->
+
+                <!-- <button (click)="huyPhieuXuat()" #saveAndCreate *ngIf="trangThai == 1" class="save-and-new"
+                  type="button" [disabled]="awaitResult">
+                  <span class="text-save-and-new">Từ chối</span>
+                </button> -->
+
+                <button #saveAndCreate [disabled]="true" *ngIf="trangThai == 2" class="save-and-new" type="button"
+                  [disabled]="awaitResult">
+                  <span class="text-save-and-new">Đã xuất kho</span>
+                </button>
+
+                <button #save class="save" *ngIf="trangThai == 0 && actionAdd" [disabled]="awaitResult" type="button"
+                  (click)="taoPhieuNhapKho()">
+                  <span class="text-save">Lưu</span>
+                </button>
+
+              </div>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row pnk-content">
+        <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Thông tin chung" [selected]="true">
+              <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Mã đề xuất: <span style="font-weight: bold; margin-left: 25px">{{maHeThong}}</span></label>
+                    <label style="margin-left: 25px">Trạng thái: <span
+                        style="font-weight: bold;">{{trangThaiText}}</span></label>
+                    <label style="margin-left: 25px">Người đề nghị: <span
+                        style="font-weight: bold;">{{userName}}</span></label>
+                    <label style="margin-left: 25px">Bộ phận: <span
+                        style="font-weight: bold;">{{department}}</span></label>
+                    <label style="margin-left: 25px">Ngày đề nghị: <span
+                        style="font-weight: bold;">{{ngayHienTai}}</span></label>
+                  </div>
+
+                  <div class="col-md-12" style="margin-top: 15px">
+                    <div class="row">
+                      <span class="col-md-4">
+                        <label>Loại phiếu:</label>
+                        <p-radioButton *ngIf="typePhieu == 7" styleClass="p-radioButtonCustom" name="group2" value=7
+                          [(ngModel)]="typePhieu" label="Xuất bán hàng"></p-radioButton>
+                        <p-radioButton *ngIf="typePhieu == 8" styleClass="p-radioButtonCustom" name="group2" value=8
+                          [(ngModel)]="typePhieu" label="Xuất NG"></p-radioButton>
+                      </span>
+
+                      <span class="col-md-8">
+
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-12" style="margin-top: 20px">
+                    <div class="row">
+                      <form [formGroup]="thongTinChungForm">
+
+                        <div class="col-md-12">
+                          <div class="row">
+                            <span class="col-md-4">
+                              <span class="row">
+                                <span class="col-md-2 no-padding">
+                                  <label>Ngày xuất:</label>
+                                </span>
+                                <span class="col-md-10">
+                                  <p-calendar formControlName="ngayXuatControl" dateFormat="dd/mm/yy"
+                                    [styleClass]="(ngayXuatControl.invalid && (ngayXuatControl.dirty || ngayXuatControl.touched)) ? 'error-border' : ''"></p-calendar>
+                                  <p [hidden]="ngayXuatControl.valid || ngayXuatControl.untouched">
+                                    <span
+                                      *ngIf="ngayXuatControl.hasError('required') || ngayXuatControl.hasError('blankString') "
+                                      class="error-message-span">
+                                      Không được để trống
+                                    </span>
+                                  </p>
+                                </span>
+                              </span>
+                            </span>
+                            <span class="col-md-4">
+                              <span class="row">
+                                <span class="col-md-2">
+                                  <label>Kho xuất:</label>
+                                </span>
+                                <span class="col-md-10">
+                                  <p-dropdown formControlName="khoXuatControl" [options]="listProduct"
+                                    optionLabel="productName" (onChange)="checkVatTu($event)"
+                                    placeholder="Lựa chọn vật tư"
+                                    [styleClass]="(khoXuatControl.invalid && (khoXuatControl.dirty || khoXuatControl.touched)) ? 'error-border' : ''"></p-dropdown>
+                                  <p [hidden]="khoXuatControl.valid || khoXuatControl.untouched">
+                                    <span
+                                      *ngIf="khoXuatControl.hasError('required') || khoXuatControl.hasError('blankString') "
+                                      class="error-message-span">
+                                      Không được để trống
+                                    </span>
+                                  </p>
+                                </span>
+                              </span>
+                            </span>
+
+                            <span class="col-md-4">
+                              <span class="row">
+                                <span class="col-md-2 no-padding">
+                                  <label>Số đơn hàng:</label>
+                                </span>
+                                <span class="col-md-10">
+                                  <input type="text" pInputText formControlName="soDonControl"
+                                    [ngClass]="(soDonControl.invalid && (soDonControl.dirty || soDonControl.touched)) ? 'error-border' : ''" />
+                                  <p [hidden]="soDonControl.valid || soDonControl.untouched">
+                                    <span
+                                      *ngIf="soDonControl.hasError('required') || soDonControl.hasError('blankString') "
+                                      class="error-message-span">
+                                      Không được để trống
+                                    </span>
+                                  </p>
+                                </span>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+
+      <div class="row area-2">
+        <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Danh sách xuất" [selected]="true">
+              <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="box-header-group-btn">
+                      <button type="button" class="btn-refresh">
+                        <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+                      </button>
+                      <button type="button" class="btn-filter">
+                        <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                        <span class="btn-filter-text">Bộ lọc</span>
+                      </button>
+                      <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                        (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
+                      <div style="clear: both;"></div>
+                      <button type="button" class="btn-save" style="width:90px!important;" *ngIf="actionAdd">
+                        <span class="btn-save-text" (click)="themDeNghi(false)">Thêm mới</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mt-10">
+                  <div class="col-md-12">
+                    <p-table #myTable [columns]="colsDanhSach" [value]="listDataDeNghi" [resizableColumns]="true"
+                      columnResizeMode="expand" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+                      [responsive]="true" class="table-border">
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                            [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                            {{col.header}}
+                            <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
+                        let-editing="editing">
+                        <tr [pEditableRow]="rowData">
+                          <td *ngFor="let col of columns" [ngSwitch]="col.field"
+                            [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+                            <!-- <span class="ui-column-title">{{col.header}}</span> -->
+
+                            <span *ngSwitchCase="'stt'" style="display: inline-block; padding: 2px 2px;">
+                              {{rowIndex + 1}}
+                            </span>
+
+                            <span *ngSwitchCase="'tenVatTu'" (click)="onViewDetail(rowData)" class="link"
+                              style="display: inline-block; padding: 2px 2px;">
+                              {{ rowData[col.field] }}
+                            </span>
+
+                            <span *ngSwitchCase="'donViTinh'">
+                              {{ rowData[col.field] }}
+                            </span>
+
+                            <span *ngSwitchCase="'soLuongDeNghi'">
+                              {{ rowData[col.field] | number }}
+                            </span>
+
+                            <!-- <span *ngSwitchCase="'ghiChu'">
+                              <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                  <input type="text" style="width: 100%; height: 40px;"
+                                    [(ngModel)]="rowData[col.field]">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                  {{ rowData[col.field] }}
+                                </ng-template>
+                              </p-cellEditor>
+                            </span> -->
+
+                            <span *ngSwitchCase="'thaoTac'">
+                              <!-- <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"
+                                class="ui-button-info" (click)="onRowEditInit(rowData)"></button> -->
+                              <button pButton type="button" pInitEditableRow icon="pi pi-trash" class="ui-button-danger"
+                                (click)="xoaDataTable(rowData, index)" style="margin-left: 5px;" *ngIf="actionDelete"></button>
+                              <!-- <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check"
+                                class="ui-button-success" style="margin-right: .5em"
+                                (click)="onRowEditSave(rowData,rowIndex)"></button>
+                              <button *ngIf="editing" pButton type="button" pCancelEditableRow icon="pi pi-times"
+                                class="ui-button-danger" (click)="onRowEditCancel(rowData, rowIndex)"></button> -->
+                            </span>
+
+                            <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<p-dialog *ngIf="typePhieu == 8" header="Thêm thành phẩm xuất kho" [(visible)]="deNghiXuatKho" [modal]="true"
+  [style]="{width: '70vw'}" [baseZIndex]="900" [draggable]="false" [resizable]="false" [closable]="false">
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <span>Chọn thành phẩm*:</span>
+        </div>
+        <div class="col-md-6">
+          <span>Nguyên liệu tái sử dụng*:</span>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <form [formGroup]="vatTu">
+            <span>
+              <p-dropdown formControlName="vatTuControl" [options]="listProduct" optionLabel="productName"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [styleClass]="(vatTuControl.invalid && (vatTuControl.dirty || vatTuControl.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControl.valid || vatTuControl.untouched">
+              <span *ngIf="vatTuControl.hasError('required') || vatTuControl.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+
+        <div class="col-md-6">
+          <form [formGroup]="vatTu">
+            <span>
+              <p-dropdown formControlName="vatTuControl" [options]="listProduct" optionLabel="productName"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [styleClass]="(vatTuControl.invalid && (vatTuControl.dirty || vatTuControl.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControl.valid || vatTuControl.untouched">
+              <span *ngIf="vatTuControl.hasError('required') || vatTuControl.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+        <!-- <div class="col-md-3">
+          <span>
+            <p style="font-weight: bold;">{{soLuongTon}}</p>
+          </span>
+        </div> -->
+      </div>
+
+      <div class="row">
+        <div class="col-md-10">
+          <span>
+            <p>Danh sách đề nghị xuất kho theo Lot.No:</p>
+          </span>
+        </div>
+        <div class="col-md-2">
+          <span style="float: right; margin-bottom: 8px;">
+            <button type="button" pButton (click)="themMoiDialog()" label="Thêm mới" *ngIf="actionAdd"></button>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p-table #dl [columns]="colsDeNghiXuatNG" [value]="listDataDialog" [resizableColumns]="true"
+            columnResizeMode="expand" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+            [responsive]="true" class="table-border">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                  {{col.header}}
+                  <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" pEditableColumn
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+                  <span *ngSwitchCase="'lotNo'">
+                    <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName" [filter]="true" appendTo="body"
+                      placeholder="Lựa chọn lot no" [style]="{'width': '100%', 'float': 'left'}" appendTo="body"
+                      [(ngModel)]="rowData[col.field]" [baseZIndex]="999" (onChange)="changeLotNo($event,rowIndex)">
+                    </p-dropdown>
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                  </span>
+                  <span *ngSwitchCase="'tonKho'">
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                    <span>{{rowData[col.field] | number}}</span>
+                  </span>
+                  <span *ngSwitchCase="'soLuongDeNghi'">
+                    <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]"
+                      (change)="tinhTong()" class="number-input"
+                      [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                  </span>
+
+                  <!-- <span *ngSwitchCase="'thaoTac'">
+                    <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash"
+                      class="ui-button-secondary" (click)="xoaDeXuat(rowData, rowIndex)"></button>
+                  </span> -->
+                  <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- <div class="col-md-6">
+          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+        </div> -->
+        <div class="col-md-6">
+          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton label="Lưu" (click)="luuDialog()"></button>
+    <button type="button" pButton label="Hủy" (click)="huyDialog()" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog *ngIf="typePhieu == 8" header="Cập nhật hóa vật tự đề ghị xuất kho" [(visible)]="deNghiXuatKhoEdit"
+  [modal]="true" [style]="{width: '70vw'}" [baseZIndex]="900" [draggable]="false" [resizable]="false"
+  [closable]="false">
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <span>Chọn hàng hóa, vật tư*:</span>
+        </div>
+        <div class="col-md-6">
+          <span>Nguyên liệu tái sử dụng*:</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <form [formGroup]="vatTuEdit">
+            <span>
+              <p-dropdown formControlName="vatTuControlEdit" [options]="listProductCheck" optionLabel="productCode"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [styleClass]="(vatTuControlEdit.invalid && (vatTuControlEdit.dirty || vatTuControlEdit.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControlEdit.valid || vatTuControlEdit.untouched">
+              <span *ngIf="vatTuControlEdit.hasError('required') || vatTuControlEdit.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+
+        <div class="col-md-6">
+          <form [formGroup]="vatTu">
+            <span>
+              <p-dropdown formControlName="vatTuControl" [options]="listProduct" optionLabel="productName"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [ngClass]="(vatTuControl.invalid && (vatTuControl.dirty || vatTuControl.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControl.valid || vatTuControl.untouched">
+              <span *ngIf="vatTuControl.hasError('required') || vatTuControl.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-10">
+          <span>
+            <p>Danh sách đề nghị xuất kho:</p>
+          </span>
+        </div>
+        <div class="col-md-2">
+          <!-- <span style="float: right; margin-bottom: 8px;">
+            <button type="button" pButton (click)="themMoiDialogEdit()" label="Thêm mới"></button>
+          </span> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p-table #dl [columns]="colsDeNghiXuatNG" [value]="listDataDialog" [resizableColumns]="true"
+            columnResizeMode="expand" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+            [responsive]="true" class="table-border">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                  {{col.header}}
+                  <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" pEditableColumn
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+                  <span *ngSwitchCase="'lotNo'">
+                    <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName" [filter]="true"
+                      [(ngModel)]="rowData[col.field]" placeholder="Lựa chọn lot no"
+                      [style]="{'width': '100%', 'float': 'left'}" appendTo="body" [baseZIndex]="999"
+                      (onChange)="changeLotNo($event,rowIndex)">
+                    </p-dropdown>
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                  </span>
+                  <span *ngSwitchCase="'tonKho'">
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                    <span>{{rowData[col.field] | number}}</span>
+                  </span>
+                  <span *ngSwitchCase="'soLuongDeNghi'">
+                    <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]"
+                      (change)="tinhTong()" class="number-input"
+                      [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                  </span>
+
+                  <!-- <span *ngSwitchCase="'thaoTac'">
+                    <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash"
+                      class="ui-button-secondary" (click)="xoaDeXuat(rowData)"></button>
+                  </span> -->
+                  <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+        </div>
+        <div class="col-md-6">
+          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton label="Lưu" (click)="luuDialogEdit()"></button>
+    <button type="button" pButton label="Hủy" (click)="huyDialogEdit()" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog *ngIf="typePhieu == 7" header="Thêm thành phẩm xuất kho" [(visible)]="deNghiXuatKho" [modal]="true"
+  [style]="{width: '70vw'}" [baseZIndex]="900" [draggable]="false" [resizable]="false" [closable]="false">
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <span>Chọn thành phẩm*:</span>
+        </div>
+        <div class="col-md-3">
+          <span>Đơn vị tính:</span>
+        </div>
+        <div class="col-md-3">
+          <span>Tồn kho:</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <form [formGroup]="vatTu">
+            <span>
+              <p-dropdown formControlName="vatTuControl" [options]="listProduct" optionLabel="productName"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [styleClass]="(vatTuControl.invalid && (vatTuControl.dirty || vatTuControl.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControl.valid || vatTuControl.untouched">
+              <span *ngIf="vatTuControl.hasError('required') || vatTuControl.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+
+        <div class="col-md-6">
+          <div class="col-md-3">
+            <span>
+              <p style="font-weight: bold;">{{donViTinh}}</p>
+            </span>
+          </div>
+          <div class="col-md-3">
+            <span>
+              <p style="font-weight: bold;">{{soLuongTon}}</p>
+            </span>
+          </div>
+        </div>
+        <!-- <div class="col-md-3">
+          <span>
+            <p style="font-weight: bold;">{{soLuongTon}}</p>
+          </span>
+        </div> -->
+      </div>
+
+      <div class="row">
+        <div class="col-md-10">
+          <span>
+            <p>Danh sách đề nghị xuất kho theo Lot.No:</p>
+          </span>
+        </div>
+        <div class="col-md-2">
+          <span style="float: right; margin-bottom: 8px;">
+            <button type="button" pButton (click)="themMoiDialog()" label="Thêm mới" *ngIf="actionAdd"></button>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p-table #dl [columns]="colsDeNghiXuat" [value]="listDataDialog" [resizableColumns]="true"
+            columnResizeMode="expand" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+            [responsive]="true" class="table-border">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                  {{col.header}}
+                  <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" pEditableColumn
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+                  <span *ngSwitchCase="'lotNo'">
+                    <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName" [filter]="true" appendTo="body"
+                      placeholder="Lựa chọn lot no" [style]="{'width': '100%', 'float': 'left'}" appendTo="body"
+                      [(ngModel)]="rowData[col.field]" [baseZIndex]="999" (onChange)="changeLotNo($event,rowIndex)">
+                    </p-dropdown>
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                  </span>
+                  <span *ngSwitchCase="'tonKho'">
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                    <span>{{rowData[col.field] | number}}</span>
+                  </span>
+                  <span *ngSwitchCase="'soLuongDeNghi'">
+                    <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]"
+                      (change)="tinhTong()" class="number-input"
+                      [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                  </span>
+
+                  <span *ngSwitchCase="'thaoTac'">
+                    <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash"
+                      class="ui-button-secondary" (click)="xoaDeXuat(rowData, rowIndex)" *ngIf="actionDelete"></button>
+                  </span>
+                  <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- <div class="col-md-6">
+          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+        </div> -->
+        <div class="col-md-6">
+          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton label="Lưu" (click)="luuDialog()"></button>
+    <button type="button" pButton label="Hủy" (click)="huyDialog()" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog *ngIf="typePhieu == 7" header="Cập nhật hóa vật tự đề ghị xuất kho" [(visible)]="deNghiXuatKhoEdit"
+  [modal]="true" [style]="{width: '70vw'}" [baseZIndex]="900" [draggable]="false" [resizable]="false"
+  [closable]="false">
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <span>Chọn hàng hóa, vật tư*:</span>
+        </div>
+        <div class="col-md-3">
+          <span>Đơn vị tính:</span>
+        </div>
+        <div class="col-md-3">
+          <span>Số lượng tồn:</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <form [formGroup]="vatTuEdit">
+            <span>
+              <p-dropdown formControlName="vatTuControlEdit" [options]="listProductCheck" optionLabel="productCode"
+                (onChange)="checkVatTu($event)" placeholder="Lựa chọn vật tư"
+                [styleClass]="(vatTuControlEdit.invalid && (vatTuControlEdit.dirty || vatTuControlEdit.touched)) ? 'error-border' : ''"></p-dropdown>
+            </span>
+            <p [hidden]="vatTuControlEdit.valid || vatTuControlEdit.untouched">
+              <span *ngIf="vatTuControlEdit.hasError('required') || vatTuControlEdit.hasError('blankString') "
+                class="error-message-span">
+                Không được để trống
+              </span>
+            </p>
+          </form>
+        </div>
+
+        <div class="col-md-3">
+          <span>
+            <p style="font-weight: bold;">{{donViTinh}}</p>
+          </span>
+        </div>
+        <div class="col-md-3">
+          <span>
+            <p style="font-weight: bold;">{{soLuongTon}}</p>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-10">
+          <span>
+            <p>Danh sách đề nghị xuất kho:</p>
+          </span>
+        </div>
+        <div class="col-md-2">
+          <!-- <span style="float: right; margin-bottom: 8px;">
+            <button type="button" pButton (click)="themMoiDialogEdit()" label="Thêm mới"></button>
+          </span> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p-table #dl [columns]="colsDeNghiXuat" [value]="listDataDialog" [resizableColumns]="true"
+            columnResizeMode="expand" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+            [responsive]="true" class="table-border">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                  {{col.header}}
+                  <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" pEditableColumn
+                  [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+                  <span *ngSwitchCase="'lotNo'">
+                    <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName" [filter]="true"
+                      [(ngModel)]="rowData[col.field]" placeholder="Lựa chọn lot no"
+                      [style]="{'width': '100%', 'float': 'left'}" appendTo="body" [baseZIndex]="999"
+                      (onChange)="changeLotNo($event,rowIndex)">
+                    </p-dropdown>
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                  </span>
+                  <span *ngSwitchCase="'tonKho'">
+                    <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                    <span>{{rowData[col.field] | number}}</span>
+                  </span>
+                  <span *ngSwitchCase="'soLuongDeNghi'">
+                    <input type="text" style="width: 100%" pInputText [(ngModel)]="rowData[col.field]"
+                      (change)="tinhTong()" class="number-input"
+                      [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                  </span>
+
+                  <!-- <span *ngSwitchCase="'thaoTac'">
+                    <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash"
+                      class="ui-button-secondary" (click)="xoaDeXuat(rowData)"></button>
+                  </span> -->
+                  <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+        </div>
+        <div class="col-md-6">
+          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton label="Lưu" (click)="luuDialogEdit()"></button>
+    <button type="button" pButton label="Hủy" (click)="huyDialogEdit()" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

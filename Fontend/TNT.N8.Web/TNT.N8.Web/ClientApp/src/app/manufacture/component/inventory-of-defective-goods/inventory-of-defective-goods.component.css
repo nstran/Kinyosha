@@ -1,0 +1,614 @@
+.inventory-of-defective-goods {
+  font-family: 'Inter UI';
+}
+
+  .inventory-of-defective-goods .bg-white {
+    background-color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .btn-save {
+    width: 156px;
+    height: 36px;
+    border-radius: 4px;
+    border: solid 1px #bebebe;
+    background-color: #6d98e7;
+    margin-left: 10px;
+  }
+
+  .inventory-of-defective-goods .m-0 {
+    margin: 0px;
+  }
+
+  .inventory-of-defective-goods .add-new {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+    margin-left: 5px;
+  }
+
+  .inventory-of-defective-goods .add-new-text {
+    /* width: 25px; */
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .cancel {
+    width: 64px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+    .inventory-of-defective-goods .cancel .text-cancel {
+      width: 24px;
+      height: 16px;
+      font-family: 'Inter UI';
+      font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.46;
+      letter-spacing: normal;
+      text-align: left;
+      color: #121619;
+    }
+
+  .inventory-of-defective-goods .link {
+    font-family: 'Inter UI';
+    color: #007ad9;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .inventory-of-defective-goods .button-style {
+    background-color: white;
+    color: #423c36;
+    margin: 0px 5px;
+    border-color: #c8c8c8;
+    width: 105px;
+  }
+
+  .inventory-of-defective-goods .box-header-title {
+    font-weight: bold;
+    font-family: 'Inter UI';
+    font-size: 20px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+  .inventory-of-defective-goods .border-div {
+    border: 1px solid #c1c7cd;
+    line-height: 5;
+  }
+  .inventory-of-defective-goods .d-inline-block {
+    display: inline-block;
+  }
+
+  .inventory-of-defective-goods .mt-10 {
+    margin-top: 10px;
+  }
+
+  .inventory-of-defective-goods .require {
+    color: #F94E4E;
+  }
+
+  .inventory-of-defective-goods .bg-e4e4e4 {
+    background-color: #e4e4e4;
+  }
+
+  .inventory-of-defective-goods .text-white {
+    color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .text-title {
+    font-family: 'Inter UI';
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+  .inventory-of-defective-goods .circle-btn-delete {
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: hidden;
+    font-size: 15px;
+  }
+
+  .inventory-of-defective-goods .icon-delete {
+    margin-left: -3.5px;
+    margin-top: 1px;
+    color: red;
+  }
+
+  .inventory-of-defective-goods .p-10 {
+    padding: 10px;
+  }
+
+  .inventory-of-defective-goods .mb-15 {
+    margin-bottom: 15px;
+  }
+
+  .inventory-of-defective-goods .border-dde1e6 {
+    border: 1px solid #dde1e6;
+  }
+
+  .inventory-of-defective-goods .box-header-group-btn {
+    text-align: right;
+    padding-top: 5px;
+  }
+
+  .inventory-of-defective-goods .btn-refresh {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .btn-filter {
+    width: 104px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #007aff;
+    background-color: #007aff;
+    margin-left: 5px;
+  }
+
+  .inventory-of-defective-goods .ios-funnel {
+    width: 12.3px;
+    height: 11.3px;
+    object-fit: contain;
+    margin-right: 5px;
+  }
+
+  .inventory-of-defective-goods .btn-filter-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .iput-text {
+    width: 248px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding-left: 5px;
+    margin-left: 5px;
+  }
+
+  .inventory-of-defective-goods .btn-create {
+    margin-left: 4px;
+    width: 190px;
+    height: 31px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px 0 rgb(18 22 25 / 8%);
+    background-color: #e4e4e4;
+  }
+
+  .inventory-of-defective-goods .box-filter {
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding: 10px 0px;
+  }
+
+  .inventory-of-defective-goods .btn-search {
+    width: 72px;
+    height: 32px;
+    border: solid 1px #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+  }
+
+    .inventory-of-defective-goods .btn-search:focus {
+      border-color: #007ad9;
+      outline: 0 none;
+    }
+
+  .inventory-of-defective-goods .btn-search-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .inventory-of-defective-goods .btn-create-text {
+    margin-left: 4px;
+    width: 50px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-align: center;
+    color: #333333;
+  }
+
+  .inventory-of-defective-goods .mb-10 {
+    margin-bottom: 10px;
+  }
+
+  .inventory-of-defective-goods .float-right {
+    float: right;
+  }
+
+  .inventory-of-defective-goods .float-left {
+    float: left;
+  }
+
+  .inventory-of-defective-goods .px-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .inventory-of-defective-goods .p-0 {
+    padding: 0;
+  }
+
+  .inventory-of-defective-goods .d-flex {
+    display: flex;
+  }
+
+  .inventory-of-defective-goods .item-center {
+    align-items: center;
+  }
+
+  .inventory-of-defective-goods .timeline-content {
+    margin-top: 20px;
+  }
+
+  .inventory-of-defective-goods .timeline > li {
+    margin-right: 0 !important;
+  }
+
+  .inventory-of-defective-goods .style-delete {
+    color: #FE747A;
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .inventory-of-defective-goods .style-edit {
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .inventory-of-defective-goods .note-user {
+    font-family: 'Inter UI';
+    font-weight: bold;
+  }
+
+  .inventory-of-defective-goods .timeline > li > .timeline-item {
+    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .inventory-of-defective-goods .timeline-content {
+    margin-top: 20px;
+  }
+
+  .inventory-of-defective-goods .bg-blueX {
+    background-color: #4E6BA5 !important;
+  }
+
+  .inventory-of-defective-goods .color-w {
+    color: #fff !important;
+  }
+
+  .inventory-of-defective-goods .timeline-item .onHover {
+    display: none;
+  }
+
+  .inventory-of-defective-goods .timeline-item:hover .onHover {
+    display: block;
+  }
+
+  .inventory-of-defective-goods .material-icons {
+    cursor: pointer;
+  }
+
+  .inventory-of-defective-goods .timeline-user-avatar {
+    border-radius: 50%;
+    margin-right: 5px;
+    float: left;
+  }
+
+  .inventory-of-defective-goods .note-title {
+    font-size: 11px !important;
+    color: #222 !important;
+    font-weight: normal !important;
+  }
+
+  .inventory-of-defective-goods .time-note {
+    font-size: 10px !important;
+    color: #5d5a5a !important;
+    font-weight: normal !important;
+  }
+
+  .inventory-of-defective-goods .timeline-body {
+    padding: 10px 15px;
+  }
+
+::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-header a {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  font-size: 16px;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: #121619 !important;
+}
+
+  ::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a .ui-accordion-toggle-icon {
+    color: #121619 !important;
+  }
+
+::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-header a .ui-accordion-toggle-icon {
+  color: #121619 !important;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  color: #121619 !important;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-accordion .ui-accordion-content {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.inventory-of-defective-goods .btn-cancel-note {
+  width: 72px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+.inventory-of-defective-goods .btn-save-note {
+  width: 158px;
+  height: 32px;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  border: solid 1px #cccccc;
+  margin-left: 5px;
+}
+
+.inventory-of-defective-goods .save-cancel-lable {
+  width: 24px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #121619;
+}
+
+.inventory-of-defective-goods .save-note-lable {
+  width: 110px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-dropdown {
+  height: auto !important;
+  border-left: 1px solid #c8c8c8;
+  border-right: 1px solid #c8c8c8;
+}
+
+.inventory-of-defective-goods .w-100 {
+  width: 100%;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-calendar {
+  width: 100%;
+}
+
+  ::ng-deep .inventory-of-defective-goods .ui-calendar input {
+    width: 100%;
+  }
+
+::ng-deep .inventory-of-defective-goods .ui-datepicker {
+  top: 30px !important;
+}
+
+.inventory-of-defective-goods .cancel {
+  width: 64px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+  .inventory-of-defective-goods .cancel .text-cancel {
+    width: 24px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+
+.inventory-of-defective-goods .save {
+  width: 86px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  margin-left: 5px;
+}
+
+  .inventory-of-defective-goods .save .text-save {
+    width: 25px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+.inventory-of-defective-goods .bg-F5F5F5 {
+  background-color: #F5F5F5;
+}
+
+.inventory-of-defective-goods .mr-10 {
+  margin-right: 10px;
+}
+
+.inventory-of-defective-goods .btn-add {
+  border: none;
+  background: #F5F5F5;
+  color: green;
+  font-size: 15px;
+}
+
+.inventory-of-defective-goods .button {
+  outline-style: none;
+}
+
+.inventory-of-defective-goods .d-none {
+  display: none;
+}
+
+.inventory-of-defective-goods .showButton .d-none {
+  display: block !important;
+}
+
+button:focus {
+  border: none;
+  outline: none;
+}
+
+::ng-deep .inventory-of-defective-goods .checkbox label {
+  padding-left: 10px;
+}
+
+.inventory-of-defective-goods .dialog input {
+  width: 95%;
+}
+
+.inventory-of-defective-goods .ml-5 {
+  margin-left: 5px;
+}
+
+.inventory-of-defective-goods .pb-15 {
+  padding-bottom: 15px;
+}
+
+.inventory-of-defective-goods .btn-cancel-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+}
+
+.inventory-of-defective-goods .btn-save-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+  background-color: blue;
+  color: white;
+  margin-left: 5px;
+}
+
+.inventory-of-defective-goods .px-8 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.inventory-of-defective-goods .py-3 {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.inventory-of-defective-goods .text-right {
+  text-align: right;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-editing-cell {
+  padding: 0 !important;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-toggler-column .ui-editing-cell {
+  padding-left: 0.857em !important;
+}
+
+::ng-deep .inventory-of-defective-goods .ui-dropdown {
+  display: block !important;
+}
+
+
+.inventory-of-defective-goods .link :hover {
+  cursor: pointer;
+}
+
+.inventory-of-defective-goods .error-border {
+  border: red 1px solid;
+}
+
+.inventory-of-defective-goods .over-flow {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: hidden
+}

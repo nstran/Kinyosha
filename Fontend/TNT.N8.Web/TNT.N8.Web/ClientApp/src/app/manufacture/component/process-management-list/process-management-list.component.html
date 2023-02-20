@@ -1,0 +1,288 @@
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="process-management-list">
+  <p-tabView (onChange)="onChange($event)">
+    <p-tabPanel header="Danh mục nhóm công đoạn">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+          <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                 (input)="myTableNCD.filterGlobal($event.target.value.trim(), 'contains')">
+          <button #save class="add-new" type="button" *ngIf="actionAdd" (click)="addNew('NCD')">
+            <span class="add-new-text">Thêm mới</span>
+          </button>
+        </div>
+        <div class="col-md-12" style="margin-top: 5px;">
+          <p-table [columns]="colsStageGroup" [value]="categoryModelList" #myTableNCD
+                   [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                   class="table-border" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn
+                    [ngStyle]="{'text-align': 'center', 'width': col.width }">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <p-cellEditor *ngSwitchCase="'setting'">
+                    <ng-template pTemplate="input">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'NCD')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'NCD')"></button>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'NCD')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'NCD')"></button>
+                    </ng-template>
+                  </p-cellEditor>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Danh mục công đoạn">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+          <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                 (input)="myTableCD.filterGlobal($event.target.value.trim(), 'contains')">
+          <button #save class="add-new" type="button" *ngIf="actionAdd" (click)="addNew('CD')">
+            <span class="add-new-text">Thêm mới</span>
+          </button>
+        </div>
+        <div class="col-md-12" style="margin-top: 5px;">
+          <p-table [columns]="colsStage" [value]="categoryModelList" #myTableCD
+                   [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                   class="table-border" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn
+                    [ngStyle]="{'text-align': 'center', 'width': col.width }">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <p-cellEditor *ngSwitchCase="'setting'">
+                    <ng-template pTemplate="input">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'CD')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'CD')"></button>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'CD')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'CD')"></button>
+                    </ng-template>
+                  </p-cellEditor>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Danh mục nội dung kiểm tra">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+          <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                 (input)="myTableNDKT.filterGlobal($event.target.value.trim(), 'contains')">
+          <button #save class="add-new" type="button" *ngIf="actionAdd" (click)="addNew('NDKT')">
+            <span class="add-new-text">Thêm mới</span>
+          </button>
+        </div>
+        <div class="col-md-12" style="margin-top: 5px;">
+          <p-table [columns]="colsTestContent" [value]="categoryModelList" #myTableNDKT
+                   [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                   class="table-border" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn
+                    [ngStyle]="{'text-align': 'center', 'width': col.width}">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'width': col.width }">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <p-cellEditor *ngSwitchCase="'setting'">
+                    <ng-template pTemplate="input">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'NDKT')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'NDKT')"></button>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'NDKT')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'NDKT')"></button>
+                    </ng-template>
+                  </p-cellEditor>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Danh mục quy cách/ghi chú/tham khảo">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+          <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                 (input)="myTableQC.filterGlobal($event.target.value.trim(), 'contains')">
+          <button #save class="add-new" type="button" *ngIf="actionAdd" (click)="addNew('QC')">
+            <span class="add-new-text">Thêm mới</span>
+          </button>
+        </div>
+        <div class="col-md-12" style="margin-top: 5px;">
+          <p-table [columns]="colsSpecifications" [value]="categoryModelList" #myTableQC
+                   [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                   class="table-border" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn
+                    [ngStyle]="{'text-align': 'center', 'width': col.width}">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'width': col.width }">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <p-cellEditor *ngSwitchCase="'setting'">
+                    <ng-template pTemplate="input">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'QC')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'QC')"></button>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'QC')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'QC')"></button>
+                    </ng-template>
+                  </p-cellEditor>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Danh mục hạng mục kiểm tra lỗi">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+          <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                 (input)="myTableKTL.filterGlobal($event.target.value.trim(), 'contains')">
+          <button #save class="add-new" type="button" *ngIf="actionAdd" (click)="addNew('KTL')">
+            <span class="add-new-text">Thêm mới</span>
+          </button>
+        </div>
+        <div class="col-md-12" style="margin-top: 5px;">
+          <p-table [columns]="colsErrorCheckingItem" [value]="categoryModelList" #myTableKTL
+                   [responsive]="true" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                   class="table-border" [rowsPerPageOptions]="[10, 20, 30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" pResizableColumn
+                    [ngStyle]="{'text-align': 'center', 'width': col.width}">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'width': col.width }">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <p-cellEditor *ngSwitchCase="'setting'">
+                    <ng-template pTemplate="input">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'KTL')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'KTL')"></button>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <button class="ui-button-info button-mini" pButton *ngIf="actionEdit"
+                              icon="pi pi-pencil" (click)="editRowData(rowData, 'KTL')"></button>
+                      <button class="ui-button-danger button-mini" pButton style="margin-left: 5px;" *ngIf="actionDelete"
+                              icon="pi pi-trash" (click)="removeRowData(rowData, 'KTL')"></button>
+                    </ng-template>
+                  </p-cellEditor>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+
+  <p-dialog header="Thêm mới {{labelName}}" [(visible)]="display" [modal]="true" [style]="{width: '25vw'}" [resizable]="false">
+    <form [formGroup]="categoryForm">
+      <div class="col-md-12">
+        <label>
+          Tên {{labelName}} <span class="require">*</span>:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <input type="text" pInputText style="width: 100%; margin: 1px;" formControlName="categoryName" placeholder=""
+                 [ngClass]="(categoryName.invalid && isSave && (categoryName.dirty ||  categoryName.touched)) ? 'error-border': ''">
+        </div>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <span *ngIf="categoryName.hasError('required') && isSave" class="error-message-span">Không được để trống</span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label>
+          Mô tả:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <textarea rows="3" pInputTextarea style="width: 100%; margin: 1px;" formControlName="description"></textarea>
+        </div>
+      </div>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+        <button #cancel class="cancel" type="button" (click)="cancelCategory()">
+          <span class="text-cancel">Hủy</span>
+        </button>
+        <button #save class="add-new" type="button" (click)="saveCategory()">
+          <span class="add-new-text">Lưu</span>
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+
+</div>

@@ -1,0 +1,465 @@
+<div class="loading-indicator" *ngIf="loading">
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+    </p-progressSpinner>
+</div>
+<p-toast position="bottom-right"></p-toast>
+
+<div class="danh-sach-xuat-kho">
+    <div class="row">
+        <div class="box-header">
+            <div class="col-md-4 no-padding" style="margin-left: 5px;">
+                <span class="row">
+                    <div class="col-md-12">
+                        Bộ phận quản lý
+                        <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" pInputText [(ngModel)]="selectOrg" class="w-100" disabled="true" />
+                    </div>
+                </span>
+            </div>
+            <div class="col-md-8">
+
+            </div>
+            <div class="col-md-12">
+                <p-tabView (onChange)="selectTab($event)">
+                    <p-tabPanel header="Kho chờ sản xuất">
+                        <!-- <form [formGroup]="nhapKhoForm"> -->
+                        <div class="row bottom-buffer top-buffer">
+                            <div class="col-md-4" style="margin-top: 15px">
+                                <div class="row bottom-buffer">
+                                    <span class="col-md-6">
+                                        <p-radioButton styleClass="p-radioButtonCustom" name="group" value=0 [(ngModel)]="displayTypeCSX"
+                                            label="Theo phiếu xuất kho"></p-radioButton>
+                                    </span>
+                                    <span class="col-md-6">
+                                        <p-radioButton class="ml-25" styleClass="p-radioButtonCustom" name="group" value=1 [(ngModel)]="displayTypeCSX"
+                                            label="Theo NVL" (click)="theoNVL(0)"></p-radioButton>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 15px">
+                                <div class="row bottom-buffer">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4  ">
+                                                <span>
+                                                    Từ ngày:
+                                                </span>
+                                            </div>
+                                            <div class="col-md-8 no-padding">
+                                                <p-calendar [(ngModel)]="fromDate" (onSelect)="NVL()"
+                                                    dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                                    [inputStyle]="{ width: '100%' }">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 ">
+                                                <span>
+                                                    Đến ngày:
+                                                </span>
+                                            </div>
+                                            <div class="col-md-8 no-padding">
+                                                <p-calendar [(ngModel)]="toDate" (onSelect)="NVL()"
+                                                    dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                                    [inputStyle]="{ width: '100%' }">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header-group-btn">
+                                            <button type="button" class="btn-save" style="width: 120px!important; margin-top: 5px; margin-bottom: 5px" *ngIf="actionAdd">
+                                                <span class="btn-save-text" (click)="save(2, 1, 10)">Trả lại CCDC</span>
+                                            </button>
+                                            <button type="button" class="btn-save" style="width: 120px!important; margin-top: 5px; margin-bottom: 5px" *ngIf="actionAdd">
+                                                <span class="btn-save-text" (click)="save(0, 0, 9)">Trả lại NVL</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <!-- THEO PHIẾU XUÂT -->
+                            <p-table *ngIf="displayTypeCSX == 0" #myTable [columns]="colsListXuatKho" [value]="dataListCSX"
+                                [resizableColumns]="true" columnResizeMode="expand" [paginator]="true" [rows]="10"
+                                [rowsPerPageOptions]="[10,20,30]" responsive="true" class="table-border">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                                            [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIdex="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns"
+                                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                                            [ngSwitch]="col.field">
+                                            <span class="ui-column-title">{{col.header}}</span>
+                                            <span *ngSwitchCase="'STT'">{{rowIdex + 1}}</span>
+                                            <span *ngSwitchCase="'inventoryDeliveryVoucherCode'" class="link"
+                                                (click)="maSoXuatDetail(rowData)">{{rowData[col.field]}}</span>
+                                            <span *ngSwitchCase="'inventoryDeliveryVoucherDate'">{{rowData['inventoryDeliveryVoucherDate'] | date:'dd/MM/yyyy'}}</span>
+                                            <span *ngSwitchCase="'thaoTac'">
+                                                <button *ngIf="rowData.nameStatus == 'Mới' && actionDelete" style="width: 100%; color: red;"
+                                                    type="button" pButton icon="pi pi-trash" class="ui-button-secondary"
+                                                    (click)="xoaData(rowData)"></button>
+                                            </span>
+
+                                            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+                            <!-- THEO NVL  -->
+                            <p-table *ngIf="displayTypeCSX == 1" #myTable [columns]="colsTheoNVL"
+                                [value]="chiTietSanPhamPhieuXuatKhos" [resizableColumns]="true"
+                                columnResizeMode="expand" [paginator]="true" [rows]="50"
+                                [rowsPerPageOptions]="[50,100,200,300,500,1000,2000]" responsive="true" class="table-border">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                                            field="col.field"
+                                            [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                    <tr>
+
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                (input)="myTable.filter($event.target.value, 'tenPhieuXuat', 'contains')"
+                                                placeholder="" class="ui-column-filter">
+                                        </th>
+                                        <th>
+                                            <p-calendar (onSelect)="onDateSelect($event)" appendTo="body"
+                                                [baseZIndex]="999" [style]="{'width':'100%'}"
+                                                [inputStyle]="{'width':'100%'}"
+                                                (onClearClick)="myTable.filter('', 'ngayXuat', 'startsWith')"
+                                                [showButtonBar]="true" styleClass="ui-column-filter" placeholder=""
+                                                [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar>
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                (input)="myTable.filter($event.target.value, 'productName', 'contains')"
+                                                placeholder="" class="ui-column-filter">
+                                        </th>
+
+                                        <th>
+                                            <p-dropdown [options]="statuses"
+                                                (onChange)="myTable.filter($event.value, 'productUnitName', 'equals')"
+                                                appendTo="body" [baseZIndex]="999" [style]="{'width': '50%'}"
+                                                styleClass="ui-column-filter" placeholder="Chọn đơn vị"
+                                                [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }"
+                                                (input)="myTable.filter($event.target.value.replace(',',''), 'quantity', 'gt')"
+                                                placeholder="Lớn hơn" class="ui-column-filter">
+                                        </th>
+                                        <th>
+
+                                            <p-dropdown [options]="statuses1"
+                                                (onChange)="myTable.filter($event.value, 'organizationName', 'equals')"
+                                                appendTo="body" [baseZIndex]="999" [style]="{'width': '100%'}"
+                                                placeholder="Chọn bộ phận" [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+
+                                        </th>
+                                        <th>
+                                            <p-dropdown [options]="statuses2" [style]="{'width': '100%'}"
+                                                appendTo="body" [baseZIndex]="999"
+                                                (onChange)="myTable.filter($event.value, 'productCategoryName', 'equals')"
+                                                placeholder="Chọn loại hàng" [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIdex="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns"
+                                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                                            [ngSwitch]="col.field">
+                                            <span class="ui-column-title">{{col.header}}</span>
+
+                                            <span *ngSwitchCase="'tenPhieuXuat'" class="link"
+                                                (click)="maSoXuatDetail(rowData, 3)">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'ngayXuat'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productUnitName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'quantity'">{{rowData[col.field] | number}}</span>
+
+                                            <span *ngSwitchCase="'organizationName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productCategoryName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <!-- </form> -->
+                    </p-tabPanel>
+
+                    <p-tabPanel header="Kho tái sử dụng/NG">
+                        <!-- <form [formGroup]="nhapKhoForm"> -->
+                        <div class="row bottom-buffer top-buffer">
+                            <div class="col-md-4" style="margin-top: 15px">
+                                <div class="row bottom-buffer">
+                                    <span class="col-md-6">
+                                        <p-radioButton styleClass="p-radioButtonCustom" name="group1" value=0
+                                        [(ngModel)]="displayTypeTSD" label="Theo phiếu xuất kho"></p-radioButton>
+                                    </span>
+                                    <span class="col-md-6">
+                                        <p-radioButton class="ml-25" styleClass="p-radioButtonCustom" name="group1" value=1 [(ngModel)]="displayTypeTSD"
+                                            label="Theo NVL"></p-radioButton>
+                                    </span>     
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 15px">
+                                <div class="row bottom-buffer">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4  ">
+                                                <span>
+                                                    Từ ngày:
+                                                </span>
+                                            </div>
+                                            <div class="col-md-8 no-padding">
+                                                <p-calendar [(ngModel)]="fromDate" (onChange)="getMasterData()"
+                                                    dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                                    [inputStyle]="{ width: '100%' }">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 ">
+                                                <span>
+                                                    Đến ngày:
+                                                </span>
+                                            </div>
+                                            <div class="col-md-8 no-padding">
+                                                <p-calendar [(ngModel)]="toDate" (onChange)="getMasterData()"
+                                                    dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                                    [inputStyle]="{ width: '100%' }">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header-group-btn">
+                                            <button type="button" class="btn-save" style="width: 120px!important; margin-top: 5px; margin-bottom: 5px" *ngIf="actionAdd">
+                                                <span class="btn-save-text" (click)="save(2, 2, 11)">Trả NVL TSD</span>
+                                            </button>
+                                            <button type="button" class="btn-save" style="width: 120px!important; margin-top: 5px; margin-bottom: 5px" *ngIf="actionAdd">
+                                                <span class="btn-save-text" (click)="save(0, 2, 3)">Xuất hủy</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <!-- THEO PHIẾU XUÂT -->
+                            <p-table *ngIf="displayTypeTSD == 0" #myTable [columns]="colsListXuatKho"
+                                [value]="dataListCCDC" [resizableColumns]="true" columnResizeMode="expand"
+                                [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]" responsive="true"
+                                class="table-border">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                                            [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIdex="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns"
+                                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                                            [ngSwitch]="col.field">
+                                            <span class="ui-column-title">{{col.header}}</span>
+                                            <span *ngSwitchCase="'STT'">{{rowIdex + 1}}</span>
+
+                                            <span *ngSwitchCase="'inventoryReceivingVoucherCode'" class="link"
+                                                (click)="maSoXuatDetail(rowData, 2)">{{rowData[col.field]}}</span>
+
+                                            <span
+                                                *ngSwitchCase="'inventoryReceivingVoucherTypeName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'inventoryReceivingVoucherDate'">{{rowData[col.field] |
+                                                date:'dd/MM/yyyy'}}</span>
+
+                                            <span *ngSwitchCase="'thaoTac'">
+                                                <button *ngIf="rowData.intStatus == 0 && actionDelete" style="width: 100%; color: red;"
+                                                    type="button" pButton icon="pi pi-trash" class="ui-button-secondary"
+                                                    (click)="xoaData(rowData)"></button>
+                                            </span>
+
+                                            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+                            <!-- THEO NVL  -->
+                            <p-table *ngIf="displayTypeTSD == 1" #myTable [columns]="colsTheoNVL"
+                                [value]="chiTietSanPhamPhieuNhapKhos2" [resizableColumns]="true"
+                                columnResizeMode="expand" [paginator]="true" [rows]="50"
+                                [rowsPerPageOptions]="[50,100,200,300,500,1000,2000]" responsive="true" class="table-border">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                                            [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                    <tr>
+
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                (input)="myTable.filter($event.target.value, 'tenPhieuNhap', 'contains')"
+                                                placeholder="" class="ui-column-filter">
+                                        </th>
+                                        <th>
+                                            <p-calendar (onSelect)="onDateSelect($event)" appendTo="body"
+                                                [baseZIndex]="999" [style]="{'width':'100%'}"
+                                                [inputStyle]="{'width':'100%'}"
+                                                (onClearClick)="myTable.filter('', 'ngayNhap', 'equals')"
+                                                [showButtonBar]="true" styleClass="ui-column-filter" placeholder=""
+                                                [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar>
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                (input)="myTable.filter($event.target.value, 'productName', 'contains')"
+                                                placeholder="" class="ui-column-filter">
+                                        </th>
+
+                                        <th>
+                                            <p-dropdown [options]="statuses"
+                                                (onChange)="myTable.filter($event.value, 'productUnitName', 'equals')"
+                                                appendTo="body" [baseZIndex]="999" [style]="{'width': '50%'}"
+                                                styleClass="ui-column-filter" placeholder="Chọn đơn vị"
+                                                [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+                                            <!-- <p-multiSelect [options]="representatives" placeholder="All" (onChange)="onRepresentativeChange($event)" styleClass="ui-column-filter" optionLabel="name">
+                          <ng-template let-option pTemplate="item">
+                              <div class="ui-multiselect-representative-option">
+                                  <img [alt]="option.label" src="assets/showcase/images/demo/avatar/{{option.value.image}}" width="32" />
+                                  <span>{{option.label}}</span>
+                              </div>
+                          </ng-template>
+                      </p-multiSelect> -->
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" style="width: 100%"
+                                                [cleave]="{ numeral: true, numeralPositiveOnly: true, numeralDecimalScale: 0 }"
+                                                (input)="myTable.filter($event.target.value.replace(',',''), 'quantity', 'gt')"
+                                                placeholder="Lớn hơn" class="ui-column-filter">
+                                        </th>
+                                        <th>
+
+                                            <p-dropdown [options]="statuses1"
+                                                (onChange)="myTable.filter($event.value, 'loaiPhieu', 'equals')"
+                                                appendTo="body" [baseZIndex]="999" [style]="{'width': '100%'}"
+                                                placeholder="Chọn loại phiếu" [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+
+                                        </th>
+                                        <th>
+                                            <p-dropdown [options]="statuses2" [style]="{'width': '100%'}"
+                                                appendTo="body" [baseZIndex]="999"
+                                                (onChange)="myTable.filter($event.value, 'productCategoryName', 'equals')"
+                                                placeholder="Chọn loại hàng" [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span
+                                                        [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIdex="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns"
+                                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                                            [ngSwitch]="col.field">
+                                            <span class="ui-column-title">{{col.header}}</span>
+
+                                            <span *ngSwitchCase="'tenPhieuNhap'" class="link"
+                                                (click)="maSoXuatDetail(rowData, 2)">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'ngayNhap'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productUnitName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'quantity'">{{rowData[col.field] | number}}</span>
+
+                                            <span *ngSwitchCase="'loaiPhieu'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchCase="'productCategoryName'">{{rowData[col.field]}}</span>
+
+                                            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <!-- </form> -->
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+    <p-toast position="bottom-right" key="success"></p-toast>
+    <p-toast position="bottom-right" key="info"></p-toast>
+    <p-toast position="bottom-right" key="error"></p-toast>

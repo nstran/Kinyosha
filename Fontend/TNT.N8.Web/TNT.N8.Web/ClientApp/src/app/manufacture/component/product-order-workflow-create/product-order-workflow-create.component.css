@@ -1,0 +1,260 @@
+.product-order-workflow-create .box-header {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  width: 100% !important;
+  height: auto;
+}
+
+.product-order-workflow-create .box-header-icon {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+}
+
+.product-order-workflow-create .ic_library_add_24px {
+  width: 20.4px;
+  height: 18.5px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+.product-order-workflow-create .box-header-title {
+  font-weight: bold;
+  font-family: 'Inter UI';
+  font-size: 20px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: left;
+  color: #121619;
+}
+
+.product-order-workflow-create .btn-css {
+  width: 40px !important;
+  margin-left: 5px;
+}
+
+.product-order-workflow-create .cancel {
+  width: 64px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+.product-order-workflow-create .cancel .text-cancel {
+  width: 24px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.46;
+  letter-spacing: normal;
+  text-align: left;
+  color: #121619;
+}
+.product-order-workflow-create .border-required {
+  border: 1px solid #c8c8c8;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-left: 5px;
+  margin-right: 35px;
+}
+.product-order-workflow-create .save-and-new {
+  width: 142px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+  margin-left: 5px;
+}
+
+.product-order-workflow-create .save-and-new .text-save-and-new {
+  width: 102px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.46;
+  letter-spacing: normal;
+  text-align: left;
+  color: #121619;
+}
+
+.product-order-workflow-create .save {
+  width: 86px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  margin-left: 5px;
+}
+
+.product-order-workflow-create .save .text-save {
+  width: 25px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.46;
+  letter-spacing: normal;
+  text-align: left;
+  color: #ffffff;
+}
+
+.product-order-workflow-create .box-content {
+  margin: 10px 0px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  width: 100% !important;
+  height: auto;
+}
+.product-order-workflow-create .mt-10 {
+    margin-top: 10px;
+}
+.product-order-workflow-create .header-label {
+  font-size: 16px;
+  font-weight: bold;
+}
+.product-order-workflow-create .bolder-div {
+  border: 1px solid #c8c8c8;
+  width: 95%;
+  margin-left: 5px;
+  padding-bottom: 10px;
+}
+.product-order-workflow-create .add-new {
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  margin-left: 5px;
+}
+.product-order-workflow-create .mg-left {
+    margin-left: 10px !important;
+}
+.product-order-workflow-create .btn-create-new {
+  margin-top: 10px;
+}
+.product-order-workflow-create .circle-btn-add {
+  background-color: #0a5af2;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: hidden;
+}
+.product-order-workflow-create .icon-add {
+  margin-left: -3.5px;
+  margin-top: 1px;
+  color: white;
+}
+.product-order-workflow-create .circle-btn-delete {
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: hidden;
+  font-size: 15px;
+}
+.product-order-workflow-create .icon-delete {
+  margin-left: -3.5px;
+  margin-top: 1px;
+  color: red;
+}
+
+.product-order-workflow-create .icon-view {
+  margin-left: -3.5px;
+  margin-top: 1px;
+  color: #0a5af2;
+}
+
+.product-order-workflow-create .icon-add1 {
+  color: #0a5af2;
+}
+.product-order-workflow-create .add-new-text {
+  /* width: 25px; */
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.46;
+  letter-spacing: normal;
+  text-align: left;
+  color: #ffffff;
+}
+
+.product-order-workflow-create .ui-dialog .ui-dialog-content {
+  overflow-y: hidden !important;
+}
+.product-order-workflow-create .error-item {
+  display: flex;
+  align-items: center;
+  padding: .5rem;
+  width: 100%;
+}
+
+.product-order-workflow-create .error-item .error-category {
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/*Begin: Customize Accordion */
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-header a {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  font-size: 16px;
+}
+
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: #121619 !important;
+}
+
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a .ui-accordion-toggle-icon {
+  color: #121619 !important;
+}
+
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-header a .ui-accordion-toggle-icon {
+  color: #121619 !important;
+}
+
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  color: #121619 !important;
+}
+
+::ng-deep .product-order-workflow-create .ui-accordion .ui-accordion-content {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+/*End: Customize Accordion */
+
+.product-order-workflow-create .input-text {
+  min-height: 2.55em !important;
+}
+
+.product-order-workflow-create .w100 {
+  width: 100% !important;
+}
+
+.product-order-workflow-create .require {
+  color: #F94E4E;
+}
+
+.product-order-workflow-create .error-message-span {
+  color: red !important;
+}

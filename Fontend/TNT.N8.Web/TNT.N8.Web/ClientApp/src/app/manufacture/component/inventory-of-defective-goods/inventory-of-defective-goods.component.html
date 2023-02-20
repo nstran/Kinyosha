@@ -1,0 +1,94 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="inventory-of-defective-goods">
+  <div class="row m-0 bg-white d-flex item-center p-10 mb-15 border-dde1e6">
+    <div class="col-md-6">
+      <div class="row" style="display: flex; align-items: center;">
+        <div class="col-md-12 col-xs-12">
+          <div class="box-header-title">BẢNG KIỂM TRA HÀNG LỖI</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row h-100">
+        <div class="d-inline-block float-right h-100">
+          <button class="btn-save bg-e4e4e4" type="button" (click)="goToBack()">Thoát</button>
+          <button class="btn-save bg-e4e4e4" type="button" *ngIf="actionDownload">Xuất file</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-0">
+    <div class="row m-0 bg-white border-dde1e6 p-10 mb-15">
+      <div class="row m-0 px-15 mb-10">
+        <div class="col-md-4">
+          <span>Khách hàng: </span> <b>{{ inforStatisticalError != null ? inforStatisticalError.customerName : inforStatisticalError}}</b>
+        </div>
+        <div class="col-md-4">
+          <span>Sản phẩm: </span> <b>{{ inforStatisticalError != null ? inforStatisticalError.productName : inforStatisticalError}}</b>
+        </div>
+      </div>
+      <div class="row m-0 px-15 mb-10">
+        <div class="col-md-4">
+          <span>Lot.No: </span> <b>{{ inforStatisticalError != null ? inforStatisticalError.lotNoName : inforStatisticalError}}</b>
+        </div>
+        <div class="col-md-4">
+          <span>Tổng số lượng: </span> <b>{{ inforStatisticalError != null ? inforStatisticalError.totalReached : inforStatisticalError}}</b>
+        </div>
+      </div>
+      <div class="row m-0 px-15 mb-10">
+        <div class="col-md-12">
+          <p-table #myTable [columns]="selectedColumns" [value]="listStatisticalError" [resizableColumns]="true"
+                   columnResizeMode="expand" [paginator]="true" [rows]="10" [responsive]="true">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns"
+                    [ngStyle]="{'text-align': 'center', 'display': col.display, 'width': col.width }">
+                  <span>
+                    {{col.header}}
+                  </span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <div class="row m-0 px-15">
+        <div class="col-md-6 border-div">
+          <span>Ngày xuất hàng: </span> <b>{{ inforStatisticalError != null ? (inforStatisticalError.dateShipping | date: 'dd/MM/yyyy') : inforStatisticalError}}</b>
+        </div>
+        <div class="col-md-6 border-div">
+          <span>Ngày kết thúc kiểm tra: </span> <b>{{ inforStatisticalError != null ? (inforStatisticalError.checkDate | date: 'dd/MM/yyyy') : inforStatisticalError}}</b>
+        </div>
+      </div>
+      <div class="row m-0 px-15 mb-10">
+        <div class="col-md-6 border-div">
+          <span>Số lượng đạt: </span> <b>{{ inforStatisticalError != null ? (inforStatisticalError.totalReached | number) : inforStatisticalError}}</b>
+        </div>
+        <div class="col-md-6 border-div">
+          <span>Số lượng đạt: </span> <b>{{ inforStatisticalError != null ? (inforStatisticalError.totalCheckReached | number) : inforStatisticalError}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

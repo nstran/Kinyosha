@@ -1,0 +1,40 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right" key="popup"></p-toast>
+
+<div class="product-bom-dialog">
+  <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+    <div class="row">
+      <div class="col-md-12">
+        <label>Mã vật liệu: <span style="font-weight: bold">VL 00003</span></label>
+        <label style="margin-left: 10%">Tên vật liệu: <span style="font-weight: bold;"> Tên vật liệu 1</span></label>
+        <label style="margin-left: 10%">Lot.No: <span style="font-weight: bold;">920302</span></label>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+    <p-table [value]="" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+          <tr>
+              <th>STT</th>
+              <th>Mã phiếu</th>
+              <th>Loại phiếu</th>
+              <th>Ngày nhập/xuất</th>
+              <th>Kho nhập/xuất</th>
+              <th>Số lượng</th>
+              <th>Nhà cung cấp</th>
+              <th>Số hóa đơn</th>
+              <th>Số đơn hàng</th>
+              <th>Trạng thái</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+      </ng-template>
+  </p-table>
+  </div>
+</div>
+

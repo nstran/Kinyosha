@@ -1,0 +1,171 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="create-thanhpham">
+  <div class="row no-margin" id="parent">
+    <div class="col-md-12 header" style="padding: 6px;" [ngClass]="{'fixed': fixed}" [ngStyle]="{'width':withFiexd}">
+      <div class="row">
+        <div class="col-md-6 no-padding">
+          <div class="row no-margin">
+            <div class="col-md-1 col-sm-1 col-xs-3">
+              <div class="header-box-icon">
+                <img src="/assets/icons/components/create_lead.svg" class="header-icon">
+              </div>
+            </div>
+            <div class="col-md-11 col-sm-10 col-xs-9" style="display:
+              contents;">
+              <div>
+                <span class="product-name">Tạo mới thông tin hàng hóa</span>
+              </div>
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12" style="display: flex; justify-content:
+              flex-end; margin-top: 5px;">
+              <button (click)="cancel()" type="button" class="btn-remove" style="margin-right: 5px;">
+                <span class="btn-remove-text">Thoát</span>
+              </button>
+              <button #save class="save" type="button" (click)="createProduct()">
+                <span class="text-save">Lưu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-12 header" style="padding: 6px;" [ngClass]="{'fixed':
+      fixed}" [ngStyle]="{'width':withFiexd}">
+      <form [formGroup]="thanhphamForm">
+        <div class="row">
+          <div class="col-md-12">
+            <strong>Thông tin chung</strong>
+          </div>
+          <div class="col-md-12" style="padding: 10px 0px 10px 20px;">
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Nhóm thành phẩm<span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <p-dropdown [options]="listProperty" optionLabel="categoryName" placeholder="Chọn nhóm hàng"
+                  filter="true"
+                  [styleClass]="(thanhphamForm.get('ProductCategory').invalid && (thanhphamForm.get('ProductCategory').dirty || thanhphamForm.get('ProductCategory').touched)) ? 'error-border' : ''"
+                  formControlName="ProductCategory" [style]="{ width: '100%' }">
+                </p-dropdown>
+                <span class="error-message-span" *ngIf="thanhphamForm.get('ProductCategory').hasError('required')"
+                  [hidden]="thanhphamForm.get('ProductCategory').untouched">
+                  Không được để trống
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Mã thành phẩm<span style="color: red;">*</span>:</label>
+              </div>
+              <div>
+                <div class="col-md-12" #boxProductCode>
+                  <input [ngClass]="(thanhphamForm.get('ProductCode').invalid && (thanhphamForm.get('ProductCode').dirty ||
+                                thanhphamForm.get('ProductCode').touched)) ? 'error-border' : '' "
+                    formControlName="ProductCode" type="text" class="full-width" pInputText />
+                  <span class="error-message-span" *ngIf="thanhphamForm.get('ProductCode').hasError('required')"
+                    [hidden]="thanhphamForm.get('ProductCode').untouched">Không
+                        được để trống
+                  </span>
+                </div>
+                
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Tên<span style="color: red;">*</span>:</label>
+              </div>
+              <div>
+                <div class="col-md-12">
+                  <input [ngClass]="(thanhphamForm.get('ProductName').invalid && (thanhphamForm.get('ProductName').dirty || 
+                                              thanhphamForm.get('ProductName').touched)) ? 'error-border' : '' "
+                    formControlName="ProductName" type="text" class="full-width" pInputText />
+                </div>
+                <div class="col-md-12">
+                  <span *ngIf="thanhphamForm.get('ProductName').hasError('required')" class="error-message-span"
+                    [hidden]="thanhphamForm.get('ProductName').untouched">Không được để trống</span>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" style="padding: 10px 0px 10px 20px;">
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Đơn vị tính<span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <p-dropdown [options]="listProductUnit" optionLabel="categoryName" placeholder="Chọn đơn vị tính" filter="true"
+                  [styleClass]="(thanhphamForm.get('ProductUnit').invalid && (thanhphamForm.get('ProductUnit').dirty || thanhphamForm.get('ProductUnit').touched)) ? 'error-border' : ''"
+                  formControlName="ProductUnit" [style]="{ width: '100%' }">
+                </p-dropdown>
+                <span class="error-message-span" *ngIf="thanhphamForm.get('ProductUnit').hasError('required')"
+                  [hidden]="thanhphamForm.get('ProductUnit').untouched">
+                  Không được để trống
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>Bộ phận quản lý<span style="color: red;">*</span>:</label>
+                <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+              </div>
+              <div class="col-md-12">
+                <input [ngClass]="(thanhphamForm.get('Department').invalid && (thanhphamForm.get('Department').dirty || thanhphamForm.get('Department').touched)) ? 'error-border' : '' "
+                  formControlName="Department" type="text" class="full-width" pInputText />
+              </div>
+              <div class="col-md-12">
+                <span *ngIf="thanhphamForm.get('Department').hasError('required')" class="error-message-span"
+                  [hidden]="thanhphamForm.get('Department').untouched">Không được để trống</span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <label>NVL tái sử dụng của sản phẩm NG<span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <p-dropdown [options]="listProductEntityModel" optionLabel="productName" placeholder="Chọn nguyên vật liệu"
+                  filter="true"
+                  [styleClass]="(thanhphamForm.get('Referenced').invalid && (thanhphamForm.get('Referenced').dirty || thanhphamForm.get('Referenced').touched)) ? 'error-border' : ''"
+                  formControlName="Referenced" [style]="{ width: '100%' }">
+                </p-dropdown>
+                <span class="error-message-span" *ngIf="thanhphamForm.get('Referenced').hasError('required')"
+                  [hidden]="thanhphamForm.get('Referenced').untouched">
+                  Không được để trống
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="create-thanhpham">
+  <div class="row">
+    <div class="box-header">
+      
+    </div>
+  </div>
+</div>

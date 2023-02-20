@@ -1,0 +1,341 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="track-production">
+  <div class="row no-margin">
+    <div class="col-md-12 box-header">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row" style="display: flex; align-items: center;">
+            <div class="col-md-11 col-xs-10">
+              <div class="box-header-title">Theo dõi sản xuất</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row" style="display: flex; align-items: center;">
+            <div class="col-md-12" style="text-align: right;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="background-color: #f2f4f8; width: 98%; margin: 15px auto;">
+        <div class="col-md-12">
+          <div class="row" style="border: 1px solid #a6a6a6; padding: 10px; ">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-2">Lot. No:</div>
+                    <div class="col-md-10">
+                      <input type="text" pInputText [(ngModel)]="lotNo" [style]="{'width': '100%'}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-2">Sản phẩm:</div>
+                    <div class="col-md-10">
+                      <p-multiSelect [options]="productList"
+                                     optionLabel="productName"
+                                     [(ngModel)]="selectProduct"
+                                     appendTo="body"
+                                     [style]="{'width': '100%'}"
+                                     defaultLabel="Chọn sản phẩm">
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-2">Trạng thái:</div>
+                    <div class="col-md-10">
+                      <p-dropdown [options]="statusList"
+                                  optionLabel="categoryName"
+                                  [(ngModel)]="selectStatus"
+                                  placeholder="Chọn trạng thái"
+                                  [style]="{'width':'100%'}"
+                                  [filter]="true">
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-10">
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-2">Từ ngày:</div>
+                    <div class="col-md-10">
+                      <p-calendar [(ngModel)]="startDate" dateFormat="dd/mm/yy" [style]="{'width':'100%'}" (onSelect)="selectPaidDate()" [inputStyle]="{'width':'100%'}"></p-calendar>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-2">Đến ngày:</div>
+                    <div class="col-md-10">
+                      <p-calendar [(ngModel)]="endDate" dateFormat="dd/mm/yy" [style]="{'width':'100%'}" (onSelect)="selectPaidDate()" [inputStyle]="{'width':'100%'}"></p-calendar>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="box-header-group-btn">
+                        <button type="button" class="btn-refresh" (click)="refreshFilter()">
+                          <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+                        </button>
+                        <button type="button" class="btn-filter" (click)="searchFilter()">
+                          <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                          <span class="btn-filter-text">Tìm kiếm</span>
+                        </button>
+                        <div style="clear: both;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-treeTable [value]="listProductionTracking" [columns]="cols" [paginator]="true" [rows]="10" [(first)]="first"
+                        class="table-style-page" [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header" let-columns>
+              <tr [ttRow]="rowNode">
+                <th *ngFor="let col of columns"
+                    [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns; let i = index" [ngSwitch]="col.field"
+                    [ngStyle]="{'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                  <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                  <span *ngSwitchCase="'lotNoName'" (click)="goToDetailLo(rowData)" class="link">
+                    {{rowData[col.field]}}
+                  </span>
+                  <span *ngSwitchCase="'startDate'">
+                    {{rowData[col.field] | date: 'dd/MM/yyyy' }}
+                  </span>
+                  <span *ngSwitchCase="'endDate'">
+                    {{rowData[col.field] | date: 'dd/MM/yyyy' }}
+                  </span>
+                  <span *ngSwitchCase="'quantityReached'">
+                    {{ rowData['statusCode'] != 'TTLNHT' ? '-' : rowData[col.field] }}
+                  </span>
+                  <span *ngSwitchCase="'setting'">
+                    <button pButton pRipple class="button-style" label="Bắt đầu" icon="pi pi-caret-right" (click)="changeStatusManufacture(rowData, 'BD', false)"
+                            *ngIf="actionEdit && rowData['statusCode'] == 'TTLNCSX' && ((rowData['listChildProductionProcessDetail'] != null && rowData['listChildProductionProcessDetail'] != undefined && rowData['listChildProductionProcessDetail'].length == 0) || rowData['listChildProductionProcessDetail'] == null || rowData['listChildProductionProcessDetail'] == undefined)"></button>
+                    <button pButton pRipple class="button-style" label="Xóa" icon="pi pi-trash" (click)="onRowRemove(rowData)"
+                            *ngIf="actionDelete && rowData['statusCode'] == 'TTLNCSX' && ((rowData['listChildProductionProcessDetail'] != null && rowData['listChildProductionProcessDetail'] != undefined && rowData['listChildProductionProcessDetail'].length == 0) || rowData['listChildProductionProcessDetail'] == null || rowData['listChildProductionProcessDetail'] == undefined)"></button>
+                    <button pButton pRipple class="button-style" label="Tạm dừng" icon="pi pi-stop" (click)="changeStatusManufacture(rowData, 'TD', true)"
+                            *ngIf="actionEdit && (rowData['statusCode'] == 'TTLNDCSX' || rowData['statusCode'] == 'TTLNBD') && ((rowData['listChildProductionProcessDetail'] != null && rowData['listChildProductionProcessDetail'] != undefined && rowData['listChildProductionProcessDetail'].length == 0) || rowData['listChildProductionProcessDetail'] == null || rowData['listChildProductionProcessDetail'] == undefined)"></button>
+                    <button pButton pRipple class="button-style" label="Tiếp tục" icon="pi pi-refresh" (click)="changeStatusManufacture(rowData, 'TT', true)"
+                            *ngIf="actionEdit && rowData['statusCode'] == 'TTLNTD' && rowData['statusCode'] != 'TTLNCSX'"></button>
+                    <button pButton pRipple class="button-style" label="Hủy" icon="pi pi-times" (click)="changeStatusManufacture(rowData, 'H', false)"
+                            *ngIf="actionEdit && rowData['statusCode'] != 'TTLNCSX' && rowData['statusCode'] != 'TTLNH' && rowData['statusCode'] != 'TTLNHT' && ((rowData['listChildProductionProcessDetail'] != null && rowData['listChildProductionProcessDetail'] != undefined && rowData['listChildProductionProcessDetail'].length == 0) || rowData['listChildProductionProcessDetail'] == null || rowData['listChildProductionProcessDetail'] == undefined)"></button>
+                  </span>
+                  <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-treeTable>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog header="Tạo lô con" [(visible)]="displayCreateLo" [modal]="true" [style]="{width: '25vw'}" [resizable]="false">
+    <div>
+      <div class="col-md-12">
+        <label>
+          Số lượng cần sản xuất: {{ numberNeedManufacturingDialog }}
+        </label>
+      </div>
+      <div class="col-md-12">
+        <label>
+          Số lượng sản xuất:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <p-inputNumber class="number-fullwidth" [(ngModel)]="productionNumber" [style]="{'width': '100%'}" mode="decimal"></p-inputNumber>
+        </div>
+      </div>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+        <button #save class="cancel" (click)="cancelCretaLo()" type="button">
+          <span class="text-cancel">Hủy</span>
+        </button>
+        <button class="add-new" (click)="createLoNo()" type="button">
+          <span class="add-new-text">Lưu</span>
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Xác nhận" [(visible)]="displayStart" [modal]="true" [style]="{width: '25vw'}" [resizable]="false">
+    <div>
+      <div class="col-md-12">
+        <label>
+          Để bắt đầu sản xuất lô {{ chooseRowData != null ? chooseRowData.lotNoName : chooseRowData }} của sản phẩm {{ chooseRowData != null ? chooseRowData.productName : chooseRowData }}. Bạn có thể tách thành các lô con để sản xuất theo các đợt khác nhau hoặc bắt đầu sản xuất lô hiện tại.
+        </label>
+      </div>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+        <button #save class="cancel" (click)="cancelStart()" type="button">
+          <span class="text-cancel">Hủy</span>
+        </button>
+        <button class="add-new" (click)="createLoChildren(chooseRowData)" type="button" *ngIf="actionAdd">
+          <span class="add-new-text">Tạo lô con</span>
+        </button>
+        <button class="add-new" (click)="changeStatusManufacture(chooseRowData, 'BD', true)" *ngIf="actionEdit" type="button">
+          <span class="add-new-text">Bắt đầu sản xuất</span>
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Xác nhận hủy lô" [(visible)]="displayCancelLo" [modal]="true" [style]="{width: '45vw'}" [resizable]="false">
+    <div *ngIf="chooseRowData != null && chooseRowData.statusCode == 'TTLNBD'">
+      <div class="col-md-12">
+        <label>
+          Bạn chắc chắn muốn hủy sản xuất lô <b>{{ chooseRowData != null ? chooseRowData.lotNoName : chooseRowData }}</b> của sản phẩm <b>{{ chooseRowData != null ? chooseRowData.productName : chooseRowData }}</b> .
+        </label>
+      </div>
+    </div>
+    <div *ngIf="chooseRowData != null && chooseRowData.statusCode != 'TTLNBD' && (chooseRowData.stageFinish != null && chooseRowData.stageFinish != undefined)">
+      <div class="col-md-12">
+        <label>
+          Công đoạn [{{ chooseRowData != null ? chooseRowData.stageFinish : chooseRowData }}] cần được xác nhận hoàn thành trước khi Hủy lô.
+        </label>
+      </div>
+    </div>
+    <div class="col-md-12" [formGroup]="comfirmCancelForm" *ngIf="chooseRowData != null && chooseRowData.statusCode != 'TTLNBD' && (chooseRowData.stageFinish == null || chooseRowData.stageFinish == undefined || chooseRowData.stageFinish == '')">
+      <div class="col-md-12">
+        <label>
+          Xác nhận hủy lô <b>{{ chooseRowData != null ? chooseRowData.lotNoName : chooseRowData }}</b> của sản phẩm <b>{{ chooseRowData != null ? chooseRowData.productName : chooseRowData }}</b> .
+        </label>
+      </div>
+      <div class="col-md-12 mt-10">
+        <label>
+          Số lượng đang sản xuất: <b>{{ chooseRowData != null ? chooseRowData.productionNumber : chooseRowData }}</b>.
+        </label>
+      </div>
+      <div class="col-md-12 mt-10">
+        <label>
+          Công đoạn đang thực hiện: <b>{{ chooseRowData != null ? chooseRowData.stageProgress : chooseRowData }}</b>.
+        </label>
+      </div>
+      <div class="col-md-12 mt-10">
+        <label>
+          <b>Danh sách bán thành phẩm</b>.
+        </label>
+      </div>
+      <div class="col-md-12 mt-10">
+        <div class="row">
+          <div class="col-md-12">
+            <label>Số lượng bán thành phẩm tái sử dụng: </label>
+            <p-inputNumber formControlName="productionNumberReuse" style="margin-left: 10px" mode="decimal" (onChange)="changeNumberReuse()"
+                           [ngClass]="(productionNumberReuse.invalid  && (productionNumberReuse.dirty ||  productionNumberReuse.touched)) ? 'error-border-input': ''"></p-inputNumber>
+          </div>
+        </div>
+        <div class="row mt-10">
+          <div class="col-md-12">
+            <label>Số lượng bán thành phẩm hủy: {{ productionNumberRemaining }}</label>
+          </div>
+        </div>
+        <div class="row mt-10">
+          <div class="col-md-12">
+            <label>Kho nhập: </label>
+            <p-dropdown [options]="wareHouseTSD"
+                        optionLabel="warehouseName"
+                        formControlName="selectWareHouseTSD"
+                        placeholder="Chọn kho"
+                        [style]="{'width':'50%', 'margin-left': '10px'}"
+                        [styleClass]="(selectWareHouseTSD.invalid  && (selectWareHouseTSD.dirty ||  selectWareHouseTSD.touched)) ? 'error-border': ''"
+                        [filter]="true">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mt-10">
+        <label>
+          <b>Danh sách nguyên vật liệu chưa sử dụng:</b>.
+        </label>
+      </div>
+      <div class="col-md-12 mt-10">
+        <div class="row">
+          <div class="col-md-12">
+            <label>Kho nhập: </label>
+            <p-dropdown [options]="wareHouseCSX"
+                        optionLabel="warehouseName"
+                        formControlName="selectWareHouseCSX"
+                        placeholder="Chọn kho"
+                        [style]="{'width':'50%', 'margin-left': '10px'}"
+                        [styleClass]="(selectWareHouseCSX.invalid  && (selectWareHouseCSX.dirty ||  selectWareHouseCSX.touched)) ? 'error-border': ''"
+                        [filter]="true">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="row mt-10">
+          <div class="col-md-12">
+            <p-table [columns]="colNotUsed" [value]="listSpecifications" dataKey="id" editMode="row" [tableStyle]="{'min-width': '40rem'}">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" pResizableColumn
+                      [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                    {{col.header}}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-columns="columns">
+                <tr [pEditableRow]="rowData">
+                  <td *ngFor="let col of columns"
+                      class="ui-resizable-column" [ngSwitch]="col.field"
+                      [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                    <p-cellEditor *ngSwitchCase="'quantityNotProduced'">
+                      <ng-template pTemplate="input">
+                        <p-inputNumber [(ngModel)]="rowData[col.field]" mode="decimal" class="number-fullwidth"></p-inputNumber>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <p-inputNumber [(ngModel)]="rowData[col.field]" mode="decimal" class="number-fullwidth"></p-inputNumber>
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchDefault>
+                      <ng-template pTemplate="input">
+                        {{ rowData[col.field] }}
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{ rowData[col.field] }}
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-10" style="display: flex; justify-content: flex-end;"
+         *ngIf="chooseRowData != null && ((chooseRowData.statusCode != 'TTLNBD' && (chooseRowData.stageFinish == null || chooseRowData.stageFinish == undefined || chooseRowData.stageFinish == '')) || (chooseRowData.statusCode == 'TTLNBD'))">
+      <button #save class="cancel" (click)="cancelStart()" type="button">
+        <span class="text-cancel">Đóng</span>
+      </button>
+      <button class="add-new" type="button" (click)="comfirmCancel()">
+        <span class="add-new-text">Xác nhận</span>
+      </button>
+    </div>
+  </p-dialog>
+</div>

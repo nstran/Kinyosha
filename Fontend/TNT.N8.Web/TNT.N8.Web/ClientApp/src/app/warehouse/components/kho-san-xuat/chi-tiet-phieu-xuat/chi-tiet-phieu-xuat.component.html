@@ -1,0 +1,625 @@
+<!-- <div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div> -->
+<p-toast position="bottom-right"></p-toast>
+<p-confirmDialog [style]="{width: '20vw'}" acceptLabel="Đồng ý" rejectLabel="Đóng"></p-confirmDialog>
+
+<div class="phieu-xuat-kho">
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row pnk-content" id="parent">
+        <div class="col-md-12 no-padding">
+          <div class="row no-margin button-group" [ngClass]="{'fixed': fixed}"
+               [ngStyle]="{'width':withFiexd}">
+            <div class="col-md-12">
+              <div class="center">
+                <span class="header-text">CHI TIẾT PHIẾU XUẤT KHO</span>
+              </div>
+              <div style="float: right;">
+                <button class="cancel" type="button" (click)="goBack()">
+                  <span class="text-cancel">Thoát</span>
+                </button>
+                <button #saveAndCreate class="save-and-new" type="button" *ngIf="trangThai == 2"
+                        [disabled]="awaitResult">
+                  <span class="text-save-and-new">In file</span>
+                </button>
+                <button #save class="save" [disabled]="awaitResult" *ngIf="trangThai == 2"
+                        type="button">
+                  <span class="text-save">Xuất File</span>
+                </button>
+                <button #saveAndCreate *ngIf="trangThai == 0" class="save-and-new" type="button"
+                        [disabled]="awaitResult" (click)="changeStatus()">
+                  <span class="text-save-and-new">Xuất kho</span>
+                </button>
+                <!-- <button #saveAndCreate [disabled]="true" class="save-and-new" type="button"
+                  [disabled]="awaitResult">
+                  <span class="text-save-and-new">Đã xuất kho</span>
+                </button> -->
+                <button #save class="save" *ngIf="trangThai == 0" [disabled]="awaitResult" type="button"
+                        (click)="taoPhieuXuatKho()">
+                  <span class="text-save">Lưu</span>
+                </button>
+              </div>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <form [formGroup]="detailForm">
+        <div class="row pnk-content">
+          <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+            <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right"
+                         collapseIcon="pi pi-fw pi-chevron-circle-down">
+              <p-accordionTab header="Thông tin chung" [selected]="true">
+                <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label>
+                        Mã phiếu: <span style="font-weight: bold; margin-left: 25px">{{maHeThong}}</span>
+                      </label>
+                      <label style="margin-left: 25px">
+                        Trạng thái: <span style="font-weight: bold;">{{trangThaiText}}</span>
+                      </label>
+                      <label style="margin-left: 10%">
+                        Ngày tạo: <span style="font-weight: bold;">{{ngayHienTai}}</span>
+                      </label>
+                      <label style="margin-left: 10%" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType != 4">
+                        Người tạo: <span style="font-weight: bold;">{{userName}}</span>
+                      </label>
+                      <label style="margin-left: 5%" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType != 4">
+                        Bộ phận: <span style="font-weight: bold;">{{department}}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Loại phiếu: </label>
+                        </div>
+                        <div class="col-md-8" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType != 4">
+                          <span *ngIf="loaiPhieuXuatControl.value != 11 && loaiPhieuXuatControl.value != 3">
+                            <p-radioButton styleClass="p-radioButtonCustom" name="group1" value="9" label="Trả lại NVL"
+                                           formControlName="loaiPhieuXuatControl" (onClick)="onClickType(9)">
+                            </p-radioButton>
+                          </span>
+
+                          <span *ngIf="loaiPhieuXuatControl.value != 11 && loaiPhieuXuatControl.value != 3">
+                            <p-radioButton class="ml-25" styleClass="p-radioButtonCustom" name="group1" label="Trả lại CCDC" (onClick)="onClickType(10)"
+                                           formControlName="loaiPhieuXuatControl" value="10"></p-radioButton>
+                          </span>
+
+                          <span *ngIf="loaiPhieuXuatControl.value == 11">
+                            <p-radioButton class="ml-25" styleClass="p-radioButtonCustom" name="group1" label="Trả lại NVL TSD" (onClick)="onClickType(11)"
+                                           formControlName="loaiPhieuXuatControl" value="11"></p-radioButton>
+                          </span>
+                          <span *ngIf="loaiPhieuXuatControl.value == 11">
+                            <p-radioButton class="ml-25" styleClass="p-radioButtonCustom" name="group1" label="Xuất hủy" (onClick)="onClickType(3)"
+                                           formControlName="loaiPhieuXuatControl" value="3"></p-radioButton>
+                          </span>
+                        </div>
+                        <div class="col-md-8" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType == 4">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{loaiPhieu}}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- hàng 3 -->
+                  <div class="row" style="margin-top: 15px;" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType != 4">
+                    <div class="col-md-4" *ngIf="loaiPhieuXuatControl.value != 3">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Kho xuất<span style="color: red">*</span>:</label>
+                        </div>
+                        <div class="col-md-5">
+                          <span>
+                            <p-dropdown [style]="{ width: '100%' }" [options]="listKhoXuat" placeholder="Chọn kho xuất"
+                                        optionLabel="warehouseName" formControlName="khoXuatControl" filter="true">
+                            </p-dropdown>
+                          </span>
+                          <!-- <span class="error-message-span" *ngIf="xuatkhoSXForm.get('khoXuatControl').hasError('required')"
+                              [hidden]="xuatkhoSXForm.get('khoXuatControl').untouched">
+                              Không được để trống
+                          </span> -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Ngày xuất<span style="color: red">*</span>:</label>
+                        </div>
+                        <div class="col-md-5">
+                          <span>
+                            <p-calendar dateFormat="dd/mm/yy" [style]="{ width: '100%' }" [inputStyle]="{ width: '100%' }"
+                                        formControlName="dateNgayXuatControl"></p-calendar>
+                          </span>
+                          <!-- <span class="error-message-span" *ngIf="xuatkhoSXForm.get('dateNgayXuatControl').hasError('required')"
+                              [hidden]="xuatkhoSXForm.get('dateNgayXuatControl').untouched">
+                              Không được để trống
+                          </span> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 15px;" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType == 4">
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Kho xuất*: </label>
+                        </div>
+                        <div class="col-md-5">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{ inventoryDeliveryVoucher?.warehouseName }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Ngày xuất*: </label>
+                        </div>
+                        <div class="col-md-5">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{ inventoryDeliveryVoucher?.inventoryDeliveryVoucherDate | date: 'dd/MM/yyyy' }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- hàng 4 -->
+                  <div class="row" style="margin-top: 15px;" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType != 4">
+                    <div class="col-md-4" *ngIf="loaiPhieuXuatControl.value == 3">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Bộ phận: <br /><a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a></label>
+                        </div>
+                        <div class="col-md-5">
+                          <input type="text" pInputText formControlName="selectOrg" class="w-100 positon-input" disabled="true" />
+                          <i class="pi pi-times positon-input-icon" (click)="removeOrg()" *ngIf="selectOrg.value != null && selectOrg.value != undefined && selectOrg.value != ''"></i>
+                          <!--<p-dropdown [style]="{'width': '100%'}"
+                                      (onChange)="changeDepartmentgetWH($event)"
+                                      [options]="listOrganization" optionLabel="organizationName"
+                                      formControlName="departmentControl"
+                                      placeholder="Chọn bộ phận"></p-dropdown>-->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Kho nhận<span style="color: red">*</span>:</label>
+                        </div>
+                        <div class="col-md-5">
+                          <span>
+                            <p-dropdown [style]="{ width: '100%' }" [options]="listKhoNhan" optionLabel="warehouseName"
+                                        placeholder="Chọn kho nhận" formControlName="khoNhanControl"></p-dropdown>
+                          </span>
+                          <!-- <span class="error-message-span" *ngIf="xuatkhoSXForm.get('khoNhanControl').hasError('required')"
+                              [hidden]="xuatkhoSXForm.get('khoNhanControl').untouched">
+                              Không được để trống
+                          </span> -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" hidden *ngIf="loaiPhieuXuatControl.value == 3">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Người nhận</label>
+                        </div>
+                        <div class="col-md-5">
+                          <p-dropdown [style]="{'width': '100%'}" formControlName="receiveControl" [options]="listEmployee"
+                                      placeholder="Chọn người nhận" optionLabel="EmployeeName"></p-dropdown>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 15px;" *ngIf="inventoryDeliveryVoucher?.inventoryDeliveryVoucherType == 4">
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Sản phẩm: </label>
+                        </div>
+                        <div class="col-md-5">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{ inventoryDeliveryVoucher?.productName }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Lô sản xuất: </label>
+                        </div>
+                        <div class="col-md-5">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{ inventoryDeliveryVoucher?.lotNoName }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Công đoạn: </label>
+                        </div>
+                        <div class="col-md-5">
+                          <label>
+                            <span style="font-weight: bold;">
+                              {{ inventoryDeliveryVoucher?.stateName }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </p-accordionTab>
+            </p-accordion>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-12">
+      <div class="row area-2">
+        <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right"
+                       collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Danh sách xuất" [selected]="true">
+              <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px;">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="box-header-group-btn">
+                      <button type="button" class="btn-refresh">
+                        <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+                      </button>
+                      <button type="button" class="btn-filter">
+                        <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                        <span class="btn-filter-text">Bộ lọc</span>
+                      </button>
+                      <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                             (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
+                      <button type="button" class="btn-save" style="width:90px!important;" *ngIf="trangThai == 0">
+                        <span class="btn-save-text" (click)="themDeNghi(false)">Thêm mới</span>
+                      </button>
+                      <div style="clear: both;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mt-10">
+                  <p-table #myTable [columns]="colsDanhSachXuat" [value]="listData"
+                           [resizableColumns]="true" columnResizeMode="expand" [paginator]="true"
+                           [rows]="10" [rowsPerPageOptions]="[10,20,30]" responsive="true"
+                           class="table-border">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of columns" pResizableColumn
+                            [pSortableColumn]="col.field"
+                            [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                          {{col.header}}
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns"
+                                 let-rowIndex="rowIndex">
+                      <tr>
+                        <td *ngFor="let col of columns"
+                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                            [ngSwitch]="col.field">
+                          <span class="ui-column-title">{{col.header}}</span>
+                          <span *ngSwitchCase="'STT'">
+                            {{rowIndex + 1}}
+                          </span>
+                          <span *ngSwitchCase="'tenVatTu'" class="link"
+                                (click)="tenHangHoaDetail(rowData)"
+                                style="display: inline-block; padding: 2px 2px;">{{rowData[col.field]}}</span>
+                          <span *ngSwitchCase="'donViTinh'">{{rowData[col.field]}}</span>
+                          <span *ngSwitchCase="'soLuongTon'">
+                            {{
+rowData[col.field] |
+                                                        number
+                            }}
+                          </span>
+                          <span *ngSwitchCase="'soLuongGiao'">
+                            {{
+rowData[col.field] |
+                                                        number
+                            }}
+                          </span>
+                          <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </div>
+    <!--
+      <div class="col-md-12">
+        <label>Lý do xuất:</label>
+        <textarea rows="5" cols="242" pInputTextarea style="margin-top: 10px"></textarea>
+      </div>
+    </div> -->
+
+
+    <p-dialog header="Thêm hàng hóa vật tư xuất kho" [(visible)]="xuatKho" [modal]="true" [style]="{width: '40vw'}"
+              [baseZIndex]="10000" [draggable]="false" [resizable]="false" [closable]="true" [modal]="true">
+      <div class="row no-margin">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <span>Chọn hàng hóa, vật tư*:</span>
+            </div>
+            <div class="col-md-3">
+              <span>Đơn vị tính:</span>
+            </div>
+            <div class="col-md-3">
+              <span>Số lượng tồn:</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <form [formGroup]="vatTu">
+                <span>
+                  <p-dropdown fromControlName="vatTuControl" [options]="listProduct"
+                              optionLabel="productName" (onChange)="checkVatTu($event)"
+                              placeholder="Lựa chọn vật tư">
+                  </p-dropdown>
+                </span>
+                <!-- <p [hidden]="vatTuControl.valid || vatTuControl.untouched">
+                  <span *ngIf="vatTuControl.hasError('required') || vatTuControl.hasError('blankString')"
+                    class="error-message-span">
+                    Không được để trống
+                  </span>
+                </p> -->
+              </form>
+            </div>
+
+            <div class="col-md-3">
+              <span>
+                <p style="font-weight: bold;">{{donViTinh}}</p>
+              </span>
+            </div>
+            <div class="col-md-3">
+              <span>
+                <p style="font-weight: bold;">{{soLuongTon}}</p>
+              </span>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-10">
+              <span>
+                <p>Danh sách xuất kho theo Lot.No:</p>
+              </span>
+            </div>
+            <div class="col-md-2">
+              <span style="float: right; margin-bottom: 8px;">
+                <button type="button"  pButton (click)="themMoiDialog()" label="Thêm mới"></button>
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <p-table #myTable [columns]="colsVatTu" [value]="listDataDialog" [resizableColumns]="true"
+                       columnResizeMode="expand" [paginator]="true" [rows]="10"
+                       [rowsPerPageOptions]="[10,20,30]" responsive="true" class="table-border">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                        [ngStyle]="{ 'text-align': col.textAlign, 'display': col.display, 'width': col.width }">
+                      {{col.header}}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                  <tr>
+                    <td *ngFor="let col of columns"
+                        [ngStyle]="{'text-align': col.textAlign, 'width': col.width}"
+                        [ngSwitch]="col.field" pEditableColumn>
+                      <span *ngSwitchCase="'LotNo'">
+                        <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName"
+                                    [filter]="true" appendTo="body" placeholder="Lựa chọn lot no"
+                                    [style]="{'width': '100%', 'float': 'left'}" appendTo="body"
+                                    [(ngModel)]="rowData[col.field]" [baseZIndex]="999"
+                                    (onChange)="changeLotNo($event,rowIndex)">
+                        </p-dropdown>
+                        <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                      </span>
+                      <span *ngSwitchCase="'tonKho'">
+                        <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                        <span>{{rowData[col.field] | number}}</span>
+                      </span>
+                      <span *ngSwitchCase="'sLuongGiao'">
+                        <input type="text" style="width: 100%" pInputText
+                               [(ngModel)]="rowData[col.field]" (change)="tinhTong()"
+                               class="number-input"
+                               [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                      </span>
+                      <span *ngSwitchCase="'thaoTac'">
+                        <button style="width: 100%; color: red;" type="button" pButton
+                                icon="pi pi-trash" class="ui-button-secondary"
+                                (click)="xoaDeXuat(rowData, rowIndex)"></button>
+                      </span>
+                      <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <span>Tổng cộng: {{tongSoLuongDeNghi | number}}</span>
+            </div>
+            <!-- <div class="col-md-6">
+              <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+            </div> -->
+          </div>
+
+        </div>
+      </div>
+      <p-footer>
+        <button type="button" pButton label="Lưu" (click)="luuDialog()"></button>
+        <button type="button" pButton label="Hủy" (click)="huyDialog()" class="ui-button-secondary"></button>
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog header="Cập nhật hóa vật tự đề nghị xuất kho" [(visible)]="deNghiXuatKhoEdit" [modal]="true"
+              [style]="{width: '70vw'}" [baseZIndex]="900" [draggable]="false" [resizable]="false" [closable]="true">
+      <div class="row no-margin">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <span>Chọn hàng hóa, vật tư*:</span>
+            </div>
+            <div class="col-md-3">
+              <span>Đơn vị tính:</span>
+            </div>
+            <div class="col-md-3" *ngIf="trangThai == 0">
+              <span>Số lượng tồn:</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <form [formGroup]="vatTuEdit">
+                <span>
+                  <!-- <p-dropdown formControlName="vatTuControlEdit" [options]="listProductCheck"
+                              optionLabel="productCode" (onChange)="checkVatTu($event)"
+                              placeholder="Lựa chọn vật tư"
+                              [styleClass]="(vatTuControlEdit.invalid && (vatTuControlEdit.dirty || vatTuControlEdit.touched)) ? 'error-border' : ''"></p-dropdown> -->
+                              <p style="font-weight: bold;">{{tenHangHoa}}</p>
+                </span>
+                <p [hidden]="vatTuControlEdit.valid || vatTuControlEdit.untouched">
+                  <span *ngIf="vatTuControlEdit.hasError('required') || vatTuControlEdit.hasError('blankString') "
+                        class="error-message-span">
+                    Không được để trống
+                  </span>
+                </p>
+              </form>
+            </div>
+
+            <div class="col-md-3">
+              <span>
+                <p style="font-weight: bold;">{{donViTinh}}</p>
+              </span>
+            </div>
+            <div class="col-md-3" *ngIf="trangThai == 0">
+              <span>
+                <p style="font-weight: bold;">{{soLuongTon}}</p>
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-10">
+              <span>
+                <p>Danh sách đề nghị xuất kho:</p>
+              </span>
+            </div>
+            <div class="col-md-2">
+              <span style="float: right; margin-bottom: 8px;" *ngIf="trangThai == 0">
+                <button type="button" pButton (click)="themMoiDialogEdit()" label="Thêm mới"></button>
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <p-table #myTable [columns]="colsVatTu" [value]="listDataDialog" [resizableColumns]="true"
+                       columnResizeMode="expand" [paginator]="true" [rows]="10"
+                       [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                        [ngStyle]="{ 'text-align': 'center', display: col.display, width: col.width }">
+                      {{col.header}}
+                      <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                  <tr>
+                    <td *ngFor="let col of columns" [ngSwitch]="col.field" pEditableColumn
+                        [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+                      <span *ngSwitchCase="'LotNo'">
+                        <p-dropdown [options]="rowData.dataLotNo" optionLabel="lotNoName"
+                                    [filter]="true" [(ngModel)]="rowData[col.field]"
+                                    placeholder="Lựa chọn lot no" [disabled]="trangThai == 2"
+                                    [style]="{'width': '100%', 'float': 'left'}" appendTo="body"
+                                    [baseZIndex]="999" (onChange)="changeLotNo($event,rowIndex)">
+                        </p-dropdown>
+                        <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                      </span>
+                      <span *ngSwitchCase="'tonKho'">
+                        <!-- <input type="text" pInputText [(ngModel)]="rowData[col.field]" /> -->
+                        <span>{{rowData[col.field] | number}}</span>
+                      </span>
+                      <span *ngSwitchCase="'ssLuongGiao'">
+                        <input type="text" style="width: 100%" pInputText [disabled]="trangThai == 2"
+                               [(ngModel)]="rowData[col.field]" (change)="tinhTong()"
+                               class="number-input"
+                               [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
+                      </span>
+                      <span *ngSwitchCase="'thaoTac'">
+                        <button style="width: 100%; color: red;" type="button" pButton
+                                icon="pi pi-trash" class="ui-button-secondary"
+                                (click)="xoaDeXuat(rowData)"></button>
+                      </span>
+                      <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                    </td>
+
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <span>Tổng cộng: {{tongSoLuongDeNghi | number}}</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <p-footer>
+        <button type="button" pButton label="Lưu" *ngIf="trangThai == 0" (click)="luuDialogEdit()"></button>
+        <button type="button" pButton label="Hủy" *ngIf="trangThai == 0" (click)="huyDialogEdit()"
+                class="ui-button-secondary"></button>
+      </p-footer>
+    </p-dialog>

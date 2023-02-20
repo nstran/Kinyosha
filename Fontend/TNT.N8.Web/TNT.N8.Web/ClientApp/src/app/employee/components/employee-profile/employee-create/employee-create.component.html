@@ -1,0 +1,575 @@
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="ĐỒNG Ý" rejectLabel="HỦY">
+</p-confirmDialog>
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<p-toast position="bottom-right"></p-toast>
+
+<div class="emp-create">
+  <div class="row">
+    <!-- <form [createEmpForm]="createEmpForm" style="height: 100%;">
+      <div class="col-md-12">
+        <div class="row emp-create-content">
+          <div class="row no-margin button-group" [ngClass]="{'fixed' : fixed}">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-12">
+                  <img src="/assets/icons/components/create_lead.svg" class="header-icon">
+                  <div class="header">Tạo nhân viên</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 header-botton">
+              <div class="row" style="display: flex; justify-content: flex-end; margin-right: 0px;">
+                <div style="padding-right: 10px;">
+                  <span *ngIf="!isInvalidForm">
+                    <img src="/assets/icons/components/ios-warning.svg" class="ios-warning">
+                  </span>
+                  <div class="box-waring" *ngIf="isInvalidForm" #toggleButton (click)="toggleNotifiError()">
+                    <img src="/assets/icons/components/ios-warning-active.svg" class="ios-warning-active">
+                  </div>
+                  <div class="notification" #notifi *ngIf="isOpenNotifiError">
+                    <div *ngIf="(formfirstName.invalid && (formfirstName.dirty || formfirstName.touched))"
+                      class="notifi-row" (click)="scroll(boxFirstName)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formfirstName.hasError('required')" class="notifi-text">Chưa điền họ tên đệm nhân
+                        viên</span>
+                      <span *ngIf="formfirstName?.errors?.maxlength" class="notifi-text">Họ tên đệm tối đa 250 ký
+                        tự</span>
+                      <span *ngIf="formfirstName?.errors?.forbiddenSpaceText" class="notifi-text">Họ tên đệm không được
+                        để
+                        trắng</span>
+                    </div>
+
+                    <div *ngIf="(formlastName.invalid && (formlastName.dirty || formlastName.touched))"
+                      class="notifi-row" (click)="scroll(boxLastName)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formlastName.hasError('required')" class="notifi-text">Chưa điền tên nhân
+                        viên</span>
+                      <span *ngIf="formlastName?.errors?.maxlength" class="notifi-text">Tên nhân viên tối đa 250 ký
+                        tự</span>
+                      <span *ngIf="formlastName?.errors?.forbiddenSpaceText" class="notifi-text">Tên nhân viên không
+                        được
+                        để
+                        trắng</span>
+                    </div>
+
+                    <div *ngIf="(formIdentityId.invalid && (formIdentityId.dirty || formIdentityId.touched))"
+                      class="notifi-row" (click)="scroll(boxCodeEmployee)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formIdentityId.hasError('required')" class="notifi-text">Chưa điền mã nhân
+                        viên</span>
+                      <span *ngIf="formIdentityId?.errors?.maxlength" class="notifi-text">Mã nhân viên tối đa 250 ký
+                        tự</span>
+                      <span *ngIf="formIdentityId?.errors?.forbiddenSpaceText" class="notifi-text">Mã nhân viên không
+                        được
+                        để
+                        trắng</span>
+                    </div>
+
+                    <div
+                      *ngIf="(formOrganizationId.invalid && (formOrganizationId.dirty || formOrganizationId.touched))"
+                      class="notifi-row" (click)="scroll(boxOrganization)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formOrganizationId.hasError('required')" class="notifi-text">Chưa chọn phòng
+                        ban</span>
+                    </div>
+
+                    <div *ngIf="(formEmail.invalid && (formEmail.dirty || formEmail.touched))" class="notifi-row"
+                      (click)="scroll(boxEmail)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formEmail.hasError('required')" class="notifi-text">Chưa nhập email</span>
+                      <span *ngIf="formEmail.hasError('pattern')" class="notifi-text">Sai định dạng email</span>
+                    </div>
+
+                    <div *ngIf="(formPhone.invalid && (formPhone.dirty || formPhone.touched))" class="notifi-row"
+                      (click)="scroll(boxPhone)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formPhone.hasError('pattern')" class="notifi-text">Sai định dạng số điện thoại</span>
+                    </div>
+
+                    <div *ngIf="(formUserName.invalid && (formUserName.dirty || formUserName.touched))"
+                      class="notifi-row" (click)="scroll(boxUserName)">
+                      <img src="/assets/icons/components/ios-alert.svg" class="ios-alert">
+                      <span *ngIf="formUserName.hasError('required')" class="notifi-text">Chưa nhập tên tài
+                        khoản</span>
+                      <span *ngIf="formUserName?.errors?.maxlength" class="notifi-text">Tên tài khoản tối đa 250
+                        ký tự</span>
+                      <span *ngIf="formUserName?.errors?.forbiddenSpaceText" class="notifi-text">Tên tài khoản không
+                        được
+                        để trắng</span>
+                      <span *ngIf="formUserName.hasError('duplicateCode')" class="notifi-text">Tên tài khoản đã tồn
+                        tại</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="float: right;">
+                  <button class="btn-cancel" type="button" (click)="cancel()"><span
+                      class="text-cancel">Hủy</span></button>
+                  <button #saveAndCreate class="btn-create-add" *ngIf="actionAdd" (click)="createEmployee(true)"
+                    [disabled]="awaitResult"><span class="text-save-and-new">Lưu và Thêm mới</span></button>
+                  <button #save class="btn-create" *ngIf="actionAdd" type="button" (click)="createEmployee(false)"
+                    [disabled]="awaitResult"><span class="text-save">Lưu</span></button>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row no-margin" style="background: #ffffff; padding : 15px 0px;">
+            <div class="col-md-6 no-padding border-right-color">
+              <div class="row no-margin">
+
+                <div class="col-md-6">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>Họ và tên đệm<span class="require">*</span></label>
+                    </div>
+                    <div #boxFirstName class="col-md-12 no-padding">
+                      <input type="text" class="w100" pInputText formControlName="formfirstName"
+                        [ngClass]="(formfirstName.invalid  && (formfirstName.dirty ||  formfirstName.touched)) ? 'error-border': ''">
+                    </div>
+                    <div class="col-md-12 no-padding" [hidden]="formfirstName.valid || formfirstName.untouched">
+                      <span *ngIf="formfirstName.hasError('required')" class="required-span">Chưa điền họ tên đệm
+                        nhân viên</span>
+                      <span *ngIf="formfirstName?.errors?.maxlength" class="required-span">Họ tên đệm nhân viên tối
+                        đa 250
+                        ký tự</span>
+                      <span *ngIf="formfirstName?.errors?.forbiddenSpaceText" class="required-span">Họ tên đệm nhân
+                        viên không được
+                        để trắng</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>Tên<span class="require">*</span></label>
+                    </div>
+                    <div #boxLastName class="col-md-12 no-padding">
+                      <input type="text" class="w100" pInputText formControlName="formlastName"
+                        [ngClass]="(formlastName.invalid  && (formlastName.dirty ||  formlastName.touched)) ? 'error-border': ''">
+                    </div>
+                    <div class="col-md-12 no-padding" [hidden]="formlastName.valid || formlastName.untouched">
+                      <span *ngIf="formlastName.hasError('required')" class="required-span">Chưa điền tên nhân
+                        viên</span>
+                      <span *ngIf="formlastName?.errors?.maxlength" class="required-span">Tên nhân viên tối đa 250
+                        ký tự</span>
+                      <span *ngIf="formlastName?.errors?.forbiddenSpaceText" class="required-span">Tên nhân viên
+                        không được
+                        để trắng</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mt-10">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>Mã nhân viên<span class="require">*</span></label>
+                    </div>
+                    <div #boxCodeEmployee class="col-md-12 no-padding">
+                      <input type="text" class="w100" pInputText formControlName="formIdentityId"
+                        [ngClass]="(formIdentityId.invalid  && (formIdentityId.dirty ||  formIdentityId.touched)) ? 'error-border': ''">
+                    </div>
+                  </div>
+                  <div class="col-md-12 no-padding" [hidden]="formIdentityId.valid || formIdentityId.untouched">
+                    <span *ngIf="formIdentityId.hasError('required')" class="required-span">Chưa điền mã nhân
+                      viên</span>
+                    <span *ngIf="formIdentityId?.errors?.forbiddenSpaceText" class="required-span">Mã nhân viên
+                      không
+                      được để trắng</span>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mt-10">
+                  <div class="row no-margin">
+                    <div #boxGender class="col-md-12 no-padding">
+                      <label>Giới tính<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-12 no-padding">
+                      <p-dropdown [options]="genders" formControlName="formGender" optionLabel="viewValue"
+                        [style]="{'width': '100%'}"
+                        [ngClass]="(formGender.invalid  && (formGender.dirty ||  formGender.touched)) ? 'error-border': ''">
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-10">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>
+                        Chọn đơn vị
+                        <span class="require">*</span>
+                        <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(Xem sơ đồ tổ chức)</u></a>
+                      </label>
+                    </div>
+                    <div class="col-md-12 no-padding">
+                      <p-chips formControlName="formOrganizationId" [style]="{'width': '100%'}" disabled="true">
+                      </p-chips>
+                    </div>
+                    <div class="col-md-12 no-padding"
+                      [hidden]="formOrganizationId.valid || formOrganizationId.untouched">
+                      <span *ngIf="formOrganizationId.hasError('required')" class="required-span">
+                        Chưa chọn đơn vị
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-10">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>
+                        Chức vụ</label>
+                    </div>
+                    <div class="col-md-12 no-padding">
+                      <p-dropdown [options]="roles" formControlName="formPositionId" optionLabel="positionName"
+                        [style]="{'width': '100%'}" placeholder="Chọn chức vụ"></p-dropdown>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-10">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>
+                        Email
+                        <span class="require">*</span>
+                      </label>
+                    </div>
+                    <div #boxEmail class="col-md-12 no-padding">
+                      <input class="w100" type="text" formControlName="formEmail" pInputText [style]="{'width': '100%'}"
+                        [ngClass]="(formEmail.invalid  && (formEmail.dirty ||  formEmail.touched)) ? 'error-border': ''">
+                    </div>
+                  </div>
+                  <div class="col-md-12 no-padding" [hidden]="formEmail.valid || formEmail.untouched">
+                    <span *ngIf="formEmail.hasError('required')" class="required-span">Chưa nhập email</span>
+                    <span *ngIf="formEmail.hasError('pattern')" class="required-span">Sai định dạng email</span>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-10 bt-10">
+                  <div class="row no-margin">
+                    <div class="col-md-12 no-padding">
+                      <label>
+                        Số điện thoại</label>
+                    </div>
+                    <div #boxPhone class="col-md-12 no-padding">
+                      <input class="w100" type="text" formControlName="formPhone" pInputText
+                        [style]="{'width': '100%'}">
+                    </div>
+                  </div>
+                  <div class="col-md-12 no-padding" [hidden]="formPhone.valid || formPhone.untouched">
+                    <span *ngIf="formPhone.hasError('pattern')" class="required-span">Sai
+                      định dạng số điện thoại</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 no-padding">
+              <div class="col-md-12 mt-10">
+                <div class="row no-margin">
+                  <div class="col-md-12 no-padding">
+                    <label>
+                      Tên tài khoản
+                      <span class="require">*</span>
+                    </label>
+                  </div>
+                  <div #boxUserName class="col-md-12 no-padding">
+                    <input class="w100" type="text" formControlName="formUserName" pInputText
+                      [style]="{'width': '100%'}"
+                      [ngClass]="(formUserName.invalid  && (formUserName.dirty ||  formUserName.touched)) ? 'error-border': ''">
+                  </div>
+                </div>
+                <div class="col-md-12 no-padding" [hidden]="formUserName.valid || formUserName.untouched">
+                  <span *ngIf="formUserName.hasError('required')" class="required-span">Chưa nhập tên tài
+                    khoản</span>
+                  <span *ngIf="formUserName?.errors?.maxlength" class="required-span">Tên tài khoản tối đa 250
+                    ký tự</span>
+                  <span *ngIf="formUserName?.errors?.forbiddenSpaceText" class="required-span">Tên tài khoản không
+                    được
+                    để trắng</span>
+                  <span *ngIf="formUserName.hasError('duplicateCode')" class="required-span">Tên tài khoản đã tồn
+                    tại</span>
+                </div>
+              </div>
+
+              <div class="col-md-12 mt-10">
+                <div class="row no-margin">
+                  <div class="col-md-12 no-padding" style="color: cornflowerblue;">
+                    <label>Người dùng có được phép truy nhập vào hệ thống hay không?</label>
+                  </div>
+                  <div class="col-md-12 buffer-bottom-label" style="padding-top: 3px;">
+                    <div class="col-md-4 emp-create-staff" style="padding-left: 25px;">
+                      <p-radioButton id="formIsAccess" name="formIsAccess" formControlName="formIsAccess" value="true"
+                        label="Có">
+                      </p-radioButton>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 35px;">
+                      <p-radioButton id="formIsAccess" name="formIsAccess" formControlName="formIsAccess" value="false"
+                        label="Không">
+                      </p-radioButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form> -->
+    <div class="col-md-12">
+      <div class="row emp-create-content">
+        <div class="col-md-6 d-inline-flex">
+          <img src="/assets/icons/components/create_lead.svg" class="header-icon">
+          <div class="header">Tạo nhân viên</div>
+        </div>
+        <div class="col-md-6 button-group text-right">
+          <button pButton type="button" label="Hủy" class="btn btn-cancel" (click)="cancel()"></button>
+          <!-- <button *ngIf="actionAdd" #saveAndCreate [disabled]="awaitResult" pButton type="button"
+            label="Lưu và Thêm mới" class="btn btn-create-add" (click)="createEmployee(true)"></button> -->
+          <button *ngIf="actionAdd" #save pButton [disabled]="awaitResult" type="button" label="Lưu"
+                  class="btn btn-create" (click)="createEmployee(false)"></button>
+        </div>
+      </div>
+      <!-- Thông tin chung -->
+      <div class="row">
+        <div class="col-md-12">
+          <p-tabView class="custom-tabview">
+            <p-tabPanel header="Thông tin chung">
+              <ng-container>
+                <form class="form-horizontal" [formGroup]="createEmpForm">
+                  <div class="row mb-3">
+                    <div class="col-md-6 text-center border-right">
+                      <input type="file" id="imageProfile" accept="image/*" (change)="handleFileUpload($event)"
+                             class="file-input d-none" />
+                      <img class="emp-avatar" [src]="transform(currentLogoUrl)">
+                      <div class="upload-image">
+                        <button pButton type="button" icon="pi pi-upload" iconPos="right" label="Chọn ảnh"
+                                class="ui-button-secondary btn-secondary" (click)="uploadImage()"></button>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mt-3 p-0">
+                      <div class="col-md-12 form-group">
+                        <label>Mã nhân viên <span class="required">*</span>:</label>
+                        <input class="w-100" type="text" formControlName="EmployeeCode" pInputText
+                               [ngClass]="submitted && createEmpForm.controls.EmployeeCode.errors ? 'error-border': ''">
+                        <p class="required" *ngIf="submitted && createEmpForm.controls.EmployeeCode.errors">
+                          {{
+                          error['EmployeeCode']
+                          }}
+                        </p>
+                      </div>
+                      <div class="col-md-12 form-group" style="color: cornflowerblue;">
+                        <label>Người dùng có được phép truy nhập vào hệ thống hay không?</label>
+                      </div>
+                      <div class="col-md-12 buffer-bottom-label">
+                        <div class="col-md-4">
+                          <p-radioButton id="formIsAccess" name="IsAccessable" formControlName="IsAccessable"
+                                         value="true" label="Có">
+                          </p-radioButton>
+                        </div>
+                        <div class="col-md-4">
+                          <p-radioButton id="formIsAccess" name="IsAccessable" formControlName="IsAccessable"
+                                         value="false" label="Không">
+                          </p-radioButton>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 form-group">
+                      <label>Họ và tên đệm <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="FirstName" class="w-100" (change)="khoiTaoWorkEmail()"
+                             [ngClass]="submitted && createEmpForm.controls.FirstName.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.FirstName.errors">
+                        {{
+                        error['FirstName']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Tên tiếng việt <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="LastName" class="w-100" (change)="khoiTaoWorkEmail()"
+                             [ngClass]="submitted && createEmpForm.controls.LastName.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.LastName.errors">
+                        {{
+                        error['LastName']
+                        }}
+                      </p>
+                    </div>
+                    <div hidden class="col-md-3 form-group">
+                      <label>Tên tiếng anh:</label>
+                      <input type="text" pInputText formControlName="TenTiengAnh" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.TenTiengAnh.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.TenTiengAnh.errors">
+                        {{
+                        error['TenTiengAnh']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Giới tính <span class="required">*</span>:</label>
+                      <div>
+                        <p-radioButton name="Gender" formControlName="Gender" value="NAM" label="Nam">
+                        </p-radioButton>
+                        <p-radioButton name="Gender" formControlName="Gender" value="NU" label="Nữ" class="ml-2">
+                        </p-radioButton>
+                      </div>
+                    </div>
+                  </div>
+                  <div hidden class="row">
+                    <div class="col-md-3 form-group">
+                      <label>Ngày sinh <span class="required">*</span>:</label>
+                      <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1950:2022" dateFormat="dd/mm/yy" [baseZIndex]="9999" formControlName="DateOfBirth"
+                                  [style]="{'width':'100%'}" showButtonBar="true" [inputStyle]="{'width':'100%'}"
+                                  [ngClass]="submitted && createEmpForm.controls.DateOfBirth.errors ? 'error-border': ''">
+                      </p-calendar>
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.DateOfBirth.errors">
+                        {{
+                        error['DateOfBirth']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Quốc tịch <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="QuocTich" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.QuocTich.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.QuocTich.errors">
+                        {{
+                        error['QuocTich']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Dân tộc <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="DanToc" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.DanToc.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.DanToc.errors">
+                        {{
+                        error['DanToc']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Tôn giáo <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="TonGiao" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.TonGiao.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.TonGiao.errors">
+                        {{
+                        error['TonGiao']
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div hidden class="row">
+                    <div class="col-md-3 form-group">
+                      <label>Ngày vào:</label>
+                      <input type="text" pInputText formControlName="StartedDate" class="w-100" placeholder="Tự động hiển thị theo HĐ" />
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>
+                        Phòng ban <span class="required">*</span>:
+                        <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+                      </label>
+                      <input type="text" pInputText formControlName="OrganizationId" class="w-100"
+                             [ngClass]="submitted && error['OrganizationId'] ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && error['OrganizationId']">
+                        {{
+                        error['OrganizationId']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Vị trí làm việc:</label>
+                      <input type="text" pInputText formControlName="ViTriLamViec" class="w-100" />
+                      <!-- <p-chips formControlName="ViTriLamViec" [style]="{'width': '100%'}" disabled="true"
+                        [ngClass]="submitted && createEmpForm.controls.ViTriLamViec.errors ? 'error-border': ''">
+                      </p-chips> -->
+                      <!-- <p class="required" *ngIf="submitted && createEmpForm.controls.ViTriLamViec.errors">{{
+                        error['ViTriLamViec'] }}
+                      </p> -->
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Chức vụ:</label>
+                      <input type="text" pInputText formControlName="PositionId" class="w-100" placeholder="Theo chức vụ hiện tại" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 form-group">
+                      <label>Số điện thoại cá nhân <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="Phone" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.Phone.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.Phone.errors">
+                        {{
+                        error['Phone']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Số điện thoại nhà riêng:</label>
+                      <input type="text" pInputText formControlName="OtherPhone" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.OtherPhone.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.OtherPhone.errors">
+                        {{
+                        error['OtherPhone']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>Số điện thoại công ty:</label>
+                      <input type="text" pInputText formControlName="WorkPhone" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.WorkPhone.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.WorkPhone.errors">
+                        {{
+                        error['WorkPhone']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <label>
+                        Phòng ban <span class="required">*</span>:
+                        <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+                      </label>
+                      <input type="text" pInputText formControlName="OrganizationId" class="w-100"
+                             [ngClass]="submitted && error['OrganizationId'] ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && error['OrganizationId']">
+                        {{
+                        error['OrganizationId']
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <label>Email cá nhân <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="Email" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.Email.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.Email.errors">
+                        {{
+                        error['Email']
+                        }}
+                      </p>
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label>Email công ty <span class="required">*</span>:</label>
+                      <input type="text" pInputText formControlName="WorkEmail" class="w-100"
+                             [ngClass]="submitted && createEmpForm.controls.WorkEmail.errors ? 'error-border': ''" />
+                      <p class="required" *ngIf="submitted && createEmpForm.controls.WorkEmail.errors">
+                        {{
+                        error['WorkEmail']
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                </form>
+              </ng-container>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

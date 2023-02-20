@@ -1,0 +1,123 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="create-warehouse">
+  <form [formGroup]="createWarehouseForm">
+    <div class="row top-buffer">
+      <div class="col-md-8">
+        <div class="row bottom-buffer">
+          <div class="col-md-12">
+            Tên<span class="required">*</span>
+          </div>
+          <div class="col-md-12">
+            <input maxlength="100"
+              [ngClass]="(createWarehouseForm.get('WarehouseName').invalid  &&  createWarehouseForm.get('WarehouseName').touched) ? 'error-border': ''"
+              formControlName='WarehouseName' class="w100" type="text" pInputText />
+          </div>
+          <div class="col-md-12"
+            [hidden]="createWarehouseForm.get('WarehouseName').valid || createWarehouseForm.get('WarehouseName').untouched">
+            <span
+              *ngIf="createWarehouseForm.get('WarehouseName').hasError('required')  || createWarehouseForm.get('WarehouseName').hasError('blankString')"
+              class="error-message-span">Không được để trống</span>
+            <span *ngIf="createWarehouseForm.get('WarehouseName').hasError('duplicateCode')" class="error-message-span">Tên kho
+              đã tồn tại trong hệ thống</span>
+          </div>
+        </div>
+        <div class="row bottom-buffer">
+          <div class="col-md-12">
+            Địa chỉ
+          </div>
+          <div class="col-md-12">
+            <input
+              [ngClass]="(createWarehouseForm.get('WarehouseAddress').invalid  &&  createWarehouseForm.get('WarehouseAddress').touched) ? 'error-border': ''"
+              formControlName='WarehouseAddress' class="w100" type="text" pInputText />
+          </div>
+        </div>
+        <div class="row bottom-buffer">
+          <div class="col-md-12">
+            Loại kho
+          </div>
+          <div class="col-md-12">
+            <p-dropdown
+              [styleClass]="(createWarehouseForm.get('WareHouseType').invalid && (createWarehouseForm.get('WareHouseType').dirty || createWarehouseForm.get('WareHouseType').touched)) ? 'error-border' : ''"
+              formControlName="WareHouseType" [options]="listCategoryEntityModel" optionLabel="categoryName"
+              [autoDisplayFirst]="false" [filter]="true" [showClear]="true" [style]="{'width': '100%'}"></p-dropdown>
+          </div>
+        </div>
+
+        <div class="row bottom-buffer">
+          <div class="col-md-12">
+              Bộ phận
+              <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a>
+          </div>
+          <div class="col-md-12">
+            <input type="text" pInputText formControlName="Department" class="w-100" />
+          </div>
+        </div>
+
+
+      <div class="row bottom-buffer">
+        <div class="col-md-12">
+          Mô tả
+        </div>
+        <div class="col-md-12">
+          <textarea pInputTextarea rows="7" class="w100" formControlName="WarehouseDescription"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row bottom-buffer">
+        <div class="col-md-12">
+          Mã<span class="required">*</span>
+        </div>
+        <div class="col-md-12">
+          <input maxlength="20"
+            [ngClass]="(createWarehouseForm.get('WarehouseCode').invalid  &&  createWarehouseForm.get('WarehouseCode').touched) ? 'error-border': ''"
+            formControlName='WarehouseCode' class="w100" type="text" pInputText />
+        </div>
+        <div class="col-md-12"
+          [hidden]="createWarehouseForm.get('WarehouseCode').valid || createWarehouseForm.get('WarehouseCode').untouched">
+          <span
+            *ngIf="createWarehouseForm.get('WarehouseCode').hasError('required') || createWarehouseForm.get('WarehouseCode').hasError('blankString')"
+            class="error-message-span">Không được để trống</span>
+          <span *ngIf="createWarehouseForm.get('WarehouseCode').hasError('duplicateCode')" class="error-message-span">Mã kho đã
+            tồn tại trong hệ thống</span>
+        </div>
+      </div>
+      <div class="row bottom-buffer">
+        <div class="col-md-12">
+          Điện thoại
+        </div>
+        <div class="col-md-12">
+          <input
+            [ngClass]="(createWarehouseForm.get('WarehousePhone').invalid  &&  createWarehouseForm.get('WarehousePhone').touched) ? 'error-border': ''"
+            formControlName='WarehousePhone' class="w100" type="text" pInputText />
+        </div>
+        <div class="col-md-12"
+          [hidden]="createWarehouseForm.get('WarehousePhone').valid || createWarehouseForm.get('WarehousePhone').untouched">
+          <span *ngIf="createWarehouseForm.get('WarehousePhone').hasError('pattern')" class="error-message-span">Sai định dạng
+            Số điện thoại</span>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+    <button class="cancel" type="button" (click)="cancel()">
+      <span class="text-cancel">Hủy</span>
+    </button>
+    <button class="save" type="button" (click)="createWarehouse()">
+      <span class="text-save">Lưu</span>
+    </button>
+  </div>
+</div>
+</form>
+</div>

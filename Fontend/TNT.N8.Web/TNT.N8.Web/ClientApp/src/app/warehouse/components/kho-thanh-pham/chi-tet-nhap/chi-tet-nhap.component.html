@@ -1,0 +1,162 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<div class="phieu-nhap-kho">
+
+  <div class="row no-margin">
+    <div class="col-md-12">
+      <div class="row pnk-content" id="parent">
+        <div class="col-md-12 no-padding">
+          <div class="row no-margin button-group" [ngClass]="{'fixed': fixed}" [ngStyle]="{'width':withFiexd}">
+            <div class="col-md-12">
+              <div class="center">
+                <!-- <img src="/assets/icons/components/create_lead.svg" class="header-icon"> -->
+                <span class="header-text">CHI TIẾT THÔNG TIN NHẬP KHO THÀNH PHẨM</span>
+              </div>
+
+              <div style="float: right;">
+                <span *ngIf="!isInvalidForm" style="margin-right: 5px;">
+                  <img src="/assets/icons/components/ios-warning.svg" class="ios-warning">
+                </span>
+                <div class="box-waring" *ngIf="isInvalidForm" #toggleButton (click)="toggleNotifiError()">
+                  <img src="/assets/icons/components/ios-warning-active.svg" class="ios-warning-active">
+                </div>
+
+                <button class="cancel" type="button" (click)="goBack()">
+                  <span class="text-cancel">Thoát</span>
+                </button>
+                <button *ngIf="status == 0" #saveAndCreate class="save-and-new" type="button"
+                  [disabled]="awaitResult" (click)="nhapKho()">
+                  <span class="text-save-and-new">Nhập Kho</span>
+                </button>
+              </div>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row pnk-content">
+        <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Thông tin chung" [selected]="true">
+              <div class="col-md-12" style="padding-bottom: 10px">
+                <div class="row">
+                  <span class="col-md-12">
+                    <label>Loại nhập: <span style="font-weight: bold; margin-left: 25px">{{inventoryDeliveryVoucher?.inventoryReceivingVoucherTypeName}}</span></label>
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="col-md-3">
+                    <label>Kho nhập: <span style="font-weight: bold; margin-left: 25px">{{khoNhap}}</span></label>
+
+                  </span>
+                  <span class="col-md-3">
+                    <label>Ngày nhập: <span style="font-weight: bold; margin-left: 25px">{{ngayNhap}}</span></label>
+                  </span>
+                  <span class="col-md-6">
+                  </span>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+
+      <div class="row area-2">
+        <div class="row no-margin" style="background: #ffffff; padding: 10px 0px;">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Thông tin thành phẩm nhập kho" [selected]="true">
+              <div class="col-md-12" style="padding-bottom: 10px">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="box-header-group-btn">
+                      <button type="button" class="btn-refresh">
+                        <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+                      </button>
+                      <button type="button" class="btn-filter">
+                        <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                        <span class="btn-filter-text">Bộ lọc</span>
+                      </button>
+                      <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                        (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
+                      <div style="clear: both;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mt-10">
+                  <div class="col-md-12">
+                    <p-table #myTable [columns]="colsDanhSach" [value]="listItemGroup" [resizableColumns]="true"
+                      editMode="row" columnResizeMode="expand" [paginator]="true" [rows]="10"
+                      [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border">
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+                            [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+                            {{col.header}}
+                            <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
+                        let-editing="editing">
+                        <tr [pEditableRow]="rowData">
+                          <td *ngFor="let col of columns" [ngSwitch]="col.field"
+                            [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+                            <!-- <span class="ui-column-title">{{col.header}}</span> -->
+
+                            <span *ngSwitchCase="'stt'" style="display: inline-block; padding: 2px 2px;">
+                              {{rowIndex + 1}}
+                            </span>
+                            <span *ngSwitchCase="'productName'" (click)="onViewDetail(rowData)" class="link"
+                              style="display: inline-block; padding: 2px 2px;">
+                              {{ rowData[col.field] }}
+                            </span>
+
+                            <span *ngSwitchCase="'lotNoName'">
+                              {{ rowData[col.field] }}
+                            </span>
+                            <span *ngSwitchCase="'unitName'">
+                              {{ rowData[col.field] }}
+                            </span>
+                            <span *ngSwitchCase="'quantityOK'">
+                              {{rowData[col.field] | number}}
+                            </span>
+                            <span *ngSwitchCase="'quantityPending'">
+                              {{rowData[col.field] | number}}
+                            </span>
+
+                            <span *ngSwitchCase="'quantityNG'">
+                              {{rowData[col.field] | number}}
+                            </span>
+
+                            <!-- <span *ngSwitchCase="'thaoTac'">
+
+                              <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash" *ngIf="status == 0"
+                                class="ui-button-secondary" (click)="deleteItemGroup(rowData)"></button>
+                            </span> -->
+
+                            <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

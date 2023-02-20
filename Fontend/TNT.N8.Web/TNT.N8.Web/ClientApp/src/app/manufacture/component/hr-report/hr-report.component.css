@@ -1,0 +1,616 @@
+.hr-report {
+  font-family: 'Inter UI';
+}
+
+  .hr-report .bg-white {
+    background-color: #ffffff;
+  }
+
+  .hr-report .btn-save {
+    width: 156px;
+    height: 36px;
+    border-radius: 4px;
+    border: solid 1px #bebebe;
+    background-color: #6d98e7;
+    margin-left: 10px;
+  }
+
+  .hr-report .m-0 {
+    margin: 0px;
+  }
+
+  .hr-report .add-new {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+    margin-left: 5px;
+  }
+
+  .hr-report .add-new-text {
+    /* width: 25px; */
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .hr-report .cancel {
+    width: 64px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+    .hr-report .cancel .text-cancel {
+      width: 24px;
+      height: 16px;
+      font-family: 'Inter UI';
+      font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.46;
+      letter-spacing: normal;
+      text-align: left;
+      color: #121619;
+    }
+
+  .hr-report .link {
+    font-family: 'Inter UI';
+    color: #007ad9;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .hr-report .button-style {
+    background-color: white;
+    color: #423c36;
+    margin: 0px 5px;
+    border-color: #c8c8c8;
+    width: 105px;
+  }
+
+  .hr-report .box-header-title {
+    font-weight: bold;
+    font-family: 'Inter UI';
+    font-size: 20px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+  .hr-report .border-div {
+    border: 1px solid #c1c7cd;
+    line-height: 5;
+  }
+
+  .hr-report .d-inline-block {
+    display: inline-block;
+  }
+
+  .hr-report .mt-10 {
+    margin-top: 10px;
+  }
+
+  .hr-report .require {
+    color: #F94E4E;
+  }
+
+  .hr-report .bg-e4e4e4 {
+    background-color: #e4e4e4;
+  }
+
+  .hr-report .text-white {
+    color: #ffffff;
+  }
+
+  .hr-report .text-title {
+    font-family: 'Inter UI';
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+  .hr-report .circle-btn-delete {
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: hidden;
+    font-size: 15px;
+  }
+
+  .hr-report .icon-delete {
+    margin-left: -3.5px;
+    margin-top: 1px;
+    color: red;
+  }
+
+  .hr-report .p-10 {
+    padding: 10px;
+  }
+
+  .hr-report .mb-15 {
+    margin-bottom: 15px;
+  }
+
+  .hr-report .border-dde1e6 {
+    border: 1px solid #dde1e6;
+  }
+
+  .hr-report .box-header-group-btn {
+    text-align: right;
+    padding-top: 5px;
+  }
+
+  .hr-report .btn-refresh {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+  .hr-report .btn-filter {
+    width: 104px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #007aff;
+    background-color: #007aff;
+    margin-left: 5px;
+  }
+
+  .hr-report .ios-funnel {
+    width: 12.3px;
+    height: 11.3px;
+    object-fit: contain;
+    margin-right: 5px;
+  }
+
+  .hr-report .btn-filter-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .hr-report .iput-text {
+    width: 248px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding-left: 5px;
+    margin-left: 5px;
+  }
+
+  .hr-report .btn-create {
+    margin-left: 4px;
+    width: 190px;
+    height: 31px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px 0 rgb(18 22 25 / 8%);
+    background-color: #e4e4e4;
+  }
+
+  .hr-report .box-filter {
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding: 10px 0px;
+  }
+
+  .hr-report .btn-search {
+    width: 72px;
+    height: 32px;
+    border: solid 1px #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+  }
+
+    .hr-report .btn-search:focus {
+      border-color: #007ad9;
+      outline: 0 none;
+    }
+
+  .hr-report .btn-search-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .hr-report .btn-create-text {
+    margin-left: 4px;
+    width: 50px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-align: center;
+    color: #333333;
+  }
+
+  .hr-report .mb-10 {
+    margin-bottom: 10px;
+  }
+
+  .hr-report .float-right {
+    float: right;
+  }
+
+  .hr-report .float-left {
+    float: left;
+  }
+
+  .hr-report .px-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .hr-report .p-0 {
+    padding: 0;
+  }
+
+  .hr-report .d-flex {
+    display: flex;
+  }
+
+  .hr-report .item-center {
+    align-items: center;
+  }
+
+  .hr-report .timeline-content {
+    margin-top: 20px;
+  }
+
+  .hr-report .timeline > li {
+    margin-right: 0 !important;
+  }
+
+  .hr-report .style-delete {
+    color: #FE747A;
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .hr-report .style-edit {
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .hr-report .note-user {
+    font-family: 'Inter UI';
+    font-weight: bold;
+  }
+
+  .hr-report .timeline > li > .timeline-item {
+    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .hr-report .timeline-content {
+    margin-top: 20px;
+  }
+
+  .hr-report .bg-blueX {
+    background-color: #4E6BA5 !important;
+  }
+
+  .hr-report .color-w {
+    color: #fff !important;
+  }
+
+  .hr-report .timeline-item .onHover {
+    display: none;
+  }
+
+  .hr-report .timeline-item:hover .onHover {
+    display: block;
+  }
+
+  .hr-report .material-icons {
+    cursor: pointer;
+  }
+
+  .hr-report .timeline-user-avatar {
+    border-radius: 50%;
+    margin-right: 5px;
+    float: left;
+  }
+
+  .hr-report .note-title {
+    font-size: 11px !important;
+    color: #222 !important;
+    font-weight: normal !important;
+  }
+
+  .hr-report .time-note {
+    font-size: 10px !important;
+    color: #5d5a5a !important;
+    font-weight: normal !important;
+  }
+
+  .hr-report .timeline-body {
+    padding: 10px 15px;
+  }
+
+::ng-deep .hr-report .ui-accordion .ui-accordion-header a {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  font-size: 16px;
+}
+
+::ng-deep .hr-report .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: #121619 !important;
+}
+
+  ::ng-deep .hr-report .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a .ui-accordion-toggle-icon {
+    color: #121619 !important;
+  }
+
+::ng-deep .hr-report .ui-accordion .ui-accordion-header a .ui-accordion-toggle-icon {
+  color: #121619 !important;
+}
+
+::ng-deep .hr-report .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  color: #121619 !important;
+}
+
+::ng-deep .hr-report .ui-accordion .ui-accordion-content {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.hr-report .btn-cancel-note {
+  width: 72px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+.hr-report .btn-save-note {
+  width: 158px;
+  height: 32px;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  border: solid 1px #cccccc;
+  margin-left: 5px;
+}
+
+.hr-report .save-cancel-lable {
+  width: 24px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #121619;
+}
+
+.hr-report .save-note-lable {
+  width: 110px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+::ng-deep .hr-report .ui-dropdown {
+  height: auto !important;
+  border-left: 1px solid #c8c8c8;
+  border-right: 1px solid #c8c8c8;
+}
+
+.hr-report .w-100 {
+  width: 100%;
+}
+
+::ng-deep .hr-report .ui-calendar {
+  width: 100%;
+}
+
+  ::ng-deep .hr-report .ui-calendar input {
+    width: 100%;
+  }
+
+::ng-deep .hr-report .ui-datepicker {
+  top: 30px !important;
+}
+
+.hr-report .cancel {
+  width: 64px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+  .hr-report .cancel .text-cancel {
+    width: 24px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+
+.hr-report .save {
+  width: 86px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  margin-left: 5px;
+}
+
+  .hr-report .save .text-save {
+    width: 25px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+.hr-report .bg-F5F5F5 {
+  background-color: #F5F5F5;
+}
+
+.hr-report .mr-10 {
+  margin-right: 10px;
+}
+
+.hr-report .btn-add {
+  border: none;
+  background: #F5F5F5;
+  color: green;
+  font-size: 15px;
+}
+
+.hr-report .button {
+  outline-style: none;
+}
+
+.hr-report .d-none {
+  display: none;
+}
+
+.hr-report .showButton .d-none {
+  display: block !important;
+}
+
+button:focus {
+  border: none;
+  outline: none;
+}
+
+::ng-deep .hr-report .checkbox label {
+  padding-left: 10px;
+}
+
+.hr-report .dialog input {
+  width: 95%;
+}
+
+.hr-report .ml-5 {
+  margin-left: 5px;
+}
+
+.hr-report .pb-15 {
+  padding-bottom: 15px;
+}
+
+.hr-report .btn-cancel-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+}
+
+.hr-report .btn-save-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+  background-color: blue;
+  color: white;
+  margin-left: 5px;
+}
+
+.hr-report .px-8 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.hr-report .py-3 {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.hr-report .text-right {
+  text-align: right;
+}
+
+::ng-deep .hr-report .ui-editing-cell {
+  padding: 0 !important;
+}
+
+::ng-deep .hr-report .ui-toggler-column .ui-editing-cell {
+  padding-left: 0.857em !important;
+}
+
+::ng-deep .hr-report .ui-dropdown {
+  display: block !important;
+}
+
+
+.hr-report .link :hover {
+  cursor: pointer;
+}
+
+.hr-report .error-border {
+  border: red 1px solid;
+}
+
+.hr-report .over-flow {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: hidden
+}

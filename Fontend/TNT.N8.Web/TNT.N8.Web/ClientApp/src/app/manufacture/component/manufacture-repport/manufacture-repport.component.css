@@ -1,0 +1,616 @@
+.manufacture-repport {
+  font-family: 'Inter UI';
+}
+
+  .manufacture-repport .bg-white {
+    background-color: #ffffff;
+  }
+
+  .manufacture-repport .btn-save {
+    width: 156px;
+    height: 36px;
+    border-radius: 4px;
+    border: solid 1px #bebebe;
+    background-color: #6d98e7;
+    margin-left: 10px;
+  }
+
+  .manufacture-repport .m-0 {
+    margin: 0px;
+  }
+
+  .manufacture-repport .add-new {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+    margin-left: 5px;
+  }
+
+  .manufacture-repport .add-new-text {
+    /* width: 25px; */
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .manufacture-repport .cancel {
+    width: 64px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+    .manufacture-repport .cancel .text-cancel {
+      width: 24px;
+      height: 16px;
+      font-family: 'Inter UI';
+      font-size: 13px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.46;
+      letter-spacing: normal;
+      text-align: left;
+      color: #121619;
+    }
+
+  .manufacture-repport .link {
+    font-family: 'Inter UI';
+    color: #007ad9;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .manufacture-repport .button-style {
+    background-color: white;
+    color: #423c36;
+    margin: 0px 5px;
+    border-color: #c8c8c8;
+    width: 105px;
+  }
+
+  .manufacture-repport .box-header-title {
+    font-weight: bold;
+    font-family: 'Inter UI';
+    font-size: 20px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+  .manufacture-repport .border-div {
+    border: 1px solid #c1c7cd;
+    line-height: 5;
+  }
+
+  .manufacture-repport .d-inline-block {
+    display: inline-block;
+  }
+
+  .manufacture-repport .mt-10 {
+    margin-top: 10px;
+  }
+
+  .manufacture-repport .require {
+    color: #F94E4E;
+  }
+
+  .manufacture-repport .bg-e4e4e4 {
+    background-color: #e4e4e4;
+  }
+
+  .manufacture-repport .text-white {
+    color: #ffffff;
+  }
+
+  .manufacture-repport .text-title {
+    font-family: 'Inter UI';
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+  .manufacture-repport .circle-btn-delete {
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: hidden;
+    font-size: 15px;
+  }
+
+  .manufacture-repport .icon-delete {
+    margin-left: -3.5px;
+    margin-top: 1px;
+    color: red;
+  }
+
+  .manufacture-repport .p-10 {
+    padding: 10px;
+  }
+
+  .manufacture-repport .mb-15 {
+    margin-bottom: 15px;
+  }
+
+  .manufacture-repport .border-dde1e6 {
+    border: 1px solid #dde1e6;
+  }
+
+  .manufacture-repport .box-header-group-btn {
+    text-align: right;
+    padding-top: 5px;
+  }
+
+  .manufacture-repport .btn-refresh {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #ffffff;
+  }
+
+  .manufacture-repport .btn-filter {
+    width: 104px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #007aff;
+    background-color: #007aff;
+    margin-left: 5px;
+  }
+
+  .manufacture-repport .ios-funnel {
+    width: 12.3px;
+    height: 11.3px;
+    object-fit: contain;
+    margin-right: 5px;
+  }
+
+  .manufacture-repport .btn-filter-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .manufacture-repport .iput-text {
+    width: 248px;
+    height: 32px;
+    border-radius: 4px;
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding-left: 5px;
+    margin-left: 5px;
+  }
+
+  .manufacture-repport .btn-create {
+    margin-left: 4px;
+    width: 190px;
+    height: 31px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px 0 rgb(18 22 25 / 8%);
+    background-color: #e4e4e4;
+  }
+
+  .manufacture-repport .box-filter {
+    border: solid 1px #c1c7cd;
+    background-color: #f2f4f8;
+    padding: 10px 0px;
+  }
+
+  .manufacture-repport .btn-search {
+    width: 72px;
+    height: 32px;
+    border: solid 1px #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+    background-color: #0f62fe;
+  }
+
+    .manufacture-repport .btn-search:focus {
+      border-color: #007ad9;
+      outline: 0 none;
+    }
+
+  .manufacture-repport .btn-search-text {
+    width: 36px;
+    height: 13px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .manufacture-repport .btn-create-text {
+    margin-left: 4px;
+    width: 50px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-align: center;
+    color: #333333;
+  }
+
+  .manufacture-repport .mb-10 {
+    margin-bottom: 10px;
+  }
+
+  .manufacture-repport .float-right {
+    float: right;
+  }
+
+  .manufacture-repport .float-left {
+    float: left;
+  }
+
+  .manufacture-repport .px-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .manufacture-repport .p-0 {
+    padding: 0;
+  }
+
+  .manufacture-repport .d-flex {
+    display: flex;
+  }
+
+  .manufacture-repport .item-center {
+    align-items: center;
+  }
+
+  .manufacture-repport .timeline-content {
+    margin-top: 20px;
+  }
+
+  .manufacture-repport .timeline > li {
+    margin-right: 0 !important;
+  }
+
+  .manufacture-repport .style-delete {
+    color: #FE747A;
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .manufacture-repport .style-edit {
+    cursor: pointer;
+    font-size: 1.55em;
+  }
+
+  .manufacture-repport .note-user {
+    font-family: 'Inter UI';
+    font-weight: bold;
+  }
+
+  .manufacture-repport .timeline > li > .timeline-item {
+    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .manufacture-repport .timeline-content {
+    margin-top: 20px;
+  }
+
+  .manufacture-repport .bg-blueX {
+    background-color: #4E6BA5 !important;
+  }
+
+  .manufacture-repport .color-w {
+    color: #fff !important;
+  }
+
+  .manufacture-repport .timeline-item .onHover {
+    display: none;
+  }
+
+  .manufacture-repport .timeline-item:hover .onHover {
+    display: block;
+  }
+
+  .manufacture-repport .material-icons {
+    cursor: pointer;
+  }
+
+  .manufacture-repport .timeline-user-avatar {
+    border-radius: 50%;
+    margin-right: 5px;
+    float: left;
+  }
+
+  .manufacture-repport .note-title {
+    font-size: 11px !important;
+    color: #222 !important;
+    font-weight: normal !important;
+  }
+
+  .manufacture-repport .time-note {
+    font-size: 10px !important;
+    color: #5d5a5a !important;
+    font-weight: normal !important;
+  }
+
+  .manufacture-repport .timeline-body {
+    padding: 10px 15px;
+  }
+
+::ng-deep .manufacture-repport .ui-accordion .ui-accordion-header a {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  font-size: 16px;
+}
+
+::ng-deep .manufacture-repport .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: #121619 !important;
+}
+
+  ::ng-deep .manufacture-repport .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a .ui-accordion-toggle-icon {
+    color: #121619 !important;
+  }
+
+::ng-deep .manufacture-repport .ui-accordion .ui-accordion-header a .ui-accordion-toggle-icon {
+  color: #121619 !important;
+}
+
+::ng-deep .manufacture-repport .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  color: #121619 !important;
+}
+
+::ng-deep .manufacture-repport .ui-accordion .ui-accordion-content {
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.manufacture-repport .btn-cancel-note {
+  width: 72px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+.manufacture-repport .btn-save-note {
+  width: 158px;
+  height: 32px;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  border: solid 1px #cccccc;
+  margin-left: 5px;
+}
+
+.manufacture-repport .save-cancel-lable {
+  width: 24px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #121619;
+}
+
+.manufacture-repport .save-note-lable {
+  width: 110px;
+  height: 16px;
+  font-family: 'Inter UI';
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+::ng-deep .manufacture-repport .ui-dropdown {
+  height: auto !important;
+  border-left: 1px solid #c8c8c8;
+  border-right: 1px solid #c8c8c8;
+}
+
+.manufacture-repport .w-100 {
+  width: 100%;
+}
+
+::ng-deep .manufacture-repport .ui-calendar {
+  width: 100%;
+}
+
+  ::ng-deep .manufacture-repport .ui-calendar input {
+    width: 100%;
+  }
+
+::ng-deep .manufacture-repport .ui-datepicker {
+  top: 30px !important;
+}
+
+.manufacture-repport .cancel {
+  width: 64px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  background-color: #ffffff;
+}
+
+  .manufacture-repport .cancel .text-cancel {
+    width: 24px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #121619;
+  }
+
+
+.manufacture-repport .save {
+  width: 86px;
+  height: 32px;
+  border-radius: 4px;
+  border: solid 1px #c1c7cd;
+  box-shadow: 0 1px 1px 0 rgba(18, 22, 25, 0.08);
+  background-color: #0f62fe;
+  margin-left: 5px;
+}
+
+  .manufacture-repport .save .text-save {
+    width: 25px;
+    height: 16px;
+    font-family: 'Inter UI';
+    font-size: 13px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.46;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ffffff;
+  }
+
+.manufacture-repport .bg-F5F5F5 {
+  background-color: #F5F5F5;
+}
+
+.manufacture-repport .mr-10 {
+  margin-right: 10px;
+}
+
+.manufacture-repport .btn-add {
+  border: none;
+  background: #F5F5F5;
+  color: green;
+  font-size: 15px;
+}
+
+.manufacture-repport .button {
+  outline-style: none;
+}
+
+.manufacture-repport .d-none {
+  display: none;
+}
+
+.manufacture-repport .showButton .d-none {
+  display: block !important;
+}
+
+button:focus {
+  border: none;
+  outline: none;
+}
+
+::ng-deep .manufacture-repport .checkbox label {
+  padding-left: 10px;
+}
+
+.manufacture-repport .dialog input {
+  width: 95%;
+}
+
+.manufacture-repport .ml-5 {
+  margin-left: 5px;
+}
+
+.manufacture-repport .pb-15 {
+  padding-bottom: 15px;
+}
+
+.manufacture-repport .btn-cancel-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+}
+
+.manufacture-repport .btn-save-dialog {
+  padding: 5px 10px;
+  border: 1px solid #e4e4e4;
+  background-color: blue;
+  color: white;
+  margin-left: 5px;
+}
+
+.manufacture-repport .px-8 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.manufacture-repport .py-3 {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.manufacture-repport .text-right {
+  text-align: right;
+}
+
+::ng-deep .manufacture-repport .ui-editing-cell {
+  padding: 0 !important;
+}
+
+::ng-deep .manufacture-repport .ui-toggler-column .ui-editing-cell {
+  padding-left: 0.857em !important;
+}
+
+::ng-deep .manufacture-repport .ui-dropdown {
+  display: block !important;
+}
+
+
+.manufacture-repport .link :hover {
+  cursor: pointer;
+}
+
+.manufacture-repport .error-border {
+  border: red 1px solid;
+}
+
+.manufacture-repport .over-flow {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: hidden
+}

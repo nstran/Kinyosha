@@ -1,0 +1,111 @@
+<!-- <div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div> -->
+<p-toast position="bottom-right"></p-toast>
+
+<div class="de-nghi-xuat-kho-list">
+  <div class="row no-margin">
+    <div class="box-header">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box-header-group">
+              <div class="row">
+                <div class="col-md-11 col-xs-10">
+                  <div class="box-header-title">Danh sách xuất kho thành phẩm</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+          </div>
+          <div class="col-md-12">
+            <div class="box-header-group-btn">
+              <button type="button" class="btn-refresh">
+                <img src="/assets/icons/components/ios-refresh.svg" class="ios-refresh">
+              </button>
+              <button type="button" class="btn-filter">
+                <img src="/assets/icons/components/ios-funnel.svg" class="ios-funnel">
+                <span class="btn-filter-text">Bộ lọc</span>
+              </button>
+              <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
+                (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')" />
+              <button type="button" class="btn-save" style="width:140px!important;" *ngIf="actionAdd">
+                <span class="btn-save-text" (click)="taoMoiXuat(7)">Xuất thành phẩm</span>
+              </button>
+              <!-- <button type="button" class="btn-save" style="width:120px!important;">
+                <span class="btn-save-text" (click)="taoMoiXuat(8)">Cập nhật NG</span>
+              </button> -->
+
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="box-header-2">
+      <div class="col-md-12">
+        <p-radioButton styleClass="p-radioButtonCustom" name="group" value=0 [(ngModel)]="displayType"
+          label="Theo phiếu xuất kho"></p-radioButton>
+        <p-radioButton styleClass="p-radioButtonCustom" name="group" value=1 [(ngModel)]="displayType"
+          label="Theo NVL"></p-radioButton>
+      </div>
+    </div> -->
+  </div>
+  <div class="row no-margin" style="background-color: #f2f4f8;">
+    <div>
+
+      <p-table #myTable [columns]="cols" [value]="listData" [resizableColumns]="true" columnResizeMode="expand"
+        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field"
+              [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width }">
+              {{col.header}}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-editing="editing">
+          <tr [pEditableRow]="rowData">
+            <td *ngFor="let col of columns" [ngSwitch]="col.field"
+              [ngStyle]="{ 'text-align': col.textAlign, display: col.display, width: col.width, 'color': rowData.error == true ? col.color : '' }">
+
+              <span *ngSwitchCase="'STT'" style="display: inline-block; padding: 2px 2px;">
+                {{rowIndex + 1}}
+              </span>
+
+              <span *ngSwitchCase="'maPhieu'" (click)="onViewDetail(rowData)" class="link"
+                style="display: inline-block; padding: 2px 2px;">
+                {{ rowData[col.field] }}
+              </span>
+
+              <span *ngSwitchCase="'ngayXuat'">
+                {{ rowData[col.field] | date:'dd/MM/yyyy'}}
+              </span>
+
+              <span *ngSwitchCase="'loaiPhieu'">
+                {{ rowData[col.field] }}
+              </span>
+
+              <span *ngSwitchCase="'soDonHang'">
+                {{ rowData[col.field] | number }}
+              </span>
+
+              <span *ngSwitchCase="'soLuongXuat'">
+                {{ rowData[col.field] | number }}
+              </span>
+
+              <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="hr-report">
+  <div class="row m-0 bg-white d-flex item-center p-10 mb-15 border-dde1e6">
+    <div class="col-md-6">
+      <div class="row" style="display: flex; align-items: center;">
+        <div class="col-md-12 col-xs-12">
+          <div class="box-header-title">
+            <span>Báo cáo nhân sự</span>
+            <p-calendar [(ngModel)]="monthDate" view="month" dateFormat="mm/yy" [yearNavigator]="true" yearRange="2000:2050" inputId="icon" [showIcon]="true"
+                        [style]="{'width':'35%', 'margin-left': '10px'}" [inputStyle]="{'width':'35%', 'text-align': 'center'}" [readonlyInput]="true"
+                        (onSelect)="selectDate()"></p-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row h-100">
+        <div class="d-inline-block float-right h-100">
+          <button class="btn-save bg-e4e4e4" type="button" *ngIf="actionExport" (click)="exportExcel()">Xuất file</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-0">
+    <div class="row m-0 bg-white border-dde1e6 p-10 mb-15">
+      <div class="row m-0 px-15 mb-10">
+
+      </div>
+      <div class="row m-0 px-15 mb-10">
+        <div class="col-md-12">
+          <p-table #myTable [columns]="selectedColumns" [value]="listHrReport" [resizableColumns]="true"
+                   columnResizeMode="expand" [responsive]="true" [scrollable]="true" scrollHeight="551px">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns"
+                    [ngStyle]="{'text-align': 'center', 'display': col.display, 'width': col.width }">
+                  <span>
+                    {{col.header}}
+                  </span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns" style="height: 200px">
+              <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field" [attr.rowspan]="col.rowspan"
+                    [ngStyle]="{'text-align': col.textAlign, 'display': ((col.field == 'timeSheetDate' && rowData[col.field] == null) ? 'none' : col.display), 'width': col.width }">
+                  <span class="ui-column-title">{{col.header}}</span>
+                  <span *ngSwitchCase="'timeSheetDate'" (click)="goToDetail(rowData)" class="link">
+                    {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+                  </span>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer" let-columns *ngIf="listHrReport.length > 0">
+              <tr style="line-height: 2.5">
+                <td colspan="2" [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">(1CORE)</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalNV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalSGLV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalVS }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalDM }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalSGLT }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCore.totalTSGLV }}</td>
+              </tr>
+              <tr style="line-height: 2.5">
+                <td colspan="2" [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">7 Isn(Visual)</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalNV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalSGLV }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalVS }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalDM }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalSGLT }}</td>
+                <td [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalInsVisual.totalTSGLV }}</td>
+              </tr>
+              <tr style="line-height: 2.5">
+                <th colspan="2" [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">CF</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalNV }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalV }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalSGLV }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalVS }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalDM }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalSGLT }}</th>
+                <th [ngStyle]="{'text-align': 'center', 'border': '1px solid #c1c7cd' }">{{ this.totalCf.totalTSGLV }}</th>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Báo cáo hàng ngày-->
+  <p-dialog header="Báo cáo hàng ngày" [(visible)]="displayReport" [modal]="true" [style]="{width: '50vw'}" [resizable]="false">
+    <div>
+      <div class="col-md-12 mt-10" *ngIf="chooseRowData != null">
+        <p-table [value]="dataReportDialog">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="text-align: center; font-weight: bold; width: 350px;" rowspan="2">{{chooseRowData.timeSheetDate | date: 'dd/MM/yyyy'}}</th>
+              <th style="text-align: center;" colspan="3">1CORE</th>
+              <th style="text-align: center;" colspan="3">7 Isn(Visual)</th>
+            </tr>
+            <tr>
+              <th style="text-align: center;">Ca 1</th>
+              <th style="text-align: center;">Ca 2</th>
+              <th style="text-align: center;">Ca 3</th>
+              <th style="text-align: center;">Ca 1</th>
+              <th style="text-align: center;">Ca 2</th>
+              <th style="text-align: center;">Ca 3</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+            <tr>
+              <td style="text-align: left; font-weight: bold; width: 350px;">{{ rowData.text }}</td>
+              <td style="text-align: center;">{{ rowData.coreCa1 }}</td>
+              <td style="text-align: center;">{{ rowData.coreCa2 }}</td>
+              <td style="text-align: center;">{{ rowData.coreCa3 }}</td>
+              <td style="text-align: center;">{{ rowData.isnVisualCa1 }}</td>
+              <td style="text-align: center;">{{ rowData.isnVisualCa2 }}</td>
+              <td style="text-align: center;">{{ rowData.isnVisualCa3 }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </p-dialog>
+</div>

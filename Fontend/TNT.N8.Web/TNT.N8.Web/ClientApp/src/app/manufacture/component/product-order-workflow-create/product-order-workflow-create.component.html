@@ -1,0 +1,863 @@
+<!-- Loading... -->
+<div class="loading-indicator" *ngIf="loading">
+  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s">
+  </p-progressSpinner>
+</div>
+<!-- Message Response... -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Confirm... -->
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
+
+<div class="product-order-workflow-create">
+  <div class="row no-margin">
+    <div class="col-md-12 box-header">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row" style="display: flex; align-items: center;">
+            <div class="col-md-1 col-xs-2">
+              <div class="box-header-icon">
+                <img src="/assets/icons/components/ic_library_add_24px.svg" class="ic_library_add_24px">
+              </div>
+            </div>
+            <div class="col-md-11 col-xs-10">
+              <div class="box-header-title">Chi tiết Quy trình sản xuất</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row" style="display: flex; align-items: center;">
+            <div class="col-md-12" style="text-align: right;">
+              <button class="cancel" type="button" (click)="backPage()">
+                <span class="text-cancel">Thoát</span>
+              </button>
+              <button #save *ngIf="actionAdd" class="save" type="button" (click)="createProductOrderWorkflow(null)">
+                <span class="text-save">Lưu</span>
+              </button>
+              <button #done *ngIf="actionAdd" class="save" type="button" (click)="createProductOrderWorkflow(true)" [disabled]="awaitResult">
+                <span class="text-save">Kích hoạt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Thông tin chung-->
+    <div class="col-md-12 box-content">
+      <form [formGroup]="productOrderWorkflowForm" style="height: 100%;">
+        <div class="row no-margin">
+          <p-accordion expandIcon="pi pi-fw pi-chevron-circle-right" collapseIcon="pi pi-fw pi-chevron-circle-down">
+            <p-accordionTab header="Thông tin chung" [selected]="true">
+              <div class="col-md-12">
+                <div class="row col-md-12">
+                  <div class="col-md-1">
+                    <label>Tên sản phẩm<span style="color:red;">*</span>:</label>
+                  </div>
+                  <div class="col-md-3">
+                    <p-dropdown [options]="productList" optionLabel="productName" [autoDisplayFirst]="false" (onChange)="onChangeProduct($event)" formControlName="nameControl"
+                                [style]="{'width': '100%'}" [styleClass]="(nameControl.invalid  && (nameControl.dirty ||  nameControl.touched)) ? 'error-border': ''"></p-dropdown>
+                  </div>
+                  <div class="col-md-3">
+                    <label>Mã sản phẩm:</label>
+                    <strong style="margin-left: 5px;">{{productCode}}</strong>
+                  </div>
+                  <div class="col-md-3">
+                    <label>Mã quy trình sản phẩm: </label>
+                    <strong style="margin-left: 5px;">
+                      (Tự động tạo khi lưu)
+                    </strong>
+                  </div>
+                  <div class="col-md-2 text-right" hidden>
+                    <p-checkbox [binary]="true" formControlName="isDefaultControl" (onChange)="checkIsDefault()"></p-checkbox>
+                    <label style="margin-left: 5px;">Hiệu lực</label>
+                  </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 15px;">
+                  <div class="col-md-1">
+                    <label>Diễn giải:</label>
+                  </div>
+                  <div class="col-md-11">
+                    <textarea rows="3" formControlName="descriptionControl" pInputTextarea style="width: 100%;"></textarea>
+                  </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 15px;">
+                  <div class="col-md-1">
+                    <label>Số sản phẩm trên 1 lô:</label>
+                  </div>
+                  <div class="col-md-3">
+                    <p-inputNumber formControlName="productNumberControl" class="number-fullwidth" [style]="{'width': '100%'}" mode="decimal"
+                                   [ngClass]="(productNumberControl.invalid  && (productNumberControl.dirty ||  productNumberControl.touched)) ? 'error-border-input': ''"></p-inputNumber>
+                  </div>
+                  <div class="col-md-1" hidden>
+                    <label>Số tỉ lệ cần trộn nguyên liệu để chế tạo mẫu LTV:</label>
+                  </div>
+                  <div class="col-md-3" hidden>
+                    <p-inputNumber formControlName="ltvControl" class="number-fullwidth" [style]="{'width': '100%'}" mode="decimal"></p-inputNumber>
+                  </div>
+                  <div class="col-md-1" hidden>
+                    <label>Số sản phẩm cần đo độ cứng sau PC:</label>
+                  </div>
+                  <div class="col-md-3" hidden>
+                    <p-inputNumber formControlName="pcControl" class="number-fullwidth" [style]="{'width': '100%'}" mode="decimal"></p-inputNumber>
+                  </div>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </form>
+    </div>
+
+    <!--Cấu hình công đoạn sản xuất-->
+    <div class="col-md-12 box-content" hidden>
+      <div class="row no-margin">
+        <p-tabView>
+          <p-tabPanel header="Cấu hình công đoạn sản xuất">
+            <form [formGroup]="stepStageForm" style="height: 100%;">
+              <div class="row">
+                <div class="col-md-6" style="margin-top: 5px;">
+                  <span class="header-label">Danh sách công đoạn </span>
+                </div>
+                <div class="col-md-6" style="display: flex; justify-content: flex-end;">
+                  <button #save class="add-new" type="button" (click)="showCreateStageDialog(null)" *ngIf="actionAdd">
+                    <span class="add-new-text">Thêm công đoạn</span>
+                  </button>
+                  <button hidden class="add-new" type="button" (click)="showCopyStageDialog()">
+                    <span class="add-new-text">Copy công đoạn</span>
+                  </button>
+                </div>
+                <div class="col-md-12" style="margin-top: 5px;">
+                  <p-table #myTable [columns]="colsStage" [value]="configProductionData.configStages"
+                           [responsive]="true" [paginator]="true" [rows]="5" [resizableColumns]="true"
+                           class="table-border">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of columns" pResizableColumn
+                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                          {{col.header}}
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                      <tr>
+                        <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field"
+                            [ngStyle]="{'text-align': col.textAlign, 'width': col.width }">
+                          <span class="ui-column-title">{{col.header}}</span>
+                          <span *ngSwitchCase="'stt'">
+                            {{ rowData[col.field] }}
+                          </span>
+                          <span *ngSwitchCase="'stageName'">
+                            <a target="_blank" style="cursor: pointer" (click)="showCreateStageDialog(rowData)">{{rowData[col.field]}}</a>
+                          </span>
+                          <span *ngSwitchCase="'setting'">
+                            <button class="ui-button-danger btn-css" *ngIf="actionDelete" pButton icon="pi pi-trash" (click)="onRowRemove(rowData)"></button>
+                            <!--<button type="button" class="circle-btn-delete" (click)="onRowRemove(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>-->
+                          </span>
+                          <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            </form>
+          </p-tabPanel>
+          <p-tabPanel header="Cấu hình hạng mục lỗi">
+            <div class="row">
+              <div class="col-md-6" style="margin-top: 5px;">
+                <span class="header-label">Danh sách nhóm công đoạn cần thống kê  hạng mục lỗi </span>
+              </div>
+              <div class="col-md-12" style="margin-top: 5px;">
+                <div class="row col-md-12" *ngFor="let item of stageGroupErrorList">
+                  <p-checkbox [binary]="true" [(ngModel)]="item.checked" (onChange)="checkListError($event, item)"></p-checkbox>
+                  <label style="margin-left: 5px;">{{ item.categoryName }}</label>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </div>
+  </div>
+
+  <!--Copy công đoạn-->
+  <p-dialog header="Copy công đoạn" [(visible)]="displayCopyStage" [modal]="true" [style]="{width: '25vw'}" [resizable]="false">
+    <div>
+      <div class="col-md-12">
+        <label>
+          Chọn quy trình sản xuất:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <p-dropdown #dropdownVal [options]="productionProcesslist" [formControl]="selectedProductionProcess"
+                      optionLabel="stage" [filter]="true" [style]="{'width': '100%'}">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label>
+          Chọn công đoạn copy:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <p-dropdown #dropdownVal [options]="productionProcesslist" [formControl]="selectedProductionProcess"
+                      optionLabel="stage" [filter]="true" [style]="{'width': '100%'}">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+        <button #save class="cancel" type="button">
+          <span class="text-cancel">Thoát</span>
+        </button>
+        <button class="add-new" type="button">
+          <span class="add-new-text">Lưu</span>
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <!--Tạo mới quy trình/công đoạn-->
+  <p-dialog header="Tạo mới quy trình/công đoạn" [(visible)]="displayCreateStage" [modal]="true" [style]="{width: '75vw'}" [resizable]="false">
+    <div>
+      <p-tabView (onChange)="onChangeTabView($event)" [(activeIndex)]="indexActive">
+        <p-tabPanel header="Thông tin chung">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Tên quy trình/công đoạn<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-dropdown #dropdownVal [options]="stageList" optionLabel="categoryName" [formControl]="selectedStage" [filter]="true"
+                                [style]="{'width': '100%'}" placeholder="Chọn quy trình/công đoạn" (onChange)="changeStage()"
+                                [styleClass]="(selectedStage.invalid  && (selectedStage.dirty ||  selectedStage.touched)) ? 'error-border': ''">
+                    </p-dropdown>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Thuộc nhóm công đoạn<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-dropdown #dropdownVal [options]="stageGroupList" [formControl]="selectedGroupStage" optionLabel="categoryName" [filter]="true"
+                                [style]="{'width': '100%'}" placeholder="Chọn nhóm công đoạn"
+                                [styleClass]="(selectedGroupStage.invalid  && (selectedGroupStage.dirty ||  selectedGroupStage.touched)) ? 'error-border': ''">
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-10">
+                <div class="col-md-12">
+                  <div class="row col-md-12">
+                    <span>
+                      Bộ phận phụ trách
+                      <a href="javascript:(0)" (click)="openOrgPopup()"> <u>(sơ đồ tổ chức)</u></a><span class="require">*</span>
+                    </span>
+                  </div>
+                  <div class="row col-md-12">
+                    <input type="text" pInputText [formControl]="organizationName" class="w-100" disabled
+                           [ngClass]="(organizationName.invalid  && (organizationName.dirty ||  organizationName.touched)) ? 'error-border': ''" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Số người thực hiện công đoạn<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-dropdown #dropdownVal [options]="numberOfPeoplePerforming" [formControl]="selectedNumPerson" placeholder="Chọn số người thực hiện"
+                                optionLabel="categoryName" [filter]="true" [style]="{'width': '100%'}"
+                                [styleClass]="(selectedNumPerson.invalid  && (selectedNumPerson.dirty ||  selectedNumPerson.touched)) ? 'error-border': ''">
+                    </p-dropdown>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Thứ tự công đoạn</span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-inputNumber [formControl]="sortOrderControl" class="number-fullwidth" [style]="{'width': '100%'}" mode="decimal"></p-inputNumber>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-10">
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Danh sách người phụ trách<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-multiSelect [options]="employeeByOrgList" [formControl]="selectedListEmployee" optionLabel="employeeName" [style]="{'width': '100%'}"
+                                   defaultLabel="Chọn danh sách người phụ trách"
+                                   [styleClass]="(selectedListEmployee.invalid  && (selectedListEmployee.dirty ||  selectedListEmployee.touched)) ? 'error-border': ''">
+                    </p-multiSelect>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row col-md-12">
+                    <span>Người xác nhận<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-dropdown #dropdownVal [options]="employeeByOrgList" [formControl]="selectedVerifier" placeholder="Chọn người xác nhận"
+                                optionLabel="employeeName" [filter]="true" [style]="{'width': '100%'}"
+                                [styleClass]="(selectedVerifier.invalid  && (selectedVerifier.dirty ||  selectedVerifier.touched)) ? 'error-border': ''">
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-10">
+            <div class="col-md-12">
+              <p-checkbox [binary]="true" [(ngModel)]="checkRequired"></p-checkbox><span>Ràng buộc công đoạn</span>
+            </div>
+          </div>
+          <div class="row mt-10 border-required" *ngIf="checkRequired">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row col-md-12">
+                    <span>Công đoạn hoàn thành trước:</span>
+                  </div>
+                  <div class="row col-md-12">
+                    <p-dropdown #dropdownVal [options]="listStageGroup" [formControl]="selectedStageBefore"
+                                placeholder="Chọn công đoạn ràng buộc"
+                                optionLabel="stage" [filter]="true" [style]="{'width': '100%'}">
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row col-md-12">
+                    <span>Thời gian thực hiện sau khi hoàn thành công đoạn trước (giờ)</span>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">Từ:</div>
+                    <div class="col-md-3">
+                      <p-inputNumber [formControl]="selectedFrom" class="number-fullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false">
+                      </p-inputNumber>
+                    </div>
+                    <div class="col-md-1">Đến:</div>
+                    <div class="col-md-3">
+                      <p-inputNumber [formControl]="selectedTo" class="number-fullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false">
+                      </p-inputNumber>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-10">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row col-md-12">
+                    <span>Các bước thực hiện:</span>
+                  </div>
+                  <div class="row col-md-12 bolder-div" style="min-height: 200px;">
+                    <div class="row mt-10" *ngFor="let item of stepProgress; let i = index;">
+                      <div class="col-md-12">
+                        <input type="text" pInputText [(ngModel)]="stepProgress[i].text" (blur)="onBlurStep()" style="width: 85%"
+                               [ngClass]="saveActionStage && (stepProgress[i].text == null || stepProgress[i].text == undefined || stepProgress[i].text.trim() == '') ? 'error-border': ''" />
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '5px'}" [(ngModel)]="item.isHasValue"></p-checkbox>
+                        <button type="button" class="circle-btn-delete" (click)="removeStepStage(i)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                      </div>
+                    </div>
+                    <div class="row col-md-12 mt-10">
+                      <button type="button" class="circle-btn-add" (click)="addStepStage()" tooltipPosition="top"><i class="pi pi-plus icon-add"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row col-md-12">
+                    <span>Các nội dung/hạng mục kiểm tra<span class="require">*</span></span>
+                  </div>
+                  <div class="row col-md-12 bolder-div" style="min-height: 200px;">
+                    <div class="row mt-10" *ngFor="let item of stepProgressDetail; let i = index;">
+                      <div class="col-md-12">
+                        <p-dropdown #dropdownVal [options]="contentTestList" [(ngModel)]="stepProgressDetail[i].content"
+                                    optionLabel="categoryName" [filter]="true" [style]="{'width': '85%'}" placeholder="Chọn nội dung kiểm tra"
+                                    [styleClass]="saveActionStage && (stepProgressDetail[i].content == null || stepProgressDetail[i].content == undefined || stepProgressDetail[i].content == '') ? 'error-border': ''">
+                        </p-dropdown>
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '5px'}" [(ngModel)]="item.isHasValue"></p-checkbox>
+                        <button type="button" class="circle-btn-delete" (click)="removeStepStageDetail(i)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                      </div>
+                    </div>
+                    <div class="row col-md-12 mt-10">
+                      <button type="button" class="circle-btn-add" (click)="addStepStageDetail()" tooltipPosition="top"><i class="pi pi-plus icon-add"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Danh sách NVL  đầu vào">
+          <div class="row">
+            <div class="col-md-5" style="margin-top: 5px;">
+              <p-orderList [value]="stageConfigNVL" [listStyle]="{'max-height':'50rem'}" header="Danh sách NVL đầu vào" filterBy="productName"
+                           filterPlaceholder="Tìm kiếm" [dragdrop]="true" [(selection)]="selectedConfigNVL">
+                <ng-template let-error pTemplate="item">
+                  <div class="error-item">
+                    <span class="error-category">{{error.productName}}</span>
+                  </div>
+                </ng-template>
+              </p-orderList>
+            </div>
+            <div class="col-md-1" style="margin-top: 40px;">
+              <div class="ui-orderlist-controls">
+                <button [disabled]="selectedConfigNVL.length == 0" type="button" (click)="nextNVL()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-right"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigNVL.length == 0" type="button" (click)="nextNVL()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-double-right"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigNVLChoose.length == 0" type="button" (click)="pressNVL()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-left"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigNVLChoose.length == 0" type="button" (click)="pressNVL()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-double-left"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-5" style="margin-top: 5px;">
+              <p-orderList [value]="stageConfigNVLChoose" class="right-order-list" [listStyle]="{'max-height':'50rem'}" header="Danh sách NVL đầu vào đã chọn"
+                           filterBy="productName" filterPlaceholder="Tìm kiếm" [dragdrop]="true" [(selection)]="selectedConfigNVLChoose">
+                <ng-template let-error pTemplate="item">
+                  <div class="error-item">
+                    <span class="error-category">{{error.productName}}</span>
+                  </div>
+                </ng-template>
+              </p-orderList>
+            </div>
+          </div>
+          <div class="row mt-10" style="margin: 10px;">
+            <p-checkbox [binary]="true" [(ngModel)]="isHasValueFinishedProduct"></p-checkbox><label>Công đoạn không có bán thành phẩm đầu vào</label>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Quy cách">
+          <div class="row">
+            <div class="col-md-12" style="display: flex; justify-content: flex-end; margin-bottom: 20px; z-index: 1;">
+              <button class="add-new" type="button" (click)="addLineQC()">
+                <span class="add-new-text">Thêm dòng</span>
+              </button>
+            </div>
+          </div>
+          <div class="row" style="min-height: 520px">
+            <p-table [columns]="colsSpecifications" [value]="listSpecifications" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}"
+                     scrollHeight="500px" [scrollable]="listSpecifications.length > 5">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" pResizableColumn
+                      [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                    {{col.header}}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-columns="columns">
+                <tr [pEditableRow]="rowData">
+                  <td *ngFor="let col of columns"
+                      class="ui-resizable-column" [ngSwitch]="col.field"
+                      [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                    <p-cellEditor *ngSwitchCase="'stt'">
+                      <ng-template pTemplate="input">
+                        {{rowData[col.field]}}
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{rowData[col.field]}}
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchCase="'stepContent'">
+                      <ng-template pTemplate="input">
+                        <p-dropdown [options]="stepProgressQC"
+                                    optionLabel="text"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn bước thực hiện"
+                                    [style]="{'width':'100%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <p-dropdown [options]="stepProgressQC"
+                                    optionLabel="text"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn bước thực hiện"
+                                    [style]="{'width':'100%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchCase="'content'">
+                      <ng-template pTemplate="input">
+                        <p-dropdown [options]="stepProgressDetailQC"
+                                    optionLabel="text"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn nội dung kiểm tra"
+                                    [style]="{'width':'100%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <p-dropdown [options]="stepProgressDetailQC"
+                                    optionLabel="text"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn nội dung kiểm tra"
+                                    [style]="{'width':'100%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchCase="'specifications'">
+                      <ng-template pTemplate="input">
+                        <p-dropdown [options]="specificationsList"
+                                    optionLabel="categoryName"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn quy cách"
+                                    [style]="{'width':'80%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                        <button type="button" class="circle-btn-delete" style="margin-left: 5px; font-size: 18px;" (click)="addCategory(rowData)" tooltipPosition="top"><i class="pi pi-plus icon-add1"></i></button>
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '15px'}" [(ngModel)]="rowData['isHaveValues']"></p-checkbox>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <p-dropdown [options]="specificationsList"
+                                    optionLabel="categoryName"
+                                    [(ngModel)]="rowData[col.field]"
+                                    placeholder="Chọn quy cách"
+                                    [style]="{'width':'80%'}"
+                                    [filter]="true">
+                        </p-dropdown>
+                        <button type="button" class="circle-btn-delete" style="margin-left: 5px; font-size: 18px;" (click)="addCategory(rowData)" tooltipPosition="top"><i class="pi pi-plus icon-add1"></i></button>
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '15px'}" [(ngModel)]="rowData['isHaveValues']"></p-checkbox>
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchCase="'numberOfSamples'">
+                      <ng-template pTemplate="input">
+                        <p-inputNumber [(ngModel)]="rowData[col.field]" [disabled]="rowData['disable'] == true" mode="decimal" class="number-hfullwidth"></p-inputNumber>
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '5px'}" [(ngModel)]="rowData['disable']"></p-checkbox><span style="margin-left: 5px">All</span>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <p-inputNumber [(ngModel)]="rowData[col.field]" [disabled]="rowData['disable'] == true" mode="decimal" class="number-hfullwidth"></p-inputNumber>
+                        <p-checkbox [binary]="true" [style]="{'margin-left': '5px'}" [(ngModel)]="rowData['disable']"></p-checkbox><span style="margin-left: 5px">All</span>
+                      </ng-template>
+                    </p-cellEditor>
+                    <p-cellEditor *ngSwitchCase="'setting'">
+                      <ng-template pTemplate="input">
+                        <button type="button" class="circle-btn-delete" style="margin-left: -15px; font-size: 30px;" (click)="viewDetail(rowData)" tooltipPosition="top"><i class="pi pi-eye icon-view"></i></button>
+                        <button type="button" class="circle-btn-delete" style="margin-left: 30px; font-size: 30px;" (click)="remoteDetail(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                        <!--<p-splitButton (onDropdownClick)="onChangeAction(rowData)" [model]="actions" appendTo="body"
+                                 styleClass="ui-button-secondary"></p-splitButton>-->
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        <button type="button" class="circle-btn-delete" style="margin-left: -15px; font-size: 30px;" (click)="viewDetail(rowData)" tooltipPosition="top"><i class="pi pi-eye icon-view"></i></button>
+                        <button type="button" class="circle-btn-delete" style="margin-left: 30px; font-size: 30px;" (click)="remoteDetail(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                        <!--<p-splitButton (onDropdownClick)="onChangeAction(rowData)" [model]="actions" appendTo="body"
+                        styleClass="ui-button-secondary"></p-splitButton>-->
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Danh sách hạng mục lỗi">
+          <div class="row">
+            <div class="col-md-5" style="margin-top: 5px;">
+              <p-orderList [value]="stageConfigError" [listStyle]="{'max-height':'50rem'}" header="Danh sách hạng mục kiểm tra hàng lỗi" filterBy="categoryName"
+                           filterPlaceholder="Tìm kiếm" [dragdrop]="true" [(selection)]="selectedConfigError">
+                <ng-template let-error pTemplate="item">
+                  <div class="error-item">
+                    <span class="error-category">{{error.categoryName}}</span>
+                  </div>
+                </ng-template>
+              </p-orderList>
+            </div>
+            <div class="col-md-1" style="margin-top: 40px;">
+              <div class="ui-orderlist-controls">
+                <button [disabled]="selectedConfigError.length == 0" type="button" (click)="nextError()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-right"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigError.length == 0" type="button" (click)="nextError()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-double-right"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigErrorChoose.length == 0" type="button" (click)="pressError()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-left"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+                <button [disabled]="selectedConfigErrorChoose.length == 0" type="button" (click)="pressError()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+                  <span aria-hidden="true" class="ui-button-icon-left ui-clickable pi pi-angle-double-left"></span>
+                  <span aria-hidden="true" class="ui-button-text ui-clickable">ui-btn</span>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-5" style="margin-top: 5px;">
+              <p-orderList [value]="stageConfigErrorChoose" class="right-order-list" [listStyle]="{'max-height':'50rem'}" header="Danh sách hạng mục kiểm tra hàng lỗi đã chọn"
+                           filterBy="categoryName" filterPlaceholder="Tìm kiếm" [dragdrop]="true" [(selection)]="selectedConfigErrorChoose">
+                <ng-template let-error pTemplate="item">
+                  <div class="error-item">
+                    <span class="error-category">{{error.categoryName}}</span>
+                  </div>
+                </ng-template>
+              </p-orderList>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end; margin-top: 30px;">
+        <button class="cancel" type="button" (click)="cancelCreateStage()">
+          <span class="text-cancel">Thoát</span>
+        </button>
+        <button class="add-new" type="button" (click)="saveCreateStage()">
+          <span class="add-new-text">Lưu</span>
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <!--Cài đặt thông số quy cách-->
+  <p-dialog header="Cài đặt thông số quy cách" [(visible)]="displaySetting" [modal]="true" [style]="{width: '70vw'}" [resizable]="false">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end; margin-bottom: 20px; z-index: 1;">
+          <button class="add-new" type="button" (click)="addLineSetting()">
+            <span class="add-new-text">Thêm dòng</span>
+          </button>
+        </div>
+      </div>
+      <div class="row" style="min-height: 400px;">
+        <p-table [columns]="colsSetting" [value]="listSetting" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}"
+                 scrollHeight="500px" [scrollable]="listSetting.length > 5">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" pResizableColumn
+                  [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                {{col.header}}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-columns="columns">
+            <tr [pEditableRow]="rowData">
+              <td *ngFor="let col of columns"
+                  class="ui-resizable-column" [ngSwitch]="col.field"
+                  [ngStyle]="{'text-align': col.textAlign, 'width': col.width}">
+                <p-cellEditor *ngSwitchCase="'type'">
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="typeResult"
+                                optionLabel="categoryName"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn kiểu kết quả"
+                                [style]="{'width':'100%'}"
+                                [styleClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border': ''"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-dropdown [options]="typeResult"
+                                optionLabel="categoryName"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn kiểu kết quả"
+                                [style]="{'width':'100%'}"
+                                [styleClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border': ''"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'first'">
+                  <ng-template pTemplate="input">
+                    <input type="text" pInputText [(ngModel)]="rowData[col.field]" [style]="{'width': '100%'}" />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <input type="text" pInputText [(ngModel)]="rowData[col.field]" [style]="{'width': '100%'}" />
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'last'">
+                  <ng-template pTemplate="input">
+                    <input type="text" pInputText [(ngModel)]="rowData[col.field]" [style]="{'width': '100%'}" />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <input type="text" pInputText [(ngModel)]="rowData[col.field]" [style]="{'width': '100%'}" />
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'sort'">
+                  <ng-template pTemplate="input">
+                    <p-inputNumber [(ngModel)]="rowData[col.field]" class="number-hfullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                                   [ngClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border-input': ''">
+                    </p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-inputNumber [(ngModel)]="rowData[col.field]" class="number-hfullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                                   [ngClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border-input': ''">
+                    </p-inputNumber>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'line'">
+                  <ng-template pTemplate="input">
+                    <p-inputNumber [(ngModel)]="rowData[col.field]" class="number-hfullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                                   [ngClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border-input': ''">
+                    </p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-inputNumber [(ngModel)]="rowData[col.field]" class="number-hfullwidth" mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                                   [ngClass]="saveActionConfigStage && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border-input': ''">
+                    </p-inputNumber>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'productName'">
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="productNVLList"
+                                optionLabel="productName"
+                                [(ngModel)]="rowData[col.field]"
+                                (onChange)="changeNVL(rowData)"
+                                placeholder="Chọn NVL"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-dropdown [options]="productNVLList"
+                                optionLabel="productName"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn NVL"
+                                (onChange)="changeNVL(rowData)"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'dvt'">
+                  <ng-template pTemplate="input">
+                    {{ rowData['productName'] != null ? rowData['productName'].productUnitName : rowData[col.field] }}
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ rowData['productName'] != null ? rowData['productName'].productUnitName : rowData[col.field] }}
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'infor'">
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="infoFormulaType"
+                                optionLabel="text"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn thông tin cần lấy"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active || (rowData['productName'] == null || rowData['productName'] == undefined)"
+                                [styleClass]="saveActionConfigStage && rowData['productName'] != null && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border test': ''"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-dropdown [options]="infoFormulaType"
+                                optionLabel="text"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn thông tin cần lấy"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active || (rowData['productName'] == null || rowData['productName'] == undefined)"
+                                [styleClass]="saveActionConfigStage && rowData['productName'] != null && (rowData[col.field] == null || rowData[col.field] == undefined) ? 'error-border': ''"
+                                [filter]="true">
+                    </p-dropdown>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'valueDvt'">
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="formulaType"
+                                optionLabel="text"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn giá trị quy đổi"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active || (rowData['infor'] == null || rowData['infor'].id != 1)"
+                                [filter]="true">
+                    </p-dropdown>
+                    <p-inputNumber [(ngModel)]="rowData['formulaValue']" [disabled]="active || rowData['infor'] == null || rowData['infor'].id != 1" mode="decimal" class="number-hfullwidth" inputId="withoutgrouping" [useGrouping]="false"
+                                   [inputStyle]="{'width':'30%'}" [style]="{'margin-left': '5px' }">
+                    </p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-dropdown [options]="formulaType"
+                                optionLabel="text"
+                                [(ngModel)]="rowData[col.field]"
+                                placeholder="Chọn giá trị quy đổi"
+                                [style]="{'width':'20%'}"
+                                [disabled]="active || (rowData['infor'] == null || rowData['infor'].id != 1)"
+                                [filter]="true">
+                    </p-dropdown>
+                    <p-inputNumber [(ngModel)]="rowData['formulaValue']" [disabled]="active || (rowData['infor'] == null || rowData['infor'].id != 1)" mode="decimal" class="number-hfullwidth" inputId="withoutgrouping" [useGrouping]="false"
+                                   [inputStyle]="{'width':'30%'}" [style]="{'margin-left': '5px' }">
+                    </p-inputNumber>
+                  </ng-template>
+                </p-cellEditor>
+                <p-cellEditor *ngSwitchCase="'setting'">
+                  <ng-template pTemplate="input">
+                    <button type="button" class="circle-btn-delete" style="font-size: 20px;" (click)="remoteSettingDetail(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <button type="button" class="circle-btn-delete" style="font-size: 20px;" (click)="remoteSettingDetail(rowData)" tooltipPosition="top"><i class="pi pi-times icon-delete"></i></button>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="row">
+        <div class="col-md-12" style="display: flex; justify-content: flex-end; margin-top: 30px;">
+          <button class="cancel" type="button" (click)="cancelSetting()">
+            <span class="text-cancel">Thoát</span>
+          </button>
+          <button class="add-new" type="button" (click)="saveSetting()">
+            <span class="add-new-text">Lưu</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Thêm mới Quy cách" [(visible)]="displayAddQC" [modal]="true" [style]="{width: '25vw'}" [resizable]="false">
+    <form [formGroup]="categoryForm">
+      <div class="col-md-12">
+        <label>
+          Tên quy cách <span class="require">*</span>:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <input type="text" pInputText style="width: 100%; margin: 1px;" formControlName="categoryName" placeholder=""
+                 [ngClass]="(categoryName.invalid && isSave && (categoryName.dirty ||  categoryName.touched)) ? 'error-border': ''">
+        </div>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <span *ngIf="categoryName.hasError('required') && isSave" class="error-message-span">Không được để trống</span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label>
+          Mô tả:
+        </label>
+        <div class="form-group control-input" style="padding-right: 10px">
+          <textarea rows="3" pInputTextarea style="width: 100%; margin: 1px;" formControlName="description"></textarea>
+        </div>
+      </div>
+      <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+        <button #cancel class="cancel" type="button" (click)="cancelCategory()">
+          <span class="text-cancel">Thoát</span>
+        </button>
+        <button #save class="add-new" type="button" (click)="saveCategory()">
+          <span class="add-new-text">Lưu</span>
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
