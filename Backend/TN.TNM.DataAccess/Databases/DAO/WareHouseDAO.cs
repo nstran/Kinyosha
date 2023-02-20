@@ -9411,17 +9411,18 @@ namespace TN.TNM.DataAccess.Databases.DAO
         {
             try
             {
-                //var listWarehouse = context.Warehouse.ToList();
-                //var listOrganization = context.Organization.ToList();
+                var listWarehouse = context.Warehouse.ToList();
+                var listOrganization = context.Organization.ToList();
 
-                var listPhieuNhapKho = new List<InventoryReceivingVoucherEntityModel>();
                 var categoryTypeId = context.CategoryType.FirstOrDefault(x => x.CategoryTypeCode == "KHO")?.CategoryTypeId;
                 var loaikho_id = context.Category.FirstOrDefault(x => x.CategoryCode == ((WarehouseType)parameter.WarehouseType).ToString() && x.CategoryTypeId == categoryTypeId).CategoryId;
 
                 var listkho = context.Warehouse.Where(x => x.WareHouseType == loaikho_id).Select(x => x.WarehouseId).ToList();
                 var lstInventoryType = new List<int>() { (int)InventoryDeliveryVoucherType.XBH, (int)InventoryDeliveryVoucherType.XNG };
 
-                var listPhieuXuatKho = context.InventoryDeliveryVoucher.Where(x => x.InventoryDeliveryVoucherScreenType == (int)ScreenType.TP && listkho.Contains(x.WarehouseId)
+                var listPhieuXuatKho = context.InventoryDeliveryVoucher.Where(x => x.InventoryDeliveryVoucherScreenType == (int)ScreenType.TP && x.InventoryDeliveryVoucherDate.Value.Date >= parameter.FromDate.Value.Date
+                && x.InventoryDeliveryVoucherDate.Value.Date <= parameter.ToDate.Value.Date
+                && listkho.Contains(x.WarehouseId)
                 && lstInventoryType.Contains(x.InventoryDeliveryVoucherType)) // lấy danh sách cho màn hình xuất kho SAN XUAT
                   .Select(y => new InventoryDeliveryVoucherEntityModel
                   {
@@ -9431,6 +9432,7 @@ namespace TN.TNM.DataAccess.Databases.DAO
                       InventoryDeliveryVoucherType = y.InventoryDeliveryVoucherType,
                       WarehouseReceivingId = y.WarehouseReceivingId,
                       InventoryDeliveryVoucherReason = y.InventoryDeliveryVoucherReason,
+                      OrderNumber = y.OrderNumber,
                       InventoryDeliveryVoucherDate = y.InventoryDeliveryVoucherDate,
                       CreatedById = y.CreatedById,
                       CreatedDate = y.CreatedDate,
@@ -9447,32 +9449,7 @@ namespace TN.TNM.DataAccess.Databases.DAO
 
                     listPhieuXuatKho.ForEach(item =>
                     {
-                        #region Lấy bộ phận
-                        item.EmployeeDepartment = context.Organization.FirstOrDefault(x => x.OrganizationId == item.OrganizationId)?.OrganizationName;
-
-                        #endregion
-
-                        #region Lấy tên loại phiếu
-                        // Xuất hàng ngày = 1, hàng tuần =2, hàng tháng =3, xuất văn phòng phẩm = 4
-                        if (item.InventoryDeliveryVoucherReason == 1)
-                        {
-                            item.InventoryDeliveryVoucherReasonText = "Xuất vật tư tiêu hao hàng ngày";
-                        }
-                        else if (item.InventoryDeliveryVoucherReason == 2)
-                        {
-                            item.InventoryDeliveryVoucherReasonText = "Xuất vật tư tiêu hao hàng tuần";
-                        }
-                        else if (item.InventoryDeliveryVoucherReason == 3)
-                        {
-                            item.InventoryDeliveryVoucherReasonText = "Xuất vật tư tiêu hao hàng tháng";
-                        }
-                        else if (item.InventoryDeliveryVoucherReason == 4)
-                        {
-                            item.InventoryDeliveryVoucherReasonText = "Xuất văn phòng phẩm";
-                        }
-
-                        #endregion
-                        #region Lấy tên kho đề nghị
+                        #region Lấy tên loại kho
                         // Xuất hàng ngày = 1, hàng tuần =2, hàng tháng =3, xuất văn phòng phẩm = 4
                         if (item.InventoryDeliveryVoucherType == (int)InventoryDeliveryVoucherType.KHC)
                         {
@@ -9517,30 +9494,66 @@ namespace TN.TNM.DataAccess.Databases.DAO
                         var status = listAllStatus.FirstOrDefault(x => x.CategoryId == item.StatusId);
                         item.NameStatus = status?.CategoryName;
 
-                        item.DepartmentName = context.Organization.FirstOrDefault(x => x.OrganizationId == item.OrganizationId)?.OrganizationName;
+                        switch (item.NameStatus)
+                        {
+                            case "Mới":
+                                item.IntStatusDnx = 0;
+                                break;
+                            case "Đã xuất kho":
+                                item.IntStatusDnx = 2;
+                                break;
+                        }
                         #endregion
 
                         var listPhieuXuatKhoMapping = context.InventoryDeliveryVoucherMapping.Where(x => x.InventoryDeliveryVoucherId == item.InventoryDeliveryVoucherId).ToList();
 
-                        listPhieuXuatKhoMapping.ForEach(map =>
+                        var listMappingGroup = listPhieuXuatKhoMapping.GroupBy(w => w.ProductId).Select(s => new ChiTietSanPhamPhieuXuatKho
+                        {
+                            ProductId = s.Key,
+                            Quantity = s.Sum(sum => sum.QuantityDelivery)
+                        }).ToList();
+
+                        listMappingGroup.ForEach(map =>
                         {
                             var product = context.Product.FirstOrDefault(x => x.ProductId == map.ProductId);
 
                             var chitiet = new ChiTietSanPhamPhieuXuatKho();
+                            chitiet.InventoryDeliveryVoucherId = item.InventoryDeliveryVoucherId;
                             chitiet.ProductId = product.ProductId;
                             chitiet.TenPhieuXuat = item.InventoryDeliveryVoucherCode;
-                            chitiet.NgayXuat = item.InventoryDeliveryVoucherDate;
+                            chitiet.NgayXuat = item.InventoryDeliveryVoucherDate == null ? item.InventoryDeliveryVoucherDate : item.InventoryDeliveryVoucherDate.Value.Date;
                             chitiet.ProductName = product.ProductName;
                             chitiet.ProductUnitName = listAllProductUnit.FirstOrDefault(c => c.CategoryId == product.ProductUnitId)?.CategoryName ?? "";
-                            chitiet.Quantity = map.QuantityDelivery;
-                            chitiet.ProductCategoryName = context.Category.FirstOrDefault(c => c.Active == true && c.CategoryId == product.ProductCategoryId)?.CategoryName ?? "";
-                            chitiet.OrganizationName = item.EmployeeDepartment;
+                            chitiet.Quantity = map.Quantity;
+                            chitiet.OrderNumber = item.OrderNumber;
+                            chitiet.StatusName = item.NameStatus;
+
+
+                            if (item.InventoryDeliveryVoucherType == (int)InventoryDeliveryVoucherType.XBH)
+                            {
+                                chitiet.LoaiPhieu = "Xuất bán hàng";
+                            } 
+                            else if(item.InventoryDeliveryVoucherType == (int)InventoryDeliveryVoucherType.XNG)
+                            {
+                                chitiet.LoaiPhieu = "Xuất NG";
+                            }
+
                             chiTietSanPhamPhieuXuatKhos.Add(chitiet);
                         });
                     });
                 }
 
                 listPhieuXuatKho = listPhieuXuatKho.OrderByDescending(z => z.CreatedDate).ToList();
+
+                var chiTietSanPhamPhieuXuatKhosGroup = chiTietSanPhamPhieuXuatKhos.GroupBy(w => new { w.NgayXuat, w.ProductName, w.OrganizationName }).Select(w => new ChiTietSanPhamPhieuXuatKho
+                {
+                    ProductId = w.First().ProductId,
+                    ProductName = w.First().ProductName,
+                    NgayXuat = w.First().NgayXuat,
+                    Quantity = w.Sum(c => c.Quantity),
+                    TenPhieuXuat = w.First().TenPhieuXuat,
+                    InventoryDeliveryVoucherId = w.First().InventoryDeliveryVoucherId
+                }).ToList();
 
                 return new SearchInventoryDeliveryVoucherResult
                 {

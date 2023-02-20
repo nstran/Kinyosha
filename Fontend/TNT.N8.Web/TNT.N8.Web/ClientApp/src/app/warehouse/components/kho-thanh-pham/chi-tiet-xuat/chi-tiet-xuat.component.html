@@ -32,25 +32,14 @@
                   <span class="text-cancel">Thoát</span>
                 </button>
 
-                <button #saveAndCreate *ngIf="trangThai == 0 && actionConfirm" class="save-and-new" type="button"
-                  [disabled]="awaitResult" (click)="luuVaGui()">
-                  <span class="text-save-and-new">Xác nhận xuất kho</span>
+                <button #saveAndCreate *ngIf="trangThai == 0" class="save-and-new" type="button"
+                  [disabled]="awaitResult" (click)="pheDuyetPhieuXuat()">
+                  <span class="text-save-and-new">Xuất kho</span>
                 </button>
-
-                <!-- <button #saveAndCreate (click)="pheDuyetPhieuXuat()" *ngIf="trangThai == 1" class="save-and-new"
-                  type="button" [disabled]="awaitResult" style="width: 210px !important">
-                  <span class="text-save-and-new">Phê duyệt và tạo phiếu xuất</span>
-                </button> -->
-
-                <!-- <button (click)="huyPhieuXuat()" #saveAndCreate *ngIf="trangThai == 1" class="save-and-new"
-                  type="button" [disabled]="awaitResult">
-                  <span class="text-save-and-new">Từ chối</span>
-                </button> -->
-
-                <button #saveAndCreate [disabled]="true" *ngIf="trangThai == 2" class="save-and-new" type="button"
+                <!-- <button #saveAndCreate [disabled]="true" *ngIf="trangThai == 2" class="save-and-new" type="button"
                   [disabled]="awaitResult">
                   <span class="text-save-and-new">Đã xuất kho</span>
-                </button>
+                </button> -->
 
                 <button #save class="save" *ngIf="trangThai == 0 && actionAdd" [disabled]="awaitResult" type="button"
                   (click)="taoPhieuNhapKho()">
@@ -130,16 +119,14 @@
                                   <label>Kho xuất:</label>
                                 </span>
                                 <span class="col-md-10">
-                                  <p-dropdown formControlName="khoXuatControl" [options]="listProduct"
-                                    optionLabel="productName" (onChange)="checkVatTu($event)"
-                                    placeholder="Lựa chọn vật tư"
-                                    [styleClass]="(khoXuatControl.invalid && (khoXuatControl.dirty || khoXuatControl.touched)) ? 'error-border' : ''"></p-dropdown>
+                                  <p-dropdown formControlName="khoXuatControl" [options]="listWarehouseNhan"
+                                    optionLabel="warehouseName" placeholder="Lựa chọn kho" ></p-dropdown>
                                   <p [hidden]="khoXuatControl.valid || khoXuatControl.untouched">
-                                    <span
+                                    <!-- <span
                                       *ngIf="khoXuatControl.hasError('required') || khoXuatControl.hasError('blankString') "
                                       class="error-message-span">
                                       Không được để trống
-                                    </span>
+                                    </span> -->
                                   </p>
                                 </span>
                               </span>
@@ -238,24 +225,11 @@
                             <span *ngSwitchCase="'soLuongDeNghi'">
                               {{ rowData[col.field] | number }}
                             </span>
-
-                            <!-- <span *ngSwitchCase="'ghiChu'">
-                              <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                  <input type="text" style="width: 100%; height: 40px;"
-                                    [(ngModel)]="rowData[col.field]">
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                  {{ rowData[col.field] }}
-                                </ng-template>
-                              </p-cellEditor>
-                            </span> -->
-
                             <span *ngSwitchCase="'thaoTac'">
                               <!-- <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil"
                                 class="ui-button-info" (click)="onRowEditInit(rowData)"></button> -->
                               <button pButton type="button" pInitEditableRow icon="pi pi-trash" class="ui-button-danger"
-                                (click)="xoaDataTable(rowData, index)" style="margin-left: 5px;" *ngIf="actionDelete"></button>
+                                (click)="xoaDataTable(rowData, index)" style="margin-left: 5px;"></button>
                               <!-- <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check"
                                 class="ui-button-success" style="margin-right: .5em"
                                 (click)="onRowEditSave(rowData,rowIndex)"></button>
@@ -525,7 +499,7 @@
 
       <div class="row">
         <div class="col-md-6">
-          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+          <!-- <span>Tổng tồn kho: {{tongTonKho | number}}</span> -->
         </div>
         <div class="col-md-6">
           <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
@@ -765,11 +739,10 @@
                       (change)="tinhTong()" class="number-input"
                       [cleave]="{numeral: true, numeralPositiveOnly: true, numeralDecimalScale: '0'}" />
                   </span>
-
-                  <!-- <span *ngSwitchCase="'thaoTac'">
+                  <span *ngSwitchCase="'thaoTac'">
                     <button style="width: 100%; color: red;" type="button" pButton icon="pi pi-trash"
                       class="ui-button-secondary" (click)="xoaDeXuat(rowData)"></button>
-                  </span> -->
+                  </span>
                   <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
                 </td>
 
@@ -781,10 +754,10 @@
 
       <div class="row">
         <div class="col-md-6">
-          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+          <!-- <span>Tổng tồn kho: {{tongTonKho | number}}</span> -->
         </div>
         <div class="col-md-6">
-          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+          <span>Tổng cộng: {{tongSoLuongDeNghi | number}}</span>
         </div>
       </div>
     </div>

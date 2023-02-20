@@ -13,7 +13,10 @@ namespace TN.TNM.DataAccess.Models.WareHouse
         public string ProductUnitName { get; set; }
         public string ProductCategoryName { get; set; }
         public string TenPhieuXuat { get; set; }
+        public string LoaiPhieu { get; set; }
+        public string StatusName { get; set; }
         public string OrganizationName { get; set; }
+        public string OrderNumber { get; set; }
         public Guid InventoryDeliveryVoucherId { get; set; }
     }
 }

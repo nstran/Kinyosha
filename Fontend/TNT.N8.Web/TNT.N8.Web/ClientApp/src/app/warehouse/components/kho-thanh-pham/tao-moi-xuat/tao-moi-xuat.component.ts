@@ -133,6 +133,7 @@ class mapDataDialog {
   lotNoId: any;
   lotNo: any;
   tonKho: number;
+  soLuongTon: number;
   soLuongDeNghi: number;
   ghiChu: string;
   thaoTac: any;
@@ -144,6 +145,7 @@ class MapDataTable {
   productId: string;
   tenVatTu: string;
   donViTinh: string;
+  soLuongTon: number;
   soLuongDeNghi: number;
   ghiChu: string;
 }
@@ -442,8 +444,16 @@ export class TaoMoiXuatComponent implements OnInit {
         color: "#f44336",
       },
       {
+        field: "soLuongTon",
+        header: "Số lượng tồn",
+        width: "150px",
+        textAlign: "right",
+        display: "table-cell",
+        color: "#f44336",
+      },
+      {
         field: "soLuongDeNghi",
-        header: "Số lượng đề nghị",
+        header: "Số lượng xuất",
         width: "150px",
         textAlign: "right",
         display: "table-cell",
@@ -537,28 +547,20 @@ export class TaoMoiXuatComponent implements OnInit {
       },
       {
         field: "soLuongDeNghi",
-        header: "Số lượng đề nghị",
+        header: "Số lượng xuất",
         width: "100px",
         textAlign: "center",
         display: "table-cell",
         color: "#f44336",
       },
-      // {
-      //   field: "ghiChu",
-      //   header: "Ghi chú",
-      //   width: "120px",
-      //   textAlign: "right",
-      //   display: "table-cell",
-      //   color: "#f44336",
-      // },
-      // {
-      //   field: "thaoTac",
-      //   header: "Thao tác",
-      //   width: "40px",
-      //   textAlign: "right",
-      //   display: "table-cell",
-      //   color: "#f44336",
-      // },
+      {
+        field: "thaoTac",
+        header: "Thao tác",
+        width: "40px",
+        textAlign: "right",
+        display: "table-cell",
+        color: "#f44336",
+      },
     ];
 
     this.colsDeNghiXuat2 = [
@@ -783,18 +785,6 @@ export class TaoMoiXuatComponent implements OnInit {
       this.department = getMaterDataResult.employeeDepartment;
       this.listProduct = getMaterDataResult.listProduct
       this.listProductCheck = getMaterDataResult.listProduct
-
-      /** fake data */
-      // this.listProduct = [
-      //   {
-      //     productId: '121-1312-4311', listProductLotNoMapping: [
-      //       { lotNoId: 50, lotNoName: 'lotno1' },
-      //       { lotNoId: 51, lotNoName: 'lotno2' }
-      //     ], productName: 'product 1'
-      //   },
-      // ]
-      // this.listProductCheck = this.listProduct
-
       this.listWarehouseNhan = getListWarehouse.listWareHouse;
       this.selectKhoNhan = this.listWarehouseNhan[0]
     } else {
@@ -831,7 +821,8 @@ export class TaoMoiXuatComponent implements OnInit {
           lotNoId: this.vatTuControlEdit.value.listProductLotNoMapping.find(i => i.lotNoId == x.LotNoId).lotNoId,
           lotNo: this.vatTuControlEdit.value.listProductLotNoMapping.find(i => i.lotNoId == x.LotNoId),
           tonKho: x.QuantityInventory,
-          soLuongDeNghi: x.QuantityRequire,
+          soLuongTon: x.QuantityInventory,
+          soLuongDeNghi: x.QuantityDelivery,
           ghiChu: x.Note,
           thaoTac: null,
           dataLotNo: this.selectVatTu.listProductLotNoMapping
@@ -929,7 +920,7 @@ export class TaoMoiXuatComponent implements OnInit {
               "/warehouse/thanh-pham-xuat/detail",
               {
                 inventoryDeliveryVoucherId: result.inventoryDeliveryVoucherId,
-                warehouseType: this.warehouseType,
+                warehouseType: 4,
               },
             ]);
           }
@@ -949,6 +940,7 @@ export class TaoMoiXuatComponent implements OnInit {
     let inventoryDeliveryVoucher = new InventoryDeliveryVoucherModel();
     inventoryDeliveryVoucher.inventoryDeliveryVoucherId = this.emptyGuid;
     inventoryDeliveryVoucher.statusId = this.emptyGuid;
+    inventoryDeliveryVoucher.organizationId = this.emptyGuid;
     inventoryDeliveryVoucher.inventoryDeliveryVoucherType = this.typePhieu;
     inventoryDeliveryVoucher.warehouseId =
       this.thongTinChungForm.get("khoXuatControl").value?.warehouseId;
@@ -1059,6 +1051,7 @@ export class TaoMoiXuatComponent implements OnInit {
         lotNoId: '',
         lotNo: null,
         tonKho: 0,
+        soLuongTon: 0,
         soLuongDeNghi: 0,
         ghiChu: '',
         thaoTac: null,
@@ -1091,6 +1084,7 @@ export class TaoMoiXuatComponent implements OnInit {
       lotNoId: '',
       lotNo: null,
       tonKho: 0,
+      soLuongTon: 0,
       soLuongDeNghi: 0,
       ghiChu: '',
       thaoTac: null,
@@ -1122,6 +1116,7 @@ export class TaoMoiXuatComponent implements OnInit {
               lotNoId: x.lotNoId,
               lotNo: x.lotNo,
               tonKho: x.tonKho,
+              soLuongTon: x.soLuongTon,
               soLuongDeNghi: x.soLuongDeNghi,
               ghiChu: x.ghiChu,
               thaoTac: null,
@@ -1143,6 +1138,7 @@ export class TaoMoiXuatComponent implements OnInit {
             lotNoId: x.lotNoId,
             lotNo: x.lotNo,
             tonKho: x.tonKho,
+            soLuongTon: x.soLuongTon,
             soLuongDeNghi: x.soLuongDeNghi,
             ghiChu: x.ghiChu,
             thaoTac: null,
@@ -1217,6 +1213,7 @@ export class TaoMoiXuatComponent implements OnInit {
         productId: this.selectVatTu.productId,
         tenVatTu: this.selectVatTu.productName,
         donViTinh: this.donViTinh,
+        soLuongTon: this.soLuongTon,
         soLuongDeNghi: this.tongSoLuongDeNghi,
         ghiChu: '',
       }
@@ -1227,8 +1224,8 @@ export class TaoMoiXuatComponent implements OnInit {
           InventoryDeliveryVoucherMappingId: this.emptyGuid,
           InventoryDeliveryVoucherId: this.emptyGuid,
           ProductId: this.selectVatTu.productId,
-          ProductCode: '',
-          QuantityRequire: ParseStringToFloat(i.soLuongDeNghi), //So luong de nghi
+          ProductCode: "",
+          QuantityRequire: 0, //So luong de nghi
           QuantityInventory: ParseStringToFloat(i.tonKho),
           Quantity: 0,
           Price: 0,
@@ -1240,17 +1237,17 @@ export class TaoMoiXuatComponent implements OnInit {
           ListSerial: [],
           DiscountValue: 0,
           TotalSerial: 0,
-          QuantityDelivery: 0, //So luong giao
-          ProductReuse: '',
+          QuantityDelivery: ParseStringToFloat(i.soLuongDeNghi), //So luong giao
+          ProductReuse: "",
           LotNoId: i.lotNoId,
           LotNoName: i.lotNo.lotNoName,
           ProductName: this.selectVatTu.productName,
-          WareHouseName: '',
+          WareHouseName: "",
           UnitName: this.donViTinh,
-          NameMoneyUnit: '',
+          NameMoneyUnit: "",
           SumAmount: 0,
           WareHouseType: 0,
-        }
+        };
         this.listDataUse.push(dataUse)
       })
 
@@ -1288,7 +1285,7 @@ export class TaoMoiXuatComponent implements OnInit {
           InventoryDeliveryVoucherId: this.emptyGuid,
           ProductId: this.vatTuControlEdit.value.productId,
           ProductCode: '',
-          QuantityRequire: ParseStringToFloat(z.soLuongDeNghi), //So luong de nghi
+          QuantityRequire: 0, //So luong de nghi
           QuantityInventory: ParseStringToFloat(z.tonKho),
           Quantity: 0,
           Price: 0,
@@ -1300,7 +1297,7 @@ export class TaoMoiXuatComponent implements OnInit {
           ListSerial: [],
           DiscountValue: 0,
           TotalSerial: 0,
-          QuantityDelivery: 0, //So luong giao
+          QuantityDelivery: ParseStringToFloat(z.soLuongDeNghi), //So luong giao
           ProductReuse: '',
           LotNoId: z.lotNoId,
           LotNoName: z.lotNo.lotNoName,
@@ -1366,9 +1363,10 @@ export class TaoMoiXuatComponent implements OnInit {
         productId: productId,
         tenVatTu: vatTuName,
         donViTinh: this.donViTinh,
+        soLuongTon: this.soLuongTon,
         soLuongDeNghi: this.tongSoLuongDeNghi,
-        ghiChu: null
-      }
+        ghiChu: null,
+      };
       this.listDataDeNghi.push(data)
     })
   }

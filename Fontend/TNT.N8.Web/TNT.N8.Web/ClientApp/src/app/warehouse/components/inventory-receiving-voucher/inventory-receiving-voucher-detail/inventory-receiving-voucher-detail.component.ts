@@ -2072,9 +2072,7 @@ export class InventoryReceivingVoucherDetailComponent implements OnInit {
     });
   }
 
-  printFile(){
-    
-  }
+  printFile() {}
 
   showToast(severity: string, summary: string, detail: string) {
     this.messageService.add({
@@ -2384,6 +2382,10 @@ export class InventoryReceivingVoucherDetailComponent implements OnInit {
         this.minDate = null;
       }
     }
+  }
+
+  inFile() {
+    
   }
 }
 

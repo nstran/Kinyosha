@@ -852,16 +852,9 @@ export class WarehouseService {
     toDate: any,
     organizationId: string
   ) {
-    const url =
-      localStorage.getItem("ApiEndPoint") +
-      "/api/warehouse/searchInventoryDeliveryVoucherTP";
+    const url = localStorage.getItem("ApiEndPoint") + "/api/warehouse/searchInventoryDeliveryVoucherTP";
     return this.httpClient
-      .post(url, {
-        WarehouseType: warehouseType,
-        FromDate: fromDate,
-        ToDate: toDate,
-        OrganizationId: organizationId,
-      })
+      .post(url, { WarehouseType: warehouseType, FromDate: fromDate, ToDate: toDate, OrganizationId: organizationId})
       .map((response: Response) => {
         return <any>response;
       });

@@ -2942,7 +2942,7 @@ namespace TN.TNM.DataAccess.Databases.DAO
                                 decimal productionNumber = GetProductionNumber(entProductionProcessDetail.Id);                                
                                 UpdateInventoryReport(entProductionProcessDetail.ProductId, lotNoId, parameter.WarehouseId.Value, parameter.UserId,
                                     entInventoryReceivingVoucher.InventoryReceivingVoucherDate, entProductionProcessDetail.TotalReached,
-                                    0, 0, 0, entProductionProcessDetail.TotalPending.Value, 0, 0, productionNumber);
+                                    0, 0, 0, entProductionProcessDetail.TotalPending.Value, 0, 0, 0, productionNumber);
                                 #endregion
                                 #region Thêm phiếu nhập kho vào công đoạn
                                 if (entProductionProcessStage != null)

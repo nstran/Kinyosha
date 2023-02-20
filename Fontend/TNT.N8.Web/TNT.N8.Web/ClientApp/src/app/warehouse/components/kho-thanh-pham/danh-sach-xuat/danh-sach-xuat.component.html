@@ -3,6 +3,8 @@
   </p-progressSpinner>
 </div> -->
 <p-toast position="bottom-right"></p-toast>
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" acceptLabel="Chấp nhận" rejectLabel="Không">
+</p-confirmDialog>
 
 <div class="de-nghi-xuat-kho-list">
   <div class="row no-margin">
@@ -36,7 +38,7 @@
               <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
                 (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')" />
               <button type="button" class="btn-save" style="width:140px!important;" *ngIf="actionAdd">
-                <span class="btn-save-text" (click)="taoMoiXuat(7)">Xuất thành phẩm</span>
+                <span class="btn-save-text" (click)="taoMoiXuat(12)">Xuất thành phẩm</span>
               </button>
               <!-- <button type="button" class="btn-save" style="width:120px!important;">
                 <span class="btn-save-text" (click)="taoMoiXuat(8)">Cập nhật NG</span>
@@ -60,7 +62,7 @@
   <div class="row no-margin" style="background-color: #f2f4f8;">
     <div>
 
-      <p-table #myTable [columns]="cols" [value]="listData" [resizableColumns]="true" columnResizeMode="expand"
+      <p-table #myTable [columns]="cols" [value]="listPhieuXuatKho" [resizableColumns]="true" columnResizeMode="expand"
         [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border">
         <ng-template pTemplate="header" let-columns>
           <tr>
@@ -79,8 +81,12 @@
                 {{rowIndex + 1}}
               </span>
 
-              <span *ngSwitchCase="'maPhieu'" (click)="onViewDetail(rowData)" class="link"
+              <span *ngSwitchCase="'tenPhieuXuat'" (click)="onViewDetail(rowData)" class="link"
                 style="display: inline-block; padding: 2px 2px;">
+                {{ rowData[col.field] }}
+              </span>
+
+              <span *ngSwitchCase="'loaiPhieu'">
                 {{ rowData[col.field] }}
               </span>
 
@@ -88,18 +94,17 @@
                 {{ rowData[col.field] | date:'dd/MM/yyyy'}}
               </span>
 
-              <span *ngSwitchCase="'loaiPhieu'">
+              <span *ngSwitchCase="'quantity'">
+                {{ rowData[col.field] | number }}
+              </span>
+
+              <span *ngSwitchCase="'orderNumber'">
                 {{ rowData[col.field] }}
               </span>
-
-              <span *ngSwitchCase="'soDonHang'">
-                {{ rowData[col.field] | number }}
+              <span *ngSwitchCase="'thaoTac'">
+                <button *ngIf="rowData.statusName == 'Mới'" style="width: 100%; color: red;" type="button" pButton
+                  icon="pi pi-trash" class="ui-button-secondary" (click)="xoaData(rowData)"></button>
               </span>
-
-              <span *ngSwitchCase="'soLuongXuat'">
-                {{ rowData[col.field] | number }}
-              </span>
-
               <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
             </td>
           </tr>

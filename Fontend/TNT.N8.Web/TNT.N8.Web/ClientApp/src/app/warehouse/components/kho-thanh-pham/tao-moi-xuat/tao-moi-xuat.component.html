@@ -37,7 +37,7 @@
                   <span class="text-save-and-new">Gửi phê duyệt</span>
                 </button> -->
 
-                <button #save class="save" [disabled]="awaitResult" type="button" (click)="taoPhieuNhapKho(false)" *ngIf="actionAdd">
+                <button #save class="save" [disabled]="awaitResult" type="button" (click)="taoPhieuXuatKho(false)" *ngIf="actionAdd">
                   <span class="text-save">Lưu</span>
                 </button>
 
@@ -71,7 +71,7 @@
                     <div class="row">
                       <span class="col-md-4">
                         <label>Loại phiếu:</label>
-                        <p-radioButton *ngIf="typePhieu == 7" styleClass="p-radioButtonCustom" name="group2" value=7
+                        <p-radioButton *ngIf="typePhieu == 12" styleClass="p-radioButtonCustom" name="group2" value=12
                           [(ngModel)]="typePhieu" label="Xuất bán hàng"></p-radioButton>
                         <p-radioButton *ngIf="typePhieu == 8" styleClass="p-radioButtonCustom" name="group2" value=8
                           [(ngModel)]="typePhieu" label="Xuất NG"></p-radioButton>
@@ -187,7 +187,7 @@
 
                 <div class="row mt-10">
                   <div class="col-md-12">
-                    <p-table *ngIf="typePhieu == 7" #myTable [columns]="colsDanhSach" [value]="listDataDeNghi"
+                    <p-table *ngIf="typePhieu == 12" #myTable [columns]="colsDanhSach" [value]="listDataDeNghi"
                       [resizableColumns]="true" columnResizeMode="expand" [paginator]="true" [rows]="10"
                       [rowsPerPageOptions]="[10,20,30]" [responsive]="true" class="table-border">
                       <ng-template pTemplate="header" let-columns>
@@ -442,10 +442,10 @@
 
       <div class="row">
         <div class="col-md-6">
-          <span>Tổng tồn kho: {{tongTonKho | number}}</span>
+          <!-- <span>Tổng tồn kho: {{tongTonKho | number}}</span> -->
         </div>
         <div class="col-md-6">
-          <span>Tổng số lượng đề nghị: {{tongSoLuongDeNghi | number}}</span>
+          <span>Tổng cộng: {{tongSoLuongDeNghi | number}}</span>
         </div>
       </div>
     </div>

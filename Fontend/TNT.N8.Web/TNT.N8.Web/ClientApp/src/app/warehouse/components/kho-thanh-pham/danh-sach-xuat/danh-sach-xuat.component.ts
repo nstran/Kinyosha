@@ -6,7 +6,7 @@ import { EmployeeService } from "../../../../employee/services/employee.service"
 import { CategoryService } from "../../../../shared/services/category.service";
 import { VendorService } from "../../../../vendor/services/vendor.service";
 import { ProductService } from "../../../../product/services/product.service";
-import { MessageService, SortEvent } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GetPermission } from "../../../../shared/permission/get-permission";
 import { DialogService } from "primeng/dynamicdialog";
@@ -20,6 +20,9 @@ import { NotificationService } from "../../../../shared/services/notification.se
 export class DanhSachXuatComponent implements OnInit {
   cols: any;
   listData: Array<any> = [];
+
+  listPhieuXuatKho: Array<any> = [];
+
   loading: boolean = false;
   displayType: number = 0;
   @ViewChild("myTable") myTable: Table;
@@ -39,7 +42,8 @@ export class DanhSachXuatComponent implements OnInit {
     public dialogService: DialogService,
     public messageService: MessageService,
     private router: Router,
-    private notificationService: NotificationService
+    private confirmationService: ConfirmationService,
+    private notificationService: NotificationService,
   ) {}
 
   async ngOnInit() {
@@ -70,6 +74,8 @@ export class DanhSachXuatComponent implements OnInit {
         let result: any = response;
         if (result.statusCode == 200) {
           this.listData = result.lstResult;
+          this.listPhieuXuatKho = result.chiTietSanPhamPhieuXuatKhos;
+          this.loading = false;
         } else {
           let msg = {
             severity: "error",
@@ -80,14 +86,14 @@ export class DanhSachXuatComponent implements OnInit {
         }
       });
 
-    this.loading = false;
+    // this.loading = false;
   }
 
   initTable() {
     this.cols = [
       { field: "STT", header: "STT", width: "40px", textAlign: "center" },
       {
-        field: "maPhieu",
+        field: "tenPhieuXuat",
         header: "Mã phiếu",
         width: "100px",
         textAlign: "center",
@@ -105,15 +111,27 @@ export class DanhSachXuatComponent implements OnInit {
         textAlign: "center",
       },
       {
-        field: "soLuongXuat",
+        field: "quantity",
         header: "Số lượng xuất",
         width: "100px",
         textAlign: "center",
       },
       {
-        field: "soDonHang",
+        field: "statusName",
+        header: "Trạng thái",
+        width: "60px",
+        textAlign: "center",
+      },
+      {
+        field: "orderNumber",
         header: "Số đơn hàng",
         width: "100px",
+        textAlign: "center",
+      },
+      {
+        field: "thaoTac",
+        header: "Thao tác",
+        width: "50px",
         textAlign: "center",
       },
     ];
@@ -133,6 +151,44 @@ export class DanhSachXuatComponent implements OnInit {
       { typePhieu: data },
     ]);
   }
+
+  xoaData(data: any) {
+    if (data.inventoryDeliveryVoucherId) {
+      this.confirmationService.confirm({
+        message: "Bạn có chắc chắn muốn xóa phiếu này?",
+        accept: () => {
+          this.loading = true;
+          this.warehouseService
+            .deleteInventoryDeliveryVoucher(data.inventoryDeliveryVoucherId)
+            .subscribe(
+              (response) => {
+                let result: any = response;
+                if (result.statusCode == 200) {
+                  let msg = {
+                    severity: "success",
+                    summary: "Thông báo:",
+                    detail: result.messageCode,
+                  };
+                  this.showMessage(msg);
+                  this.getMasterData();
+                } else {
+                  if (result.statusCode == 200) {
+                    let msg = {
+                      severity: "error",
+                      summary: "Thông báo:",
+                      detail: result.messageCode,
+                    };
+                    this.showMessage(msg);
+                  }
+                }
+              },
+              () => (this.loading = false)
+            );
+        },
+      });
+    }
+  }
+
   showMessage(msg: any) {
     this.messageService.add(msg);
   }

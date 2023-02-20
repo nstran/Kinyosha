@@ -50,7 +50,7 @@
                   <span class="text-save-and-new">Lưu kiểm kê</span>
                 </button> -->
 
-                <button #saveAndCreate class="save-and-new" type="button" *ngIf="status == 1 && actionPrint" [disabled]="awaitResult">
+                <button #saveAndCreate class="save-and-new" type="button" *ngIf="status == 1 && actionPrint" [disabled]="awaitResult" (click)="inFile()">
                   <span class="text-save-and-new">In file</span>
                 </button>
 

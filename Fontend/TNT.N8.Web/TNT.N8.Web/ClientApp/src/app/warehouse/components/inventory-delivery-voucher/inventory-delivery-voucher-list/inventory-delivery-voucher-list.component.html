@@ -70,7 +70,7 @@
                     <input (keypress)="checkEnterPress($event)" type="text" [(ngModel)]="filterGlobal" class="iput-text" placeholder="Tìm kiếm trong danh sách"
                       (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')"> -->
                     <!-- <div style="clear: both;"></div> -->
-                    <button type="button" class="btn-save" style="width:90px!important;" (click)="exportExcel()">
+                    <button *ngIf="displayTypeNVL == 1" type="button" class="btn-save" style="width:90px!important;" (click)="exportExcel()">
                       <span class="btn-save-text">Xuất file</span>
                     </button>
                     <button type="button" class="btn-save" *ngIf="actionAdd"
@@ -348,7 +348,7 @@
                     <input type="text" class="iput-text" placeholder="Tìm kiếm trong danh sách"
                       (input)="myTable.filterGlobal($event.target.value.trim(), 'contains')">
                     <div style="clear: both;"></div> -->
-                    <button type="button" class="btn-save" style="width:90px!important;" (click)="exportExcelCCDC()">
+                    <button *ngIf="displayCCDC == 1" type="button" class="btn-save" style="width:90px!important;" (click)="exportExcelCCDC()">
                       <span class="btn-save-text">Xuất file</span>
                     </button>
                     <button type="button" class="btn-save" *ngIf="actionAdd"

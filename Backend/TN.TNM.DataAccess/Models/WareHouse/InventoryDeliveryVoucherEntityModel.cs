@@ -50,6 +50,7 @@ namespace TN.TNM.DataAccess.Models.WareHouse
         public int? WarehouseCategory { get; set; } // KHO NVL,CCDC, CSX=CF, NG-CF,TP
         public int? InventoryDeliveryVoucherScreenType { get; set; } // 
         public string OrderNumber { get; set; }
+        public string Quantity { get; set; }
         public Guid? ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductCode { get; set; }

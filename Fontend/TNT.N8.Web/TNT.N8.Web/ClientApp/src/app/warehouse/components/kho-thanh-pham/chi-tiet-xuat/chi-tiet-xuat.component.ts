@@ -64,6 +64,7 @@ class MapData {
   InventoryDeliveryVoucherType: number
   WarehouseId: string
   ObjectId: string
+  OrderNumber: string
   Reason: string
   InventoryDeliveryVoucherDate: Date
   InventoryDeliveryVoucherTime: Date
@@ -204,6 +205,8 @@ export class ChiTietXuatComponent implements OnInit {
   @ViewChild("myTable") myTable: Table;
   filterGlobal: string = "";
 
+  auth: any = JSON.parse(localStorage.getItem("auth"));
+
   /* Valid Form */
   isInvalidForm: boolean = false;
   emitStatusChangeForm: any;
@@ -228,7 +231,7 @@ export class ChiTietXuatComponent implements OnInit {
   loaiPhieuNhapType: number = 1;
   listCurrentChips: Array<string> = [];
   listVendor: Array<Vendor> = [];
-  listWarehouseNhan: Array<Warehouse> = [];
+  listWarehouseNhan: Array<any> = [];
   listWarehouseXuat: Array<Warehouse> = [];
   listCustomer: Array<Customer> = [];
   listVendorOrder: Array<VendorOrder> = [];
@@ -338,6 +341,8 @@ export class ChiTietXuatComponent implements OnInit {
   actionConfirm: boolean = true;
   actionDelete: boolean = true;
 
+  status: any;
+
   maHeThong: any;
   constructor(
     private getPermission: GetPermission,
@@ -354,8 +359,8 @@ export class ChiTietXuatComponent implements OnInit {
         this.id = params["inventoryDeliveryVoucherId"];
       }
 
-      if (params["warehouseType"]) {
-        this.warehouseType = params["warehouseType"];
+      if (params["WarehouseType"]) {
+        this.warehouseType = params["WarehouseType"];
       }
       if (params["typePhieu"]) {
         this.typePhieu = params["typePhieu"];
@@ -402,7 +407,7 @@ export class ChiTietXuatComponent implements OnInit {
       this.router.navigate(["/home"]);
     } else {
       let listCurrentActionResource = permission.listCurrentActionResource;
-      if (listCurrentActionResource.indexOf('add') == -1) {
+      if (listCurrentActionResource.indexOf("add") == -1) {
         this.actionAdd = false;
       }
       if (listCurrentActionResource.indexOf("confirm") == -1) {
@@ -413,7 +418,6 @@ export class ChiTietXuatComponent implements OnInit {
       }
     }
     this.getMasterData();
-
   }
 
   initTable() {
@@ -443,21 +447,21 @@ export class ChiTietXuatComponent implements OnInit {
         color: "#f44336",
       },
       {
-        field: "soLuongDeNghi",
-        header: "Số lượng đề nghị",
+        field: "soLuongTon",
+        header: "Số lượng tồn",
         width: "150px",
         textAlign: "right",
         display: "table-cell",
         color: "#f44336",
       },
-      // {
-      //   field: "ghiChu",
-      //   header: "Ghi chú",
-      //   width: "190px",
-      //   textAlign: "center",
-      //   display: "table-cell",
-      //   color: "#f44336",
-      // },
+      {
+        field: "soLuongDeNghi",
+        header: "Số lượng xuất",
+        width: "150px",
+        textAlign: "right",
+        display: "table-cell",
+        color: "#f44336",
+      },
       {
         field: "thaoTac",
         header: "Thao tác",
@@ -711,7 +715,6 @@ export class ChiTietXuatComponent implements OnInit {
       getMaterDataResult.statusCode == 200 &&
       getListWarehouse.statusCode == 200
     ) {
-  
       this.inventoryDeliveryVoucher =
         getMaterDataResult.inventoryDeliveryVoucher;
 
@@ -724,6 +727,10 @@ export class ChiTietXuatComponent implements OnInit {
         getMaterDataResult.inventoryDeliveryVoucherMappingModel;
 
       this.listWarehouseNhan = getListWarehouse.listWareHouse;
+      this.status = getMaterDataResult.inventoryDeliveryVoucher.intStatusDnx;
+
+      
+
     } else {
       let msg = {
         severity: "error",
@@ -737,18 +744,7 @@ export class ChiTietXuatComponent implements OnInit {
   }
 
   setDefaultValue() {
-    /**fake data */
-    // this.listProduct = [
-    //   {
-    //     productId: '121-1312-4311', listProductLotNoMapping: [
-    //       { lotNoId: 50, lotNoName: 'lotno1' },
-    //       { lotNoId: 51, lotNoName: 'lotno2' }
-    //     ], productName: 'product 1'
-    //   },
-    // ]
-    // this.listProductCheck = this.listProduct
-
-    debugger
+    debugger;
     this.trangThaiText = this.inventoryDeliveryVoucher.nameStatus;
     this.trangThai = this.inventoryDeliveryVoucher.intStatusDnx;
     this.maHeThong = this.inventoryDeliveryVoucher.inventoryDeliveryVoucherCode;
@@ -759,40 +755,31 @@ export class ChiTietXuatComponent implements OnInit {
     this.ngayHienTai = formatDatetime(
       new Date(this.inventoryDeliveryVoucher.createdDate)
     );
-    this.deNghi = this.inventoryDeliveryVoucher.inventoryDeliveryVoucherType;
 
+    this.typePhieu = this.inventoryDeliveryVoucher.inventoryDeliveryVoucherType;
 
-    this.lyDo = ParseStringToFloat(
-      this.inventoryDeliveryVoucher.inventoryDeliveryVoucherReason
-    );
-    this.dateNgay = this.inventoryDeliveryVoucher.day
-      ? new Date(this.inventoryDeliveryVoucher.day)
-      : null;
-
-    this.tuNgayControl.setValue(
-      this.inventoryDeliveryVoucher.dateFrom
-        ? new Date(this.inventoryDeliveryVoucher.dateFrom)
+    this.ngayXuatControl.setValue(
+      this.inventoryDeliveryVoucher.inventoryDeliveryVoucherDate
+        ? new Date(this.inventoryDeliveryVoucher.inventoryDeliveryVoucherDate)
         : null
     );
-    this.denNgayControl.setValue(
-      this.inventoryDeliveryVoucher.dateTo
-        ? new Date(this.inventoryDeliveryVoucher.dateTo)
-        : null
+
+    this.soDonControl.setValue(
+      this.inventoryDeliveryVoucher.orderNumber
+        ? this.inventoryDeliveryVoucher.orderNumber
+        : ""
     );
-    this.hangThangControl.setValue(
-      this.inventoryDeliveryVoucher.month
-        ? new Date(this.inventoryDeliveryVoucher.month)
-        : null
-    );
-    this.khoNhanSelect = this.listWarehouseNhan.find(
-      (x) => x.warehouseId == this.inventoryDeliveryVoucher.warehouseReceivingId
+
+    this.khoXuatControl.setValue(
+      this.listWarehouseNhan.find(
+        (x) => x.warehouseId == this.inventoryDeliveryVoucher.warehouseId
+      )
     );
 
     this.gopData();
   }
 
   onViewDetail(data: MapDataTable) {
-
     this.deNghiXuatKhoEdit = true;
     this.listDataDialog = [];
     this.vatTuControlEdit.disable();
@@ -817,7 +804,7 @@ export class ChiTietXuatComponent implements OnInit {
             (i) => i.lotNoId == x.lotNoId
           ),
           tonKho: x.quantityInventory,
-          soLuongDeNghi: x.quantityRequire,
+          soLuongDeNghi: x.quantityDelivery,
           ghiChu: x.note,
           thaoTac: null,
           dataLotNo: this.selectVatTu.listProductLotNoMapping,
@@ -837,7 +824,7 @@ export class ChiTietXuatComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(["/warehouse/de-nghi-xuat-kho/list"]);
+    this.router.navigate(["/warehouse/thanh-pham-xuat/list"]);
   }
   huyPhieuXuat() {
     this._warehouseService.huyDeNghiXuat(this.id).subscribe((response) => {
@@ -914,12 +901,13 @@ export class ChiTietXuatComponent implements OnInit {
       InventoryDeliveryVoucherId: this.id,
       InventoryDeliveryVoucherCode: null,
       StatusId: this.emptyGuid,
-      InventoryDeliveryVoucherType: this.deNghi,
-      WarehouseId: this.emptyGuid,
+      InventoryDeliveryVoucherType: this.typePhieu,
+      OrderNumber: this.soDonControl.value,
+      WarehouseId: this.khoNhanControl.value.warehouseId,
       ObjectId: this.emptyGuid,
       Reason: null,
-      InventoryDeliveryVoucherDate: this.ngayHienTai
-        ? new Date(this.ngayHienTai)
+      InventoryDeliveryVoucherDate: this.ngayXuatControl.value
+        ? new Date(this.ngayXuatControl.value)
         : null,
       InventoryDeliveryVoucherTime: null,
       Active: true,
@@ -931,46 +919,18 @@ export class ChiTietXuatComponent implements OnInit {
       Note: null,
       InventoryDeliveryVoucherCategory: null,
       WarehouseRequest: null,
-      InventoryDeliveryVoucherReason: this.lyDo
-        ? ParseStringToFloat(this.lyDo)
-        : null,
+      InventoryDeliveryVoucherReason: null,
       Day: this.dateNgay ? new Date(this.dateNgay) : null, //
       DateFrom: this.tuNgayControl ? new Date(this.tuNgayControl.value) : null, //
       DateTo: this.denNgayControl ? new Date(this.denNgayControl.value) : null, //
       Month: this.hangThangControl
         ? new Date(this.hangThangControl.value)
         : null, //
-      WarehouseReceivingId: this.khoNhanSelect.warehouseId,
+      WarehouseReceivingId: this.emptyGuid,
       InventoryDeliveryVoucherScreenType: null,
     };
 
     return inventoryReceiving;
-  }
-
-  async guiPheDuyet() {
-    this._warehouseService
-      .guiTrangThaiThanhPhamXuat(this.id)
-      .subscribe((response) => {
-        let result1: any = response;
-        if (result1.statusCode == 200) {
-          //Lưu và Thêm mới
-          this.resetForm();
-          let msg = {
-            severity: "success",
-            summary: "Thông báo:",
-            detail: result1.messageCode,
-          };
-          this.showMessage(msg);
-          this.getMasterData();
-        } else {
-          let msg = {
-            severity: "error",
-            summary: "Thông báo:",
-            detail: result1.messageCode,
-          };
-          this.showMessage(msg);
-        }
-      });
   }
 
   pheDuyetPhieuXuat() {
@@ -998,38 +958,38 @@ export class ChiTietXuatComponent implements OnInit {
     this.getMasterData();
   }
 
-  async luuVaGui() {
-    if (this.listDataUse.length == 0) {
-      let msg = {
-        severity: "warn",
-        summary: "Thông báo:",
-        detail: "Danh sách đề nghị chưa có dữ liệu!",
-      };
-      this.showMessage(msg);
-      return;
-    }
-    let inventoryReceivingVoucherModel = this.mapDataToModelPhieuNhapKho();
+  // async luuVaGui() {
+  //   if (this.listDataUse.length == 0) {
+  //     let msg = {
+  //       severity: "warn",
+  //       summary: "Thông báo:",
+  //       detail: "Danh sách đề nghị chưa có dữ liệu!",
+  //     };
+  //     this.showMessage(msg);
+  //     return;
+  //   }
+  //   let inventoryReceivingVoucherModel = this.mapDataToModelPhieuNhapKho();
 
-    let noteContent: string = "a";
+  //   let noteContent: string = "a";
 
-    let result: any = await this._warehouseService.taoThanhPhamXuat(
-      inventoryReceivingVoucherModel,
-      this.listDataUse,
-      noteContent
-    );
+  //   let result: any = await this._warehouseService.taoThanhPhamXuat(
+  //     inventoryReceivingVoucherModel,
+  //     this.listDataUse,
+  //     noteContent
+  //   );
 
-    if (result.statusCode == 200) {
-      await this.guiPheDuyet();
-    } else {
-      let msg = {
-        severity: "warn",
-        summary: "Thông báo:",
-        detail: "Gửi phê duyệt không thành công!",
-      };
-      this.showMessage(msg);
-      return;
-    }
-  }
+  //   if (result.statusCode == 200) {
+  //     await this.pheDuyetPhieuXuat();
+  //   } else {
+  //     let msg = {
+  //       severity: "warn",
+  //       summary: "Thông báo:",
+  //       detail: "Nhập kho không thành công!",
+  //     };
+  //     this.showMessage(msg);
+  //     return;
+  //   }
+  // }
 
   resetForm() {
     if (this.emitStatusChangeForm) {
@@ -1378,7 +1338,8 @@ export class ChiTietXuatComponent implements OnInit {
       let ghiChu = "";
       this.listDataUse.forEach((z) => {
         if (y == z.productId) {
-          tongSoLuong += ParseStringToFloat(z.quantityRequire);
+          tongSoLuong += ParseStringToFloat(z.quantityDelivery);
+          tongTonKho += ParseStringToFloat(z.quantityInventory);
           donViTinh = this.listProductCheck.find(
             (i) => i.productId == y
           ).productUnitName;
@@ -1396,7 +1357,7 @@ export class ChiTietXuatComponent implements OnInit {
         tenVatTu: vatTuName,
         donViTinh: donViTinh,
         soLuongDeNghi: tongSoLuong,
-        soLuongTon: this.tongTonKho,
+        soLuongTon: tongTonKho,
       };
       this.listDataDeNghi.push(data);
     });
